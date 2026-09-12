@@ -639,7 +639,7 @@ app.get('/api/clientes', (req, res) => {
 
 app.post('/api/clientes', (req, res) => {
   const db = getDB();
-  const { nome, telefone, email, notas, planoId, servidorId, appId } = req.body;
+  const { nome, telefone, email, notas, planoId, servidorId, appId, modeloMensagemId } = req.body;
   if (!nome || !telefone) {
     return res.status(400).json({ error: "Nome e WhatsApp são obrigatórios" });
   }
@@ -655,6 +655,7 @@ app.post('/api/clientes', (req, res) => {
     planoId: planoId || '',
     servidorId: servidorId || '',
     appId: appId || '',
+    modeloMensagemId: modeloMensagemId || '',
     dataCriacao: new Date().toISOString()
   };
 
@@ -668,7 +669,7 @@ app.put('/api/clientes/:id', (req, res) => {
   const index = db.clientes.findIndex(c => c.id === req.params.id);
   if (index === -1) return res.status(404).json({ error: "Cliente não encontrado" });
 
-  const { nome, telefone, email, notas, planoId, servidorId, appId } = req.body;
+  const { nome, telefone, email, notas, planoId, servidorId, appId, modeloMensagemId } = req.body;
   const telSanitizado = telefone ? sanitizePhone(telefone) : db.clientes[index].telefone;
 
   db.clientes[index] = {
@@ -679,7 +680,8 @@ app.put('/api/clientes/:id', (req, res) => {
     notas: notas !== undefined ? notas : db.clientes[index].notas,
     planoId: planoId !== undefined ? planoId : db.clientes[index].planoId,
     servidorId: servidorId !== undefined ? servidorId : db.clientes[index].servidorId,
-    appId: appId !== undefined ? appId : db.clientes[index].appId
+    appId: appId !== undefined ? appId : db.clientes[index].appId,
+    modeloMensagemId: modeloMensagemId !== undefined ? modeloMensagemId : db.clientes[index].modeloMensagemId
   };
 
   db.cobrancas.forEach(cob => {
