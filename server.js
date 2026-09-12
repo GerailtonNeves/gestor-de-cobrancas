@@ -195,7 +195,18 @@ function processarTemplateMensagem(template, data = {}, meusDados = {}) {
   
   let dtProxVenc = '-';
   if (data.proximoVencimento) {
-    dtProxVenc = formatDateBR(data.proximoVencimento);
+    dtProxVenc = data.proximoVencimento.includes('T') ? formatDateBR(data.proximoVencimento.split('T')[0]) : formatDateBR(data.proximoVencimento);
+  } else if (data.dataVencimento) {
+    const baseDate = data.dataVencimento.split('T')[0];
+    const parts = baseDate.split('-').map(Number);
+    if (parts.length === 3) {
+      const d = new Date(parts[0], parts[1] - 1, parts[2]);
+      d.setDate(d.getDate() + 30);
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      dtProxVenc = `${dd}/${mm}/${yyyy}`;
+    }
   }
 
   const valorFormatado = (data.valor !== undefined && data.valor !== null) ? parseFloat(data.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 'R$ 0,00';
