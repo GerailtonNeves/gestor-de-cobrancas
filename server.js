@@ -19,7 +19,9 @@ const getPublicDir = () => {
   const candidates = [
     path.join(__dirname, 'public'),
     path.join(process.cwd(), 'public'),
-    path.resolve('public')
+    path.resolve('public'),
+    __dirname,
+    process.cwd()
   ];
   for (const c of candidates) {
     if (fs.existsSync(c) && fs.existsSync(path.join(c, 'index.html'))) {
@@ -46,7 +48,9 @@ function sendIndexHtml(res) {
   const possiblePaths = [
     path.join(PUBLIC_DIR, 'index.html'),
     path.join(__dirname, 'public', 'index.html'),
-    path.join(process.cwd(), 'public', 'index.html')
+    path.join(process.cwd(), 'public', 'index.html'),
+    path.join(__dirname, 'index.html'),
+    path.join(process.cwd(), 'index.html')
   ];
 
   for (const p of possiblePaths) {
