@@ -14,7 +14,24 @@ const PORT = process.env.PORT || 3030;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public'), {
+
+const getPublicDir = () => {
+  const candidates = [
+    path.join(__dirname, 'public'),
+    path.join(process.cwd(), 'public'),
+    path.resolve('public')
+  ];
+  for (const c of candidates) {
+    if (fs.existsSync(c) && fs.existsSync(path.join(c, 'index.html'))) {
+      return c;
+    }
+  }
+  return path.join(__dirname, 'public');
+};
+
+const PUBLIC_DIR = getPublicDir();
+
+app.use(express.static(PUBLIC_DIR, {
   index: 'index.html',
   etag: false,
   maxAge: 0,
@@ -25,8 +42,31 @@ app.use(express.static(path.join(__dirname, 'public'), {
   }
 }));
 
+function sendIndexHtml(res) {
+  const possiblePaths = [
+    path.join(PUBLIC_DIR, 'index.html'),
+    path.join(__dirname, 'public', 'index.html'),
+    path.join(process.cwd(), 'public', 'index.html')
+  ];
+
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      return res.sendFile(p);
+    }
+  }
+
+  res.status(500).send(`
+    <div style="font-family: sans-serif; padding: 2rem; background: #0d1527; color: #fff; min-height: 100vh;">
+      <h2>⚠️ Servidor rodando, mas o arquivo index.html não foi encontrado.</h2>
+      <p><b>Diretório __dirname:</b> ${__dirname}</p>
+      <p><b>Diretório process.cwd():</b> ${process.cwd()}</p>
+      <p><b>Conteúdo da pasta raiz:</b> ${fs.existsSync(process.cwd()) ? fs.readdirSync(process.cwd()).join(', ') : 'não existe'}</p>
+    </div>
+  `);
+}
+
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  sendIndexHtml(res);
 });
 
 // Diretorios de dados e sessao Baileys
@@ -1242,7 +1282,7 @@ app.get('*', (req, res) => {
   if (req.path.startsWith('/api/')) {
     return res.status(404).json({ error: 'Endpoint de API não encontrado' });
   }
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  sendIndexHtml(res);
 });
 
 const HOST = '0.0.0.0';
