@@ -255,6 +255,9 @@
               </button>
             </div>
 
+            <button type="button" class="btn-whatsapp-sm" style="padding: 0.55rem 1rem; font-size: 0.88rem;" onclick="abrirModalDispararModelo()">
+              <i class="fa-solid fa-paper-plane"></i> 🚀 Escolher & Disparar Mensagem
+            </button>
             <button class="btn-primary" onclick="abrirModalNovaCobranca()">
               <i class="fa-solid fa-plus"></i> Cadastrar Cobrança
             </button>
@@ -373,6 +376,9 @@
               </button>
             </div>
 
+            <button type="button" class="btn-whatsapp-sm" style="padding: 0.55rem 1rem; font-size: 0.88rem;" onclick="abrirModalDispararModelo()">
+              <i class="fa-solid fa-paper-plane"></i> 🚀 Escolher & Disparar Mensagem
+            </button>
             <button class="btn-primary" onclick="abrirModalNovoCliente()">
               <i class="fa-solid fa-user-plus"></i> Novo Cliente
             </button>
@@ -391,6 +397,7 @@
                   <th>Plano Contratado</th>
                   <th>Servidor</th>
                   <th>App</th>
+                  <th>Modelo de Mensagem</th>
                   <th>Observações</th>
                   <th style="text-align: right;">Ações</th>
                 </tr>
@@ -865,7 +872,7 @@
               </label>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 0.75rem;">
               <div class="form-group" style="margin-bottom: 0;">
                 <label for="cliDataVencimento"><i class="fa-regular fa-calendar-days"></i> Data de Vencimento</label>
                 <input type="date" id="cliDataVencimento" class="form-control">
@@ -875,6 +882,18 @@
                 <label for="cliDataHoraEnvio"><i class="fa-brands fa-whatsapp" style="color: var(--emerald-primary);"></i> Data e Hora Envio WhatsApp *</label>
                 <input type="datetime-local" id="cliDataHoraEnvio" class="form-control">
               </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0; background: rgba(0, 240, 255, 0.05); padding: 0.85rem; border-radius: 8px; border: 1px solid rgba(0, 240, 255, 0.25);">
+              <label for="cliModeloId" style="font-weight: 700; color: var(--neon-blue); display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem;">
+                <i class="fa-solid fa-comment-dots" style="color: var(--neon-blue); font-size: 1.1rem;"></i> Modelo de Mensagem do WhatsApp
+              </label>
+              <select id="cliModeloId" class="form-control" style="background: #0D1527; border: 1px solid var(--neon-blue); color: #FFF; font-weight: 600;">
+                <option value="">-- Seleção Automática (Padrão do Sistema) --</option>
+              </select>
+              <small style="color: var(--text-brown-muted); font-size: 0.78rem; display: block; margin-top: 0.35rem;">
+                💡 Escolha o modelo de mensagem que será enviado a este cliente na data e hora agendadas.
+              </small>
             </div>
           </div>
 
@@ -1321,6 +1340,6 @@
   </div>
 
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=18.0"></script>
+  <script src="js/app.js?v=22.0"></script>
 </body>
 </html>
