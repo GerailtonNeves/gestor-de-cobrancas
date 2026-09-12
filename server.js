@@ -222,15 +222,41 @@ function processarTemplateMensagem(template, data = {}, meusDados = {}) {
     }
   }
 
-  const valorFormatado = (data.valor !== undefined && data.valor !== null) ? parseFloat(data.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 'R$ 0,00';
+  const qtdTelasInt = parseInt(data.qtdTelas || data.telas || 1) || 1;
+  const telasStr = qtdTelasInt === 1 ? '1 Tela' : `${qtdTelasInt} Telas`;
+
+  const valBrutoNum = (data.valorBruto !== undefined && data.valorBruto !== null && data.valorBruto !== '')
+    ? parseFloat(data.valorBruto)
+    : (data.valor !== undefined ? parseFloat(data.valor) : 0);
+
+  const descNum = (data.desconto !== undefined && data.desconto !== null && data.desconto !== '')
+    ? parseFloat(data.desconto)
+    : 0;
+
+  const valFinalNum = (data.valor !== undefined && data.valor !== null && data.valor !== '')
+    ? parseFloat(data.valor)
+    : Math.max(0, valBrutoNum - descNum);
+
+  const formatBRL = (v) => (v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+  const valorFormatado = formatBRL(valFinalNum);
+  const brutoFormatado = formatBRL(valBrutoNum > 0 ? valBrutoNum : valFinalNum);
+  const descontoFormatado = formatBRL(descNum);
   const clienteNome = data.clienteNome ? data.clienteNome.trim() : (data.nome ? data.nome.trim() : 'Cliente');
+  const planoNome = data.planoNome || data.descricao || 'Plano de Canais';
 
   msg = msg.replace(/\{nome\}/g, clienteNome);
+  msg = msg.replace(/\{telas\}/g, telasStr);
+  msg = msg.replace(/\{qtd_telas\}/g, telasStr);
+  msg = msg.replace(/\{valor_bruto\}/g, brutoFormatado);
+  msg = msg.replace(/\{desconto\}/g, descontoFormatado);
   msg = msg.replace(/\{valor\}/g, valorFormatado);
+  msg = msg.replace(/\{valor_final\}/g, valorFormatado);
+  msg = msg.replace(/\{plano\}/g, planoNome);
   msg = msg.replace(/\{vencimento\}/g, dtVenc);
   msg = msg.replace(/\{data_pagamento\}/g, dtPagto);
   msg = msg.replace(/\{proximo_vencimento\}/g, dtProxVenc);
-  msg = msg.replace(/\{descricao\}/g, data.descricao || 'Plano de Canais');
+  msg = msg.replace(/\{descricao\}/g, data.descricao || planoNome);
   msg = msg.replace(/\{pix_titular\}/g, meusDados.nomeTitular || 'Gerailton Neves');
   msg = msg.replace(/\{pix_banco\}/g, meusDados.banco || 'PIX');
   msg = msg.replace(/\{pix_tipo\}/g, meusDados.tipoChave || 'Celular');
@@ -239,6 +265,40 @@ function processarTemplateMensagem(template, data = {}, meusDados = {}) {
   msg = msg.replace(/\{equipe\}/g, 'Gerailton Neves');
 
   return msg;
+}
+
+function gerarTextoCob(cobranca) {
+  const db = getDB();
+  const hoje = getLocalIsoString().split('T')[0];
+
+  let modeloObj = null;
+  if (cobranca.modeloMensagemId) {
+    modeloObj = getModeloMensagem(cobranca.modeloMensagemId, db);
+  }
+  if (!modeloObj) {
+    modeloObj = (cobranca.dataVencimento < hoje) 
+      ? getModeloMensagem('planoVencido', db) 
+      : getModeloMensagem('lembreteCobranca', db);
+  }
+
+  let planoNome = 'Plano de Canais';
+  let clienteObj = db.clientes ? db.clientes.find(c => c.id === cobranca.clienteId) : null;
+  if (clienteObj && clienteObj.planoId) {
+    let p = db.planos ? db.planos.find(item => item.id === clienteObj.planoId) : null;
+    if (p) planoNome = p.nome;
+  }
+
+  return processarTemplateMensagem(modeloObj.mensagem, {
+    clienteNome: cobranca.clienteNome,
+    nome: cobranca.clienteNome,
+    valor: cobranca.valor,
+    valorBruto: cobranca.valorBruto,
+    desconto: cobranca.desconto,
+    qtdTelas: cobranca.qtdTelas || (clienteObj ? clienteObj.qtdTelas : 1),
+    planoNome: planoNome,
+    dataVencimento: cobranca.dataVencimento,
+    descricao: cobranca.descricao
+  }, db.meusDados || meusDados);
 }
 
 function getDB() {
@@ -639,7 +699,7 @@ app.get('/api/clientes', (req, res) => {
 
 app.post('/api/clientes', (req, res) => {
   const db = getDB();
-  const { nome, telefone, email, notas, planoId, servidorId, appId, modeloMensagemId } = req.body;
+  const { nome, telefone, email, notas, planoId, servidorId, appId, modeloMensagemId, qtdTelas, valorBruto, desconto } = req.body;
   if (!nome || !telefone) {
     return res.status(400).json({ error: "Nome e WhatsApp são obrigatórios" });
   }
@@ -656,6 +716,9 @@ app.post('/api/clientes', (req, res) => {
     servidorId: servidorId || '',
     appId: appId || '',
     modeloMensagemId: modeloMensagemId || '',
+    qtdTelas: parseInt(qtdTelas) || 1,
+    valorBruto: parseFloat(valorBruto) || 0,
+    desconto: parseFloat(desconto) || 0,
     dataCriacao: new Date().toISOString()
   };
 
@@ -669,7 +732,7 @@ app.put('/api/clientes/:id', (req, res) => {
   const index = db.clientes.findIndex(c => c.id === req.params.id);
   if (index === -1) return res.status(404).json({ error: "Cliente não encontrado" });
 
-  const { nome, telefone, email, notas, planoId, servidorId, appId, modeloMensagemId } = req.body;
+  const { nome, telefone, email, notas, planoId, servidorId, appId, modeloMensagemId, qtdTelas, valorBruto, desconto } = req.body;
   const telSanitizado = telefone ? sanitizePhone(telefone) : db.clientes[index].telefone;
 
   db.clientes[index] = {
@@ -681,7 +744,10 @@ app.put('/api/clientes/:id', (req, res) => {
     planoId: planoId !== undefined ? planoId : db.clientes[index].planoId,
     servidorId: servidorId !== undefined ? servidorId : db.clientes[index].servidorId,
     appId: appId !== undefined ? appId : db.clientes[index].appId,
-    modeloMensagemId: modeloMensagemId !== undefined ? modeloMensagemId : db.clientes[index].modeloMensagemId
+    modeloMensagemId: modeloMensagemId !== undefined ? modeloMensagemId : db.clientes[index].modeloMensagemId,
+    qtdTelas: qtdTelas !== undefined ? parseInt(qtdTelas) || 1 : (db.clientes[index].qtdTelas || 1),
+    valorBruto: valorBruto !== undefined ? parseFloat(valorBruto) || 0 : (db.clientes[index].valorBruto || 0),
+    desconto: desconto !== undefined ? parseFloat(desconto) || 0 : (db.clientes[index].desconto || 0)
   };
 
   db.cobrancas.forEach(cob => {
@@ -715,7 +781,7 @@ app.get('/api/cobrancas', (req, res) => {
 
 app.post('/api/cobrancas', (req, res) => {
   const db = getDB();
-  const { clienteId, valorBruto, desconto, valor, dataVencimento, dataHoraEnvio, descricao, modeloMensagemId } = req.body;
+  const { clienteId, valorBruto, desconto, valor, dataVencimento, dataHoraEnvio, descricao, modeloMensagemId, qtdTelas } = req.body;
 
   if (!clienteId || valor === undefined || !dataVencimento || !descricao) {
     return res.status(400).json({ error: "Preencha todos os campos obrigatórios" });
@@ -727,12 +793,14 @@ app.post('/api/cobrancas', (req, res) => {
   const numValor = parseFloat(valor);
   const numBruto = valorBruto !== undefined && valorBruto !== null ? parseFloat(valorBruto) : numValor;
   const numDesconto = desconto !== undefined && desconto !== null ? parseFloat(desconto) : 0;
+  const numQtdTelas = qtdTelas !== undefined && qtdTelas !== null ? parseInt(qtdTelas) : (cliente.qtdTelas || 1);
 
   const novaCobranca = {
     id: `cob_${Date.now()}`,
     clienteId,
     clienteNome: cliente.nome,
     clienteTelefone: sanitizePhone(cliente.telefone),
+    qtdTelas: numQtdTelas,
     valorBruto: numBruto,
     desconto: numDesconto,
     valor: numValor,
@@ -757,7 +825,7 @@ app.put('/api/cobrancas/:id', (req, res) => {
   const index = db.cobrancas.findIndex(c => c.id === req.params.id);
   if (index === -1) return res.status(404).json({ error: "Cobrança não encontrada" });
 
-  const { clienteId, valorBruto, desconto, valor, dataVencimento, dataHoraEnvio, descricao, modeloMensagemId, status } = req.body;
+  const { clienteId, valorBruto, desconto, valor, dataVencimento, dataHoraEnvio, descricao, modeloMensagemId, status, qtdTelas } = req.body;
 
   if (clienteId && clienteId !== db.cobrancas[index].clienteId) {
     const cliente = db.clientes.find(c => c.id === clienteId);
@@ -777,6 +845,7 @@ app.put('/api/cobrancas/:id', (req, res) => {
 
   db.cobrancas[index] = {
     ...db.cobrancas[index],
+    qtdTelas: qtdTelas !== undefined ? parseInt(qtdTelas) : (db.cobrancas[index].qtdTelas || 1),
     valorBruto: numBruto,
     desconto: numDesconto,
     valor: numValor,

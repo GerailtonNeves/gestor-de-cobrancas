@@ -574,7 +574,11 @@
           </h4>
           <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;" id="tagChipsContainer">
             <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{nome}')"><code>{nome}</code> - Nome do Cliente</span>
-            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{valor}')"><code>{valor}</code> - Valor do Plano</span>
+            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{plano}')"><code>{plano}</code> - Nome do Plano</span>
+            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{telas}')"><code>{telas}</code> - Qtd. de Telas</span>
+            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{valor_bruto}')"><code>{valor_bruto}</code> - Valor Bruto (Sem Desc.)</span>
+            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{desconto}')"><code>{desconto}</code> - Desconto Abatido</span>
+            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{valor}')"><code>{valor}</code> - Valor Final a Pagar</span>
             <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{vencimento}')"><code>{vencimento}</code> - Data do Vencimento</span>
             <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{proximo_vencimento}')"><code>{proximo_vencimento}</code> - Próximo Vencimento</span>
             <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{data_pagamento}')"><code>{data_pagamento}</code> - Data de Pagamento</span>
@@ -743,11 +747,21 @@
             </div>
           </div>
 
-          <!-- VALOR DO PLANO, DESCONTO E VALOR FINAL A COBRAR -->
+          <!-- VALOR DO PLANO, TELAS, DESCONTO E VALOR FINAL A COBRAR -->
           <div style="background: rgba(0, 0, 0, 0.25); padding: 0.9rem; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 1rem;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.75rem;">
               <div class="form-group" style="margin-bottom: 0;">
-                <label for="cobValorBruto" style="font-size: 0.8rem;"><i class="fa-solid fa-tag"></i> Valor Plano (R$)</label>
+                <label for="cobQtdTelas" style="font-size: 0.8rem; color: var(--neon-blue); font-weight: 700;"><i class="fa-solid fa-desktop"></i> Qtd. Telas</label>
+                <select id="cobQtdTelas" class="form-control" onchange="calcularValorCobComDesconto()">
+                  <option value="1">1 Tela</option>
+                  <option value="2">2 Telas</option>
+                  <option value="3">3 Telas</option>
+                  <option value="4">4 Telas</option>
+                  <option value="5">5 Telas</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="cobValorBruto" style="font-size: 0.8rem;"><i class="fa-solid fa-tag"></i> Valor Bruto (R$)</label>
                 <input type="number" step="0.01" id="cobValorBruto" class="form-control" placeholder="0.00" oninput="calcularValorCobComDesconto()">
               </div>
               <div class="form-group" style="margin-bottom: 0;">
@@ -844,11 +858,21 @@
               </div>
             </div>
 
-            <!-- VALORES E DESCONTO DO PLANO -->
+            <!-- VALORES, TELAS E DESCONTO DO PLANO -->
             <div style="background: rgba(0, 0, 0, 0.25); padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08);">
-              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.75rem;">
                 <div class="form-group" style="margin-bottom: 0;">
-                  <label for="cliValorBruto" style="font-size: 0.8rem;"><i class="fa-solid fa-tag"></i> Valor Plano (R$)</label>
+                  <label for="cliQtdTelas" style="font-size: 0.8rem; color: var(--neon-blue); font-weight: 700;"><i class="fa-solid fa-desktop"></i> Qtd. Telas</label>
+                  <select id="cliQtdTelas" class="form-control" onchange="calcularValorClienteComDesconto()">
+                    <option value="1">1 Tela</option>
+                    <option value="2">2 Telas</option>
+                    <option value="3">3 Telas</option>
+                    <option value="4">4 Telas</option>
+                    <option value="5">5 Telas</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="cliValorBruto" style="font-size: 0.8rem;"><i class="fa-solid fa-tag"></i> Valor Bruto (R$)</label>
                   <input type="number" step="0.01" id="cliValorBruto" class="form-control" placeholder="0.00" oninput="calcularValorClienteComDesconto()">
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
@@ -1340,6 +1364,6 @@
   </div>
 
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=22.0"></script>
+  <script src="js/app.js?v=23.0"></script>
 </body>
 </html>
