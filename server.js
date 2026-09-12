@@ -377,7 +377,7 @@ app.get('/api/planos', (req, res) => {
 
 app.post('/api/planos', (req, res) => {
   const db = getDB();
-  const { nome, categoria, valor, validade, descricao, corBadge } = req.body;
+  const { nome, categoria, valor, validade, descricao, corBadge, desconto, telas } = req.body;
   if (!nome || !valor) {
     return res.status(400).json({ error: "Nome do Plano e Valor são obrigatórios" });
   }
@@ -386,7 +386,9 @@ app.post('/api/planos', (req, res) => {
     id: `plano_${Date.now()}`,
     nome,
     categoria: categoria || 'Plano IPTV',
+    telas: telas || '1 Tela',
     valor: parseFloat(valor),
+    desconto: desconto !== undefined ? parseFloat(desconto) : 0,
     validade: validade || 'Mensal',
     descricao: descricao || '',
     corBadge: corBadge || 'neon-blue',
@@ -405,13 +407,15 @@ app.put('/api/planos/:id', (req, res) => {
   const index = db.planos.findIndex(p => p.id === req.params.id);
   if (index === -1) return res.status(404).json({ error: "Plano não encontrado" });
 
-  const { nome, categoria, valor, validade, descricao, corBadge } = req.body;
+  const { nome, categoria, valor, validade, descricao, corBadge, desconto, telas } = req.body;
 
   db.planos[index] = {
     ...db.planos[index],
     nome: nome || db.planos[index].nome,
     categoria: categoria || db.planos[index].categoria,
+    telas: telas !== undefined ? telas : db.planos[index].telas,
     valor: valor !== undefined ? parseFloat(valor) : db.planos[index].valor,
+    desconto: desconto !== undefined ? parseFloat(desconto) : (db.planos[index].desconto || 0),
     validade: validade || db.planos[index].validade,
     descricao: descricao !== undefined ? descricao : db.planos[index].descricao,
     corBadge: corBadge || db.planos[index].corBadge
@@ -641,21 +645,27 @@ app.get('/api/cobrancas', (req, res) => {
 
 app.post('/api/cobrancas', (req, res) => {
   const db = getDB();
-  const { clienteId, valor, dataVencimento, dataHoraEnvio, descricao, modeloMensagemId } = req.body;
+  const { clienteId, valorBruto, desconto, valor, dataVencimento, dataHoraEnvio, descricao, modeloMensagemId } = req.body;
 
-  if (!clienteId || !valor || !dataVencimento || !descricao) {
+  if (!clienteId || valor === undefined || !dataVencimento || !descricao) {
     return res.status(400).json({ error: "Preencha todos os campos obrigatórios" });
   }
 
   const cliente = db.clientes.find(c => c.id === clienteId);
   if (!cliente) return res.status(404).json({ error: "Cliente selecionado não existe" });
 
+  const numValor = parseFloat(valor);
+  const numBruto = valorBruto !== undefined && valorBruto !== null ? parseFloat(valorBruto) : numValor;
+  const numDesconto = desconto !== undefined && desconto !== null ? parseFloat(desconto) : 0;
+
   const novaCobranca = {
     id: `cob_${Date.now()}`,
     clienteId,
     clienteNome: cliente.nome,
     clienteTelefone: sanitizePhone(cliente.telefone),
-    valor: parseFloat(valor),
+    valorBruto: numBruto,
+    desconto: numDesconto,
+    valor: numValor,
     dataVencimento,
     dataHoraEnvio: dataHoraEnvio || `${dataVencimento}T09:00`,
     descricao,
@@ -677,7 +687,7 @@ app.put('/api/cobrancas/:id', (req, res) => {
   const index = db.cobrancas.findIndex(c => c.id === req.params.id);
   if (index === -1) return res.status(404).json({ error: "Cobrança não encontrada" });
 
-  const { clienteId, valor, dataVencimento, dataHoraEnvio, descricao, modeloMensagemId, status } = req.body;
+  const { clienteId, valorBruto, desconto, valor, dataVencimento, dataHoraEnvio, descricao, modeloMensagemId, status } = req.body;
 
   if (clienteId && clienteId !== db.cobrancas[index].clienteId) {
     const cliente = db.clientes.find(c => c.id === clienteId);
@@ -691,9 +701,15 @@ app.put('/api/cobrancas/:id', (req, res) => {
   const novaDataHoraEnvio = dataHoraEnvio || db.cobrancas[index].dataHoraEnvio;
   const dataHoraMudou = novaDataHoraEnvio !== db.cobrancas[index].dataHoraEnvio;
 
+  const numValor = valor !== undefined ? parseFloat(valor) : db.cobrancas[index].valor;
+  const numBruto = valorBruto !== undefined ? parseFloat(valorBruto) : (db.cobrancas[index].valorBruto !== undefined ? db.cobrancas[index].valorBruto : numValor);
+  const numDesconto = desconto !== undefined ? parseFloat(desconto) : (db.cobrancas[index].desconto || 0);
+
   db.cobrancas[index] = {
     ...db.cobrancas[index],
-    valor: valor !== undefined ? parseFloat(valor) : db.cobrancas[index].valor,
+    valorBruto: numBruto,
+    desconto: numDesconto,
+    valor: numValor,
     dataVencimento: dataVencimento || db.cobrancas[index].dataVencimento,
     dataHoraEnvio: novaDataHoraEnvio,
     descricao: descricao || db.cobrancas[index].descricao,
