@@ -1,0 +1,16 @@
+{
+  "name": "gestor-de-cobrancas",
+  "version": "1.0.0",
+  "description": "Aplicativo para gestão e envio automático de cobranças via WhatsApp",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^7.0.0-rc14",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "node-cron": "^3.0.3",
+    "qrcode": "^1.5.4"
+  }
+}

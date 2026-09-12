@@ -1,0 +1,19 @@
+# Dependências do Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Sessão e Credenciais do WhatsApp Baileys (IMPORTANTE: NUNCA SUBIR PARA O GITHUB PÚBLICO)
+data/auth_info_baileys/
+
+# Arquivos de ambiente e variáveis locais
+.env
+.env.local
+.env.development.local
+.env.production.local
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+*.log
