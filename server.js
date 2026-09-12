@@ -83,13 +83,26 @@ if (!fs.existsSync(DATA_DIR)) {
 }
 
 function getLocalIsoString(d = new Date()) {
-  const pad = (n) => String(n).padStart(2, '0');
-  const year = d.getFullYear();
-  const month = pad(d.getMonth() + 1);
-  const day = pad(d.getDate());
-  const hours = pad(d.getHours());
-  const minutes = pad(d.getMinutes());
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
+  try {
+    const brDateStr = d.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" });
+    const brDate = new Date(brDateStr);
+
+    const pad = (n) => String(n).padStart(2, '0');
+    const year = brDate.getFullYear();
+    const month = pad(brDate.getMonth() + 1);
+    const day = pad(brDate.getDate());
+    const hours = pad(brDate.getHours());
+    const minutes = pad(brDate.getMinutes());
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  } catch (err) {
+    const pad = (n) => String(n).padStart(2, '0');
+    const year = d.getFullYear();
+    const month = pad(d.getMonth() + 1);
+    const day = pad(d.getDate());
+    const hours = pad(d.getHours());
+    const minutes = pad(d.getMinutes());
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  }
 }
 
 function sanitizePhone(phone) {
