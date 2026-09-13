@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="GestorCob">
   
   <!-- CSS Principal -->
-  <link rel="stylesheet" href="css/styles.css?v=11.0">
+  <link rel="stylesheet" href="css/styles.css?v=65.0">
   
   <!-- Icones Remixicon & FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -85,7 +85,7 @@
 
         <li>
           <a class="nav-item" data-tab="cobrancas">
-            <i class="fa-solid fa-file-invoice-dollar"></i> Cobranças
+            <i class="fa-solid fa-file-invoice-dollar"></i> Renovações
           </a>
         </li>
         <li>
@@ -164,7 +164,7 @@
           </div>
           <div style="display: flex; gap: 0.75rem;">
             <button class="btn-primary" onclick="abrirModalNovaCobranca()">
-              <i class="fa-solid fa-plus"></i> Nova Cobrança
+              <i class="fa-solid fa-plus"></i> Nova Renovação
             </button>
           </div>
         </div>
@@ -173,7 +173,7 @@
         <div class="metrics-grid">
           <div class="metric-card warning">
             <div class="metric-info">
-              <h3>A Receber (Pendentes)</h3>
+              <h3>Renovações Pendentes</h3>
               <div class="metric-value" id="dashTotalPendente">R$ 0,00</div>
             </div>
             <div class="metric-icon">
@@ -181,10 +181,10 @@
             </div>
           </div>
 
-          <div class="metric-card">
+          <div class="metric-card success">
             <div class="metric-info">
-              <h3>Contas Recebidas</h3>
-              <div class="metric-value" id="dashTotalRecebido" style="color: var(--emerald-light);">R$ 0,00</div>
+              <h3>Faturamento Confirmado</h3>
+              <div class="metric-value" id="dashTotalRecebido" style="color: var(--emerald-primary);">R$ 0,00</div>
             </div>
             <div class="metric-icon">
               <i class="fa-solid fa-circle-check"></i>
@@ -193,7 +193,7 @@
 
           <div class="metric-card danger">
             <div class="metric-info">
-              <h3>Cobranças Vencidas</h3>
+              <h3>Renovações Vencidas</h3>
               <div class="metric-value" id="dashTotalVencido" style="color: #F87171;">R$ 0,00</div>
             </div>
             <div class="metric-icon">
@@ -241,8 +241,8 @@
       <section id="tab-cobrancas" class="tab-content" style="display: none;">
         <div class="page-header">
           <div>
-            <h1><i class="fa-solid fa-file-invoice-dollar"></i> Cobranças Cadastradas</h1>
-            <p>Gerencie todas as cobranças, envie notificações pelo WhatsApp e dê baixa no recebimento.</p>
+            <h1><i class="fa-solid fa-file-invoice-dollar"></i> Renovações Cadastradas</h1>
+            <p>Gerencie todas as renovações, envie notificações pelo WhatsApp e dê baixa no recebimento.</p>
           </div>
           <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
             <!-- TOGGLE DE VISUALIZAÇÃO: TABELA / CARDS -->
@@ -259,7 +259,7 @@
               <i class="fa-solid fa-paper-plane"></i> 🚀 Escolher & Disparar Mensagem
             </button>
             <button class="btn-primary" onclick="abrirModalNovaCobranca()">
-              <i class="fa-solid fa-plus"></i> Cadastrar Cobrança
+              <i class="fa-solid fa-plus"></i> Cadastrar Renovação
             </button>
           </div>
         </div>
@@ -267,7 +267,7 @@
         <!-- MODO 1: TABELA DE COBRANÇAS -->
         <div id="cobrancasTableView" class="glass-panel">
           <div class="panel-header">
-            <div class="panel-title"><i class="fa-solid fa-list-check"></i> Lista de Cobranças</div>
+            <div class="panel-title"><i class="fa-solid fa-list-check"></i> Lista de Renovações</div>
             <div style="display: flex; gap: 0.5rem; align-items: center;">
               <input type="text" id="filterCobrancas" class="form-control" placeholder="Buscar por cliente ou descrição..." style="width: 250px; font-size: 0.85rem;" oninput="filtrarTabelaCobrancas()">
             </div>
@@ -696,7 +696,7 @@
   <div class="modal-overlay" id="modalCobranca">
     <div class="modal-box" style="max-width: 650px;">
       <div class="modal-header">
-        <h3 id="modalCobrancaTitle"><i class="fa-solid fa-plus-circle"></i> Cadastrar Nova Cobrança</h3>
+        <h3 id="modalCobrancaTitle"><i class="fa-solid fa-plus-circle"></i> Cadastrar Nova Renovação</h3>
         <button class="modal-close" onclick="fecharModalCobranca()">&times;</button>
       </div>
       <form id="formCobranca">
@@ -725,12 +725,12 @@
 
             <div class="form-group">
               <label for="cobPlanoId"><i class="fa-solid fa-tag"></i> Plano de Canais</label>
-              <select id="cobPlanoId" class="form-control">
+              <select id="cobPlanoId" class="form-control" onchange="calcularValorCobComDesconto()">
                 <option value="">-- Selecione o Plano --</option>
               </select>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-grid-2">
               <div class="form-group">
                 <label for="cobServidorId"><i class="fa-solid fa-server"></i> Servidor</label>
                 <select id="cobServidorId" class="form-control">
@@ -749,7 +749,7 @@
 
           <!-- VALOR DO PLANO, TELAS, DESCONTO E VALOR FINAL A COBRAR -->
           <div style="background: rgba(0, 0, 0, 0.25); padding: 0.9rem; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 1rem;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.75rem;">
+            <div class="form-grid-4">
               <div class="form-group" style="margin-bottom: 0;">
                 <label for="cobQtdTelas" style="font-size: 0.8rem; color: var(--neon-blue); font-weight: 700;"><i class="fa-solid fa-desktop"></i> Qtd. Telas</label>
                 <select id="cobQtdTelas" class="form-control" onchange="calcularValorCobComDesconto()">
@@ -770,7 +770,7 @@
               </div>
               <div class="form-group" style="margin-bottom: 0;">
                 <label for="cobValor" style="font-size: 0.8rem; color: var(--neon-green); font-weight: 700;"><i class="fa-solid fa-calculator"></i> Valor Final (R$) *</label>
-                <input type="number" step="0.01" id="cobValor" class="form-control" placeholder="0.00" required style="border-color: var(--neon-green); background: rgba(0, 255, 136, 0.08); font-weight: 700; color: #FFF;">
+                <input type="number" step="0.01" id="cobValor" class="form-control" placeholder="0.00" required oninput="calcularDeValorFinalCob()" style="border-color: var(--neon-green); background: rgba(0, 255, 136, 0.08); font-weight: 700; color: #FFF;">
               </div>
             </div>
           </div>
@@ -785,7 +785,7 @@
             <input type="datetime-local" id="cobDataHoraEnvio" class="form-control" required>
           </div>
 
-          <input type="hidden" id="cobDescricao" value="RENOVE SEU PLANO DE CANAIS HOJE É O VENCIMENTO DO SEU PLANO.">
+          <input type="hidden" id="cobDescricao" value="SEU PLANO DE CANAIS O VENCIMENTO É HOJE RENOVE PARA NÃO FICAR SEM ASSISTIR !">
 
           <div class="form-group">
             <label for="cobModeloId"><i class="fa-solid fa-comment-dots" style="color: var(--neon-blue);"></i> Modelo de Mensagem do WhatsApp</label>
@@ -796,7 +796,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn-secondary" onclick="fecharModalCobranca()">Cancelar</button>
-          <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i> Salvar Cobrança</button>
+          <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i> Salvar Renovação</button>
         </div>
       </form>
     </div>
@@ -826,7 +826,7 @@
               <input type="text" id="cliNome" class="form-control" placeholder="Ex: Carlos Eduardo Silva" required style="background: #090F1D; border-color: rgba(0, 240, 255, 0.3); color: #FFF;">
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;">
+            <div class="form-grid-2">
               <div class="form-group" style="margin-bottom: 0;">
                 <label for="cliTelefone" style="font-weight: 700; color: var(--emerald-light);"><i class="fa-brands fa-whatsapp"></i> WhatsApp (DDD + Número) *</label>
                 <input type="text" id="cliTelefone" class="form-control" placeholder="Ex: 5581999887766" required style="background: #090F1D; border-color: var(--emerald-primary); color: #FFF;">
@@ -852,7 +852,7 @@
               </select>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;">
+            <div class="form-grid-2">
               <div class="form-group" style="margin-bottom: 0;">
                 <label for="cliServidorId" style="font-weight: 600; color: #E2E8F0;"><i class="fa-solid fa-server" style="color: var(--neon-blue);"></i> Servidor / Painel</label>
                 <select id="cliServidorId" class="form-control" style="background: #090F1D; color: #FFF;">
@@ -867,81 +867,7 @@
                 </select>
               </div>
             </div>
-          </div>
-
-          <!-- SEÇÃO 3: CÁLCULO DE TELAS, DESCONTO E VALOR FINAL -->
-          <div style="background: rgba(0, 255, 136, 0.04); padding: 1.1rem; border-radius: 14px; border: 1px solid var(--neon-green); box-shadow: 0 4px 15px rgba(0, 255, 136, 0.08);">
-            <h4 style="font-size: 0.95rem; color: var(--neon-green); margin-bottom: 0.85rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem;">
-              <i class="fa-solid fa-calculator"></i> 3. Telas, Desconto & Valor Final
-            </h4>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.75rem;">
-              <div class="form-group" style="margin-bottom: 0;">
-                <label for="cliQtdTelas" style="font-size: 0.82rem; color: var(--neon-blue); font-weight: 800;"><i class="fa-solid fa-desktop"></i> Qtd. Telas</label>
-                <select id="cliQtdTelas" class="form-control" onchange="calcularValorClienteComDesconto()" oninput="calcularValorClienteComDesconto()" style="background: #0D1527; border: 1.5px solid var(--neon-blue); color: #FFF; font-weight: 800;">
-                  <option value="1">1 Tela</option>
-                  <option value="2">2 Telas</option>
-                  <option value="3">3 Telas</option>
-                  <option value="4">4 Telas</option>
-                  <option value="5">5 Telas</option>
-                </select>
-              </div>
-
-              <div class="form-group" style="margin-bottom: 0;">
-                <label for="cliValorBruto" style="font-size: 0.82rem; color: #CBD5E1; font-weight: 700;"><i class="fa-solid fa-money-bill"></i> Valor Bruto (R$)</label>
-                <input type="number" step="0.01" id="cliValorBruto" class="form-control" placeholder="0.00" oninput="calcularValorClienteComDesconto()" style="background: #090F1D; color: #FFF;">
-              </div>
-
-              <div class="form-group" style="margin-bottom: 0;">
-                <label for="cliDesconto" style="font-size: 0.82rem; color: var(--neon-pink); font-weight: 800;"><i class="fa-solid fa-percent"></i> Desconto (R$)</label>
-                <input type="number" step="0.01" id="cliDesconto" class="form-control" placeholder="0.00" value="0.00" oninput="calcularValorClienteComDesconto()" style="background: #090F1D; border-color: var(--neon-pink); color: var(--neon-pink); font-weight: 700;">
-              </div>
-
-              <div class="form-group" style="margin-bottom: 0;">
-                <label for="cliValor" style="font-size: 0.82rem; color: var(--neon-green); font-weight: 800;"><i class="fa-solid fa-coins"></i> Valor Final (R$)</label>
-                <input type="number" step="0.01" id="cliValor" class="form-control" placeholder="0.00" style="border: 2px solid var(--neon-green); background: rgba(0, 255, 136, 0.12); font-weight: 900; color: #FFF; font-size: 1.05rem;">
-              </div>
-            </div>
-            <small style="color: var(--text-brown-muted); font-size: 0.78rem; display: block; margin-top: 0.65rem;">
-              💡 <strong>Cálculo Automático:</strong> O sistema multiplica o valor base do plano pela quantidade de telas escolhida e subtrai o desconto inserido.
-            </small>
-          </div>
-
-          <!-- SEÇÃO 4: AGENDAMENTO AUTOMÁTICO WHATSAPP & MODELO DE MENSAGEM -->
-          <div style="background: rgba(124, 58, 237, 0.05); padding: 1.1rem; border-radius: 14px; border: 1px solid #7C3AED; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.1);">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem;">
-              <label for="cliGerarCobranca" style="font-weight: 800; color: #A78BFA; margin: 0; cursor: pointer; display: flex; align-items: center; gap: 0.6rem; font-size: 0.95rem;">
-                <input type="checkbox" id="cliGerarCobranca" checked style="width: 20px; height: 20px; accent-color: var(--neon-green); cursor: pointer;">
-                <span><i class="fa-solid fa-clock"></i> 4. Programar Envio Automático no WhatsApp</span>
-              </label>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 0.85rem;">
-              <div class="form-group" style="margin-bottom: 0;">
-                <label for="cliDataVencimento" style="font-weight: 700; color: #FFF;"><i class="fa-regular fa-calendar-days" style="color: var(--neon-blue);"></i> Data de Vencimento</label>
-                <input type="date" id="cliDataVencimento" class="form-control" onchange="sincronizarDataEnvioCliente()" style="background: #090F1D; border-color: rgba(0, 240, 255, 0.3); color: #FFF; font-weight: 600;">
-              </div>
-
-              <div class="form-group" style="margin-bottom: 0;">
-                <label for="cliDataHoraEnvio" style="font-weight: 700; color: var(--emerald-light);"><i class="fa-brands fa-whatsapp" style="color: var(--emerald-primary);"></i> Data e Hora Envio WhatsApp *</label>
-                <input type="datetime-local" id="cliDataHoraEnvio" class="form-control" style="background: #090F1D; border-color: var(--emerald-primary); color: #FFF; font-weight: 600;">
-              </div>
-            </div>
-
-            <div class="form-group" style="margin-bottom: 0; background: rgba(13, 21, 39, 0.8); padding: 0.85rem; border-radius: 10px; border: 1px solid #7C3AED;">
-              <label for="cliModeloId" style="font-weight: 800; color: #A78BFA; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; font-size: 0.9rem;">
-                <i class="fa-solid fa-comment-dots" style="color: #A78BFA; font-size: 1.1rem;"></i> Modelo de Mensagem do WhatsApp
-              </label>
-              <select id="cliModeloId" class="form-control" style="background: #0D1527; border: 1px solid #7C3AED; color: #FFF; font-weight: 700;">
-                <option value="">-- Seleção Automática (Padrão do Sistema) --</option>
-              </select>
-              <small style="color: var(--text-brown-muted); font-size: 0.78rem; display: block; margin-top: 0.35rem;">
-                💬 Escolha a mensagem que será enviada a este cliente na data e horário agendados.
-              </small>
-            </div>
-          </div>
-
-          <!-- SEÇÃO 5: OBSERVAÇÕES -->
+          <!-- SEÇÃO 3: OBSERVAÇÕES -->
           <div class="form-group" style="margin-bottom: 0;">
             <label for="cliNotas" style="color: var(--text-brown-muted); font-size: 0.88rem;"><i class="fa-regular fa-clipboard"></i> Observações / Notas do Cliente</label>
             <textarea id="cliNotas" class="form-control" rows="2" placeholder="Ex: Preferência para renovar no início do mês..." style="background: #090F1D; color: #FFF;"></textarea>
@@ -951,7 +877,7 @@
         <div class="modal-footer" style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1rem;">
           <button type="button" class="btn-secondary" onclick="fecharModalCliente()">Cancelar</button>
           <button type="submit" class="btn-primary" style="font-weight: 800; padding: 0.7rem 1.6rem; font-size: 0.95rem;">
-            <i class="fa-solid fa-floppy-disk"></i> Salvar Cliente e Agendar
+            <i class="fa-solid fa-floppy-disk"></i> Salvar Cliente
           </button>
         </div>
       </form>
@@ -962,7 +888,7 @@
   <div class="modal-overlay" id="modalBaixa">
     <div class="modal-box">
       <div class="modal-header">
-        <h3><i class="fa-solid fa-circle-check" style="color: var(--emerald-primary);"></i> Dar Baixa na Cobrança</h3>
+        <h3><i class="fa-solid fa-circle-check" style="color: var(--emerald-primary);"></i> Dar Baixa na Renovação</h3>
         <button class="modal-close" onclick="fecharModalBaixa()">&times;</button>
       </div>
       <form id="formBaixa">
@@ -971,7 +897,7 @@
           <p style="margin-bottom: 1rem; color: var(--text-brown-muted);">
             Esta ação marcará a cobrança como <strong style="color: var(--emerald-light);">PAGA</strong> e a transferirá para o setor de <strong>Contas Recebidas</strong>.
           </p>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-grid-2" style="margin-bottom: 1rem;">
             <div class="form-group">
               <label for="baixaData"><i class="fa-solid fa-calendar-check" style="color: var(--emerald-primary);"></i> Data do Pagamento *</label>
               <input type="datetime-local" id="baixaData" class="form-control" required>
@@ -1388,6 +1314,6 @@
   </div>
 
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=27.0"></script>
+  <script src="js/app.js?v=65.0"></script>
 </body>
 </html>
