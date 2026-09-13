@@ -133,7 +133,7 @@ const defaultModelosMensagensArray = [
     id: "tpl_renovacao",
     titulo: "🎉 Aviso de Renovação (Baixa Quitada)",
     categoria: "Renovação",
-    mensagem: `🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!* 🚀✨\n\nOlá *{nome}*, confirmamos o recebimento do seu pagamento e a sua assinatura foi renovada com sucesso!\n\n📌 *Resumo da Renovação:*\n💻 *Telas:* {telas}\n💰 *Valor Pago:* {valor}\n📅 *Vencimento Atual:* {vencimento}\n🗓️ *Data do Pagamento:* {data_pagamento}\n🗓️ *Próxima Renovação:* {proximo_vencimento}\n\nAgradecemos a preferência e a confiança! Qualquer dúvida, estamos à disposição no WhatsApp.\n\nEQUIPE: *Gerailton Neves*`,
+    mensagem: `🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!* 🚀✨\n\nOlá *{nome}*, confirmamos o recebimento do seu pagamento e a sua assinatura foi renovada com sucesso!\n\n📌 *Resumo da Renovação:*\n💻 *Telas:* {telas}\n💰 *Valor Pago:* {valor}\n📅 *Vencimento Atual:* {vencimento}\n🗓️ *Próxima Renovação:* {proximo_vencimento}\n\nAgradecemos a preferência e a confiança! Qualquer dúvida, estamos à disposição no WhatsApp.\n\nEQUIPE: *Gerailton Neves*`,
     padrao: true
   },
   {
@@ -141,6 +141,13 @@ const defaultModelosMensagensArray = [
     titulo: "🎁 Promoção: Indique 2 Amigos & Ganhe Mensalidade Grátis",
     categoria: "Promoções",
     mensagem: `🎁 *PROMOÇÃO IMPERDÍVEL: INDIQUE E GANHE MENSALIDADE GRÁTIS!* 🚀\n\nOlá *{nome}*, temos um presente especial para você!\n\nIndique *2 amigos ou parentes* para assinar nossos planos de canais IPTV e *sua próxima mensalidade sairá 100% GRÁTIS!* 💥🎉\n\nComo funciona?\n1️⃣ Indique nossos planos para 2 amigos/familiares.\n2️⃣ Assim que eles ativarem a assinatura, você ganha 1 mês totalmente gratuito!\n\nAproveite essa oportunidade! Qualquer dúvida, conte conosco.\n\nEQUIPE: *Gerailton Neves*`,
+    padrao: true
+  },
+  {
+    id: "tpl_indicacao_desconto",
+    titulo: "🤝 Programa de Indicação (Ganhe Desconto na Próxima Fatura)",
+    categoria: "Indicações",
+    mensagem: `🤝 *PROGRAMA DE INDICAÇÕES: GANHE DESCONTO NA PRÓXIMA FATURA!* 🌟\n\nOlá *{nome}*, sabia que você pode economizar no seu plano?\n\nA cada amigo que você indicar e contratar o nosso serviço, você ganha *R$ 10,00 de desconto acumulativo* na sua próxima renovação! 💰🔥\n\nQuantos mais amigos você indicar, menor será o valor da sua fatura!\n\nFale com a gente e nos envie o nome do seu amigo indicado para garantir o seu desconto.\n\nEQUIPE: *Gerailton Neves*`,
     padrao: true
   }
 ];
