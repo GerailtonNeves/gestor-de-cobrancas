@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GESTOR DE COBRANÇAS - Automação WhatsApp & Financeiro</title>
+  
+  <!-- Favicon & PWA Icons -->
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00ff88">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GestorCob">
+  
+  <!-- CSS Principal -->
+  <link rel="stylesheet" href="css/styles.css?v=71.0">
+  
+  <!-- Icones Remixicon & FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- Chart.js para Gráficos -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Inline Modal Controller Garantia Zero Delay -->
+  <script>
+    window.abrirModal = function(modalId) {
+      const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
+      if (!modal) return;
+      document.querySelectorAll('.modal-overlay').forEach(m => {
+        m.classList.remove('active');
+        m.style.display = 'none';
+        m.style.opacity = '0';
+        m.style.visibility = 'hidden';
+        m.style.pointerEvents = 'none';
+        const b = m.querySelector('.modal-box');
+        if (b) { b.style.opacity = '0'; b.style.visibility = 'hidden'; }
+      });
+      modal.style.setProperty('display', 'flex', 'important');
+      modal.style.setProperty('opacity', '1', 'important');
+      modal.style.setProperty('visibility', 'visible', 'important');
+      modal.style.setProperty('pointer-events', 'auto', 'important');
+      modal.classList.add('active');
+      const box = modal.querySelector('.modal-box');
+      if (box) {
+        box.style.setProperty('display', 'block', 'important');
+        box.style.setProperty('opacity', '1', 'important');
+        box.style.setProperty('visibility', 'visible', 'important');
+        box.style.setProperty('transform', 'translateY(0)', 'important');
+      }
+    };
+
+    window.fecharModal = function(modalId) {
+      const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
+      if (!modal) return;
+      modal.classList.remove('active');
+      modal.style.display = 'none';
+      modal.style.opacity = '0';
+      modal.style.visibility = 'hidden';
+      modal.style.pointerEvents = 'none';
+      const box = modal.querySelector('.modal-box');
+      if (box) box.style.transform = 'translateY(20px)';
+    };
+
+    window.abrirModalNovoPlano = function() {
+      try {
+        const pId = document.getElementById('planoId'); if (pId) pId.value = '';
+        const fPlano = document.getElementById('formPlano'); if (fPlano) fPlano.reset();
+        if (document.getElementById('planoDesconto')) document.getElementById('planoDesconto').value = '0.00';
+        if (typeof calcularValorFinalPlanoModal === 'function') calcularValorFinalPlanoModal();
+      } catch(e) {}
+      window.abrirModal('modalPlano');
+    };
+
+    window.abrirModalNovoApp = function() {
+      try {
+        const aId = document.getElementById('appId'); if (aId) aId.value = '';
+        const fApp = document.getElementById('formApp'); if (fApp) fApp.reset();
+      } catch(e) {}
+      window.abrirModal('modalApp');
+    };
+
+    window.abrirModalNovoServidor = function() {
+      try {
+        const sId = document.getElementById('servidorId'); if (sId) sId.value = '';
+        const fSrv = document.getElementById('formServidor'); if (fSrv) fSrv.reset();
+      } catch(e) {}
+      window.abrirModal('modalServidor');
+    };
+
+    window.abrirModalNovoCliente = function() {
+      try {
+        const cId = document.getElementById('clienteId'); if (cId) cId.value = '';
+        const fCli = document.getElementById('formCliente'); if (fCli) fCli.reset();
+      } catch(e) {}
+      window.abrirModal('modalCliente');
+    };
+
+    window.abrirModalNovaCobranca = function() {
+      try {
+        const cobId = document.getElementById('cobrancaId'); if (cobId) cobId.value = '';
+        const fCob = document.getElementById('formCobranca'); if (fCob) fCob.reset();
+      } catch(e) {}
+      window.abrirModal('modalCobranca');
+    };
+
+    window.fecharModalPlano = function() { window.fecharModal('modalPlano'); };
+    window.fecharModalApp = function() { window.fecharModal('modalApp'); };
+    window.fecharModalServidor = function() { window.fecharModal('modalServidor'); };
+    window.fecharModalCliente = function() { window.fecharModal('modalCliente'); };
+    window.fecharModalCobranca = function() { window.fecharModal('modalCobranca'); };
+  </script>
+</head>
+<body>
+
+  <!-- BANNER PWA DE INSTALAÇÃO NO CELULAR -->
+  <div id="pwaInstallBanner" style="display: none; background: linear-gradient(135deg, rgba(0,255,136,0.18), rgba(0,210,255,0.18)); border: 1px solid var(--emerald-primary); padding: 0.85rem 1.2rem; border-radius: 14px; margin: 0.75rem 1rem 0 1rem; align-items: center; justify-content: space-between; gap: 1rem; box-shadow: 0 4px 20px rgba(0,255,136,0.2); backdrop-filter: blur(10px); animation: fadeIn 0.4s ease;">
+    <div style="display: flex; align-items: center; gap: 0.85rem;">
+      <img src="icon-192.png" alt="App Icon" style="width: 44px; height: 44px; border-radius: 12px; border: 1.5px solid var(--emerald-primary); box-shadow: 0 2px 10px rgba(0,0,0,0.4);">
+      <div>
+        <div style="font-weight: 800; color: #FFF; font-size: 1rem; display: flex; align-items: center; gap: 0.4rem;">
+          <i class="fa-solid fa-mobile-screen-button" style="color: var(--emerald-light);"></i> Instalar o App no Celular
+        </div>
+        <div style="font-size: 0.8rem; color: #CBD5E1; margin-top: 0.1rem;">Instale como aplicativo nativo para acessar rapidamente da tela inicial!</div>
+      </div>
+    </div>
+    <div style="display: flex; gap: 0.5rem; align-items: center; flex-shrink: 0;">
+      <button id="btnPwaInstall" class="btn-success-sm" style="font-weight: 800; padding: 0.55rem 1.1rem; font-size: 0.9rem; border-radius: 8px;">
+        <i class="fa-solid fa-download"></i> Instalar App
+      </button>
+      <button class="btn-danger-sm" style="padding: 0.45rem 0.65rem; border-radius: 8px;" onclick="dismissPwaBanner()" title="Fechar aviso">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Header Mobile -->
+  <header class="mobile-header">
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+      <img src="icon-192.png" alt="Logo" style="width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--emerald-primary);">
+      <span style="font-weight: 800; font-size: 1.1rem; color: #FFF;">GESTOR DE COBRANÇAS</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 0.5rem;">
+      <button id="mobileHeaderInstallBtn" class="btn-success-sm" style="display: none; padding: 0.4rem 0.75rem; font-size: 0.8rem; border-radius: 8px;" onclick="iniciarInstalacaoPwa()">
+        <i class="fa-solid fa-mobile-screen-button"></i> Instalar
+      </button>
+      <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-header">
+        <img src="icon.jpg" alt="Logo Gestor de Cobranças" class="brand-logo-img">
+        <div class="brand-title">
+          GESTOR
+          <span>DE COBRANÇAS</span>
+        </div>
+      </div>
+
+      <ul class="nav-list">
+        <li>
+          <a class="nav-item active" data-tab="dashboard" onclick="switchTab('dashboard')">
+            <i class="fa-solid fa-chart-pie"></i> Dashboard
+          </a>
+        </li>
+
+        <li>
+          <a class="nav-item" data-tab="cobrancas" onclick="switchTab('cobrancas')">
+            <i class="fa-solid fa-file-invoice-dollar"></i> Renovações
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-tab="contas-recebidas" onclick="switchTab('contas-recebidas')">
+            <i class="fa-solid fa-circle-check"></i> Contas Recebidas
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-tab="clientes" onclick="switchTab('clientes')">
+            <i class="fa-solid fa-users"></i> Clientes
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-tab="planos" onclick="switchTab('planos')">
+            <i class="fa-solid fa-layer-group"></i> Planos de Canais
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-tab="apps" onclick="switchTab('apps')">
+            <i class="fa-solid fa-mobile-screen-button"></i> Aplicativos (Apps)
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-tab="servidores" onclick="switchTab('servidores')">
+            <i class="fa-solid fa-server"></i> Servidores & Painéis
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-tab="envios-agendados" onclick="switchTab('envios-agendados')">
+            <i class="fa-brands fa-whatsapp"></i> Envios WhatsApp
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-tab="whatsapp-qr" onclick="switchTab('whatsapp-qr')">
+            <i class="fa-solid fa-qrcode"></i> Conectar WhatsApp (QR)
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-tab="modelos-mensagens" onclick="switchTab('modelos-mensagens')">
+            <i class="fa-solid fa-comment-dots"></i> Modelos de Mensagens
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-tab="meus-dados" onclick="switchTab('meus-dados')">
+            <i class="fa-solid fa-shield-halved"></i> Meus Dados PIX
+          </a>
+        </li>
+      </ul>
+
+      <!-- Botão PWA no Rodapé da Sidebar -->
+      <div style="padding: 0 1rem; margin-bottom: 0.75rem;">
+        <button id="sidebarPwaInstallBtn" class="btn-success-sm" style="width: 100%; justify-content: center; padding: 0.6rem; font-weight: 700; border-radius: 10px; background: linear-gradient(135deg, var(--emerald-primary), #00d2ff); border: none; color: #000;" onclick="iniciarInstalacaoPwa()">
+          <i class="fa-solid fa-mobile-screen-button"></i> 📲 Instalar App no Celular
+        </button>
+      </div>
+
+      <!-- Painel de Dados PIX no Rodapé da Sidebar -->
+      <div class="user-pix-badge">
+        <div class="badge-title"><i class="fa-solid fa-shield-halved"></i> Chave PIX Ativa</div>
+        <div class="badge-value" id="sidebarPixKey">Carregando...</div>
+        <button class="btn-success-sm" style="margin-top: 0.25rem; text-align: center; justify-content: center;" onclick="switchTab('meus-dados')">
+          <i class="fa-solid fa-pen"></i> Alterar Dados
+        </button>
+      </div>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <main class="main-content">
+
+      <!-- ABA 1: DASHBOARD -->
+      <section id="tab-dashboard" class="tab-content active">
+        <div class="page-header">
+          <div>
+            <h1><i class="fa-solid fa-chart-line"></i> Dashboard Financeiro</h1>
+            <p>Visão geral de recebimentos, cobranças pendentes e automações do WhatsApp.</p>
+          </div>
+          <div style="display: flex; gap: 0.65rem; flex-wrap: wrap;">
+            <button class="btn-primary" onclick="abrirModalNovaCobranca()">
+              <i class="fa-solid fa-plus"></i> + Nova Renovação
+            </button>
+            <button class="btn-success-sm" style="padding: 0.6rem 1rem; font-size: 0.88rem; font-weight: 700;" onclick="abrirModalNovoCliente()">
+              <i class="fa-solid fa-user-plus"></i> + Novo Cliente
+            </button>
+            <button class="btn-secondary" style="padding: 0.6rem 1rem; font-size: 0.85rem;" onclick="abrirModalNovoPlano()">
+              <i class="fa-solid fa-tv" style="color: var(--neon-blue);"></i> + Novo Plano
+            </button>
+            <button class="btn-secondary" style="padding: 0.6rem 1rem; font-size: 0.85rem;" onclick="abrirModalNovoApp()">
+              <i class="fa-solid fa-mobile-screen-button" style="color: var(--emerald-light);"></i> + Novo App
+            </button>
+            <button class="btn-secondary" style="padding: 0.6rem 1rem; font-size: 0.85rem;" onclick="abrirModalNovoServidor()">
+              <i class="fa-solid fa-server" style="color: var(--emerald-primary);"></i> + Novo Servidor
+            </button>
+          </div>
+        </div>
+
+        <!-- Métricas Rápidas -->
+        <div class="metrics-grid">
+          <div class="metric-card warning">
+            <div class="metric-info">
+              <h3>Renovações Pendentes</h3>
+              <div class="metric-value" id="dashTotalPendente">R$ 0,00</div>
+            </div>
+            <div class="metric-icon">
+              <i class="fa-solid fa-clock"></i>
+            </div>
+          </div>
+
+          <div class="metric-card success">
+            <div class="metric-info">
+              <h3>Faturamento Confirmado</h3>
+              <div class="metric-value" id="dashTotalRecebido" style="color: var(--emerald-primary);">R$ 0,00</div>
+            </div>
+            <div class="metric-icon">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+          </div>
+
+          <div class="metric-card danger">
+            <div class="metric-info">
+              <h3>Renovações Vencidas</h3>
+              <div class="metric-value" id="dashTotalVencido" style="color: #F87171;">R$ 0,00</div>
+            </div>
+            <div class="metric-icon">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+          </div>
+
+          <div class="metric-card info">
+            <div class="metric-info">
+              <h3>Envios Programados</h3>
+              <div class="metric-value" id="dashTotalAgendados">0</div>
+            </div>
+            <div class="metric-icon">
+              <i class="fa-brands fa-whatsapp"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gráfico e Resumo -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+          <div class="glass-panel">
+            <div class="panel-header">
+              <div class="panel-title"><i class="fa-solid fa-chart-bar"></i> Distribuição de Valores (R$)</div>
+            </div>
+            <div style="height: 280px; position: relative;">
+              <canvas id="financeChart"></canvas>
+            </div>
+          </div>
+
+          <div class="glass-panel">
+            <div class="panel-header">
+              <div class="panel-title"><i class="fa-solid fa-bell"></i> Próximos Envios de WhatsApp</div>
+              <button class="btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" onclick="switchTab('envios-agendados')">Ver Todos</button>
+            </div>
+            <div id="dashProximosEnviosList">
+              <!-- Renderizado via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+      <!-- ABA 2: COBRANÇAS -->
+      <section id="tab-cobrancas" class="tab-content" style="display: none;">
+        <div class="page-header">
+          <div>
+            <h1><i class="fa-solid fa-file-invoice-dollar"></i> Renovações Cadastradas</h1>
+            <p>Gerencie todas as renovações, envie notificações pelo WhatsApp e dê baixa no recebimento.</p>
+          </div>
+          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <!-- TOGGLE DE VISUALIZAÇÃO: TABELA / CARDS -->
+            <div style="display: flex; background: var(--bg-card); padding: 0.25rem; border-radius: 10px; border: 1px solid var(--border-color);">
+              <button id="btnViewCobrancasTable" class="btn-secondary active" style="padding: 0.35rem 0.75rem; font-size: 0.85rem;" onclick="setCobrancasViewMode('table')">
+                <i class="fa-solid fa-list"></i> Tabela
+              </button>
+              <button id="btnViewCobrancasCards" class="btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.85rem;" onclick="setCobrancasViewMode('cards')">
+                <i class="fa-solid fa-border-all"></i> Cards
+              </button>
+            </div>
+
+            <button type="button" class="btn-whatsapp-sm" style="padding: 0.55rem 1rem; font-size: 0.88rem;" onclick="abrirModalDispararModelo()">
+              <i class="fa-solid fa-paper-plane"></i> 🚀 Escolher & Disparar Mensagem
+            </button>
+            <button class="btn-primary" onclick="abrirModalNovaCobranca()">
+              <i class="fa-solid fa-plus"></i> Cadastrar Renovação
+            </button>
+          </div>
+        </div>
+
+        <!-- MODO 1: TABELA DE COBRANÇAS -->
+        <div id="cobrancasTableView" class="glass-panel">
+          <div class="panel-header">
+            <div class="panel-title"><i class="fa-solid fa-list-check"></i> Lista de Renovações</div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <input type="text" id="filterCobrancas" class="form-control" placeholder="Buscar por cliente ou descrição..." style="width: 250px; font-size: 0.85rem;" oninput="filtrarTabelaCobrancas()">
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="custom-table" id="cobrancasTable">
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Valor</th>
+                  <th>Vencimento</th>
+                  <th><i class="fa-brands fa-whatsapp" style="color: var(--emerald-primary);"></i> Data e Horário de Envio</th>
+                  <th>Descrição</th>
+                  <th>Status</th>
+                  <th style="text-align: right;">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="cobrancasTableBody">
+                <!-- Renderizado dinamicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- MODO 2: CARDS DE COBRANÇAS -->
+        <div id="cobrancasCardsView" style="display: none;">
+          <div id="cobrancasCardsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+            <!-- Renderizado dinamicamente via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ABA 3: CONTAS RECEBIDAS -->
+      <section id="tab-contas-recebidas" class="tab-content" style="display: none;">
+        <div class="page-header">
+          <div>
+            <h1><i class="fa-solid fa-hand-holding-dollar"></i> Contas Recebidas (Histórico de Baixas)</h1>
+            <p>Relatório completo de todas as cobranças quitadas pelos clientes.</p>
+          </div>
+          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <!-- TOGGLE DE VISUALIZAÇÃO: TABELA / CARDS -->
+            <div style="display: flex; background: var(--bg-card); padding: 0.25rem; border-radius: 10px; border: 1px solid var(--border-color);">
+              <button id="btnViewContasRecebidasTable" class="btn-secondary active" style="padding: 0.35rem 0.75rem; font-size: 0.85rem;" onclick="setContasRecebidasViewMode('table')">
+                <i class="fa-solid fa-list"></i> Tabela
+              </button>
+              <button id="btnViewContasRecebidasCards" class="btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.85rem;" onclick="setContasRecebidasViewMode('cards')">
+                <i class="fa-solid fa-border-all"></i> Cards
+              </button>
+            </div>
+
+            <div class="metric-card" style="padding: 0.5rem 1.25rem; min-width: 200px;">
+              <div class="metric-info">
+                <h3 style="margin: 0; font-size: 0.75rem;">Total Quitados</h3>
+                <div class="metric-value" id="totalContasRecebidasVal" style="color: var(--emerald-light); font-size: 1.25rem;">R$ 0,00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODO 1: TABELA DE CONTAS RECEBIDAS -->
+        <div id="contasRecebidasTableView" class="glass-panel">
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Valor Pago</th>
+                  <th>Data Vencimento</th>
+                  <th>Data de Recebimento</th>
+                  <th>Próximo Vencimento</th>
+                  <th>Descrição</th>
+                  <th style="text-align: right;">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="contasRecebidasTableBody">
+                <!-- Renderizado dinamicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- MODO 2: CARDS DE CONTAS RECEBIDAS -->
+        <div id="contasRecebidasCardsView" style="display: none;">
+          <div id="contasRecebidasCardsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+            <!-- Renderizado dinamicamente via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ABA 4: CLIENTES -->
+      <section id="tab-clientes" class="tab-content" style="display: none;">
+        <div class="page-header">
+          <div>
+            <h1><i class="fa-solid fa-users"></i> Cadastro de Clientes</h1>
+            <p>Gerencie seus clientes, visualize em lista ou em cards visuais, e atribua planos, servidores e apps.</p>
+          </div>
+          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <!-- TOGGLE DE VISUALIZAÇÃO: LISTA / CARDS -->
+            <div style="display: flex; background: var(--bg-card); padding: 0.25rem; border-radius: 10px; border: 1px solid var(--border-color);">
+              <button id="btnViewClientesTable" class="btn-secondary active" style="padding: 0.35rem 0.75rem; font-size: 0.85rem;" onclick="setClientesViewMode('table')">
+                <i class="fa-solid fa-list"></i> Tabela
+              </button>
+              <button id="btnViewClientesCards" class="btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.85rem;" onclick="setClientesViewMode('cards')">
+                <i class="fa-solid fa-border-all"></i> Cards
+              </button>
+            </div>
+
+            <button type="button" class="btn-whatsapp-sm" style="padding: 0.55rem 1rem; font-size: 0.88rem;" onclick="abrirModalDispararModelo()">
+              <i class="fa-solid fa-paper-plane"></i> 🚀 Escolher & Disparar Mensagem
+            </button>
+            <button class="btn-primary" onclick="abrirModalNovoCliente()">
+              <i class="fa-solid fa-user-plus"></i> Novo Cliente
+            </button>
+          </div>
+        </div>
+
+        <!-- MODO 1: TABELA DE CLIENTES -->
+        <div id="clientesTableView" class="glass-panel">
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Nome do Cliente</th>
+                  <th>WhatsApp</th>
+                  <th>Status do Plano</th>
+                  <th>Plano Contratado</th>
+                  <th>Servidor</th>
+                  <th>App</th>
+                  <th>Modelo de Mensagem</th>
+                  <th>Observações</th>
+                  <th style="text-align: right;">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="clientesTableBody">
+                <!-- Renderizado dinamicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- MODO 2: CARDS DE CLIENTES -->
+        <div id="clientesCardsView" style="display: none;">
+          <div id="clientesCardsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+            <!-- Renderizado dinamicamente em cards estilo Cyberpunk/Neon -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ABA 5: ENVIOS AGENDADOS WHATSAPP -->
+      <section id="tab-envios-agendados" class="tab-content" style="display: none;">
+        <div class="page-header">
+          <div>
+            <h1><i class="fa-brands fa-whatsapp"></i> Envios Programados no WhatsApp</h1>
+            <p>Monitoramento automático em tempo real das mensagens agendadas por data e hora.</p>
+          </div>
+        </div>
+
+        <div class="glass-panel">
+          <div class="panel-header">
+            <div class="panel-title"><i class="fa-solid fa-clock"></i> Fila de Disparo Automático</div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>WhatsApp</th>
+                  <th>Valor</th>
+                  <th>Data/Hora de Disparo</th>
+                  <th>Status do Envio</th>
+                  <th style="text-align: right;">Ação Manual</th>
+                </tr>
+              </thead>
+              <tbody id="enviosTableBody">
+                <!-- Renderizado dinamicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABA 6: CONECTAR WHATSAPP (QR CODE) -->
+      <section id="tab-whatsapp-qr" class="tab-content" style="display: none;">
+        <div class="page-header">
+          <div>
+            <h1><i class="fa-solid fa-qrcode" style="color: var(--emerald-primary);"></i> Conectar WhatsApp (Envio 100% Automático)</h1>
+            <p>Escaneie o QR Code abaixo com o WhatsApp do seu celular para ativar os disparos automáticos.</p>
+          </div>
+        </div>
+
+        <div class="glass-panel" style="max-width: 650px; text-align: center; margin: 0 auto;">
+          <div id="waStatusContainer" style="margin-bottom: 1.5rem;">
+            <div id="waStatusBadge" class="badge" style="font-size: 1rem; padding: 0.5rem 1rem;">
+              <i class="fa-solid fa-spinner fa-spin"></i> Verificando status do WhatsApp...
+            </div>
+          </div>
+
+          <div id="waQrCodeBox" style="background: #FFFFFF; padding: 1.5rem; border-radius: 16px; display: inline-block; box-shadow: 0 0 25px rgba(16, 185, 129, 0.3); margin-bottom: 1.5rem;">
+            <img id="waQrCodeImg" src="" alt="QR Code WhatsApp" style="width: 250px; height: 250px; display: none;">
+            <div id="waConnectedInfo" style="display: none; color: #000000;">
+              <i class="fa-solid fa-circle-check" style="font-size: 4rem; color: #10B981; margin-bottom: 0.5rem;"></i>
+              <h3 style="font-size: 1.25rem; font-weight: 800;">WhatsApp Conectado!</h3>
+              <p style="font-size: 0.9rem; color: #4B5563;" id="waUserNumberText"></p>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px; border: 1px solid var(--border-color); text-align: left; margin-bottom: 1.5rem;">
+            <h4 style="color: var(--emerald-light); font-size: 1rem; margin-bottom: 0.5rem;"><i class="fa-solid fa-circle-info"></i> Como funciona o Envio Automático:</h4>
+            <ol style="color: var(--text-brown-muted); font-size: 0.9rem; padding-left: 1.25rem; line-height: 1.6;">
+              <li>Abra o WhatsApp no seu celular.</li>
+              <li>Acesse <strong>Menu (3 pontos)</strong> ou <strong>Configurações</strong> &gt; <strong>Dispositivos Conectados</strong>.</li>
+              <li>Toque em <strong>Conectar um dispositivo</strong> e aponte a câmera para o QR Code acima.</li>
+              <li>Pronto! Na data e horário que você cadastrar a cobrança, o robô enviará a mensagem de cobrança <strong>diretamente para o WhatsApp do cliente de forma 100% automática</strong>.</li>
+            </ol>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <button class="btn-primary" onclick="reconectarWhatsApp()" style="justify-content: center; width: 100%;">
+              <i class="fa-solid fa-rotate-right"></i> Gerar Novo QR Code / Reconectar
+            </button>
+            <button class="btn-whatsapp-sm" onclick="testarEnvioWhatsApp()" style="justify-content: center; width: 100%; font-size: 0.95rem; padding: 0.75rem;">
+              <i class="fa-solid fa-paper-plane"></i> 🚀 Testar Envio de Mensagem pelo Robô Agora
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABA 7: MEUS DADOS PIX / RECEBIMENTO -->
+      <section id="tab-meus-dados" class="tab-content" style="display: none;">
+        <div class="page-header">
+          <div>
+            <h1><i class="fa-solid fa-qrcode"></i> Meus Dados de Recebimento (PIX)</h1>
+            <p>Configure suas informações para que os clientes realizem o pagamento diretamente para você.</p>
+          </div>
+        </div>
+
+        <div class="glass-panel" style="max-width: 700px;">
+          <form id="formMeusDados">
+            <div class="form-group">
+              <label for="pixNomeTitular"><i class="fa-solid fa-user"></i> Nome do Titular / Razão Social</label>
+              <input type="text" id="pixNomeTitular" class="form-control" placeholder="Ex: João da Silva ME / Minha Empresa" required>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1rem;">
+              <div class="form-group">
+                <label for="pixTipoChave"><i class="fa-solid fa-key"></i> Tipo da Chave</label>
+                <select id="pixTipoChave" class="form-control">
+                  <option value="CPF/CNPJ">CPF / CNPJ</option>
+                  <option value="Celular">Celular (WhatsApp)</option>
+                  <option value="E-mail">E-mail</option>
+                  <option value="Aleatoria">Chave Aleatória</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="pixChave"><i class="fa-solid fa-qrcode"></i> Chave PIX</label>
+                <input type="text" id="pixChave" class="form-control" placeholder="Cole ou digite aqui sua chave PIX" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="pixBanco"><i class="fa-solid fa-building-columns"></i> Banco / Instituição Financeira</label>
+              <input type="text" id="pixBanco" class="form-control" placeholder="Ex: Banco Nubank, Itaú, Banco do Brasil">
+            </div>
+
+            <div class="form-group">
+              <label for="pixInstrucoes"><i class="fa-solid fa-comment-dots"></i> Mensagem / Instruções para o Cliente</label>
+              <textarea id="pixInstrucoes" class="form-control" rows="3" placeholder="Ex: Após efetuar o pagamento via PIX, favor responder este mensagem anexando o comprovante."></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+              <i class="fa-solid fa-floppy-disk"></i> Salvar Meus Dados de Recebimento
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ABA 9: MODELOS DE MENSAGENS EDITÁVEIS -->
+      <section id="tab-modelos-mensagens" class="tab-content" style="display: none;">
+        <div class="page-header">
+          <div>
+            <h1><i class="fa-solid fa-comment-dots" style="color: var(--neon-blue);"></i> Modelos de Mensagens Personalizáveis</h1>
+            <p>Gerencie, crie e edite seus modelos de mensagens e escolha qual enviar para cada cliente no WhatsApp.</p>
+          </div>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <button type="button" class="btn-primary" onclick="abrirModalNovoModelo()">
+              <i class="fa-solid fa-plus"></i> + Criar Novo Modelo
+            </button>
+            <button type="button" class="btn-whatsapp-sm" style="padding: 0.6rem 1rem; font-size: 0.9rem;" onclick="abrirModalDispararModelo()">
+              <i class="fa-solid fa-paper-plane"></i> 🚀 Escolher & Disparar Mensagem
+            </button>
+            <button type="button" class="btn-secondary" style="padding: 0.6rem 1rem; font-size: 0.9rem;" onclick="abrirModalPromocao()">
+              <i class="fa-solid fa-gift"></i> Promoção Indique 2 Amigos
+            </button>
+          </div>
+        </div>
+
+        <!-- Tags / Variáveis Disponíveis -->
+        <div class="glass-panel" style="margin-bottom: 1.5rem; border-left: 4px solid var(--neon-blue);">
+          <h4 style="color: #FFF; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fa-solid fa-tags" style="color: var(--neon-green);"></i> Variáveis Dinâmicas de Preenchimento Automático (Clique para inserir):
+          </h4>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;" id="tagChipsContainer">
+            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{nome}')"><code>{nome}</code> - Nome do Cliente</span>
+            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{plano}')"><code>{plano}</code> - Nome do Plano</span>
+            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{telas}')"><code>{telas}</code> - Qtd. de Telas</span>
+            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{valor_bruto}')"><code>{valor_bruto}</code> - Valor Bruto (Sem Desc.)</span>
+            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{desconto}')"><code>{desconto}</code> - Desconto Abatido</span>
+            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{valor}')"><code>{valor}</code> - Valor Final a Pagar</span>
+            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{vencimento}')"><code>{vencimento}</code> - Data do Vencimento</span>
+            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{proximo_vencimento}')"><code>{proximo_vencimento}</code> - Próximo Vencimento</span>
+            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{data_pagamento}')"><code>{data_pagamento}</code> - Data de Pagamento</span>
+            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{descricao}')"><code>{descricao}</code> - Descrição do Plano</span>
+            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{pix_chave}')"><code>{pix_chave}</code> - Chave PIX</span>
+            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{pix_banco}')"><code>{pix_banco}</code> - Banco do PIX</span>
+            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{pix_titular}')"><code>{pix_titular}</code> - Titular do PIX</span>
+            <span class="badge badge-agendado" style="cursor: pointer;" onclick="insertTagIntoActiveTextarea('{equipe}')"><code>{equipe}</code> - Nome da Equipe</span>
+          </div>
+        </div>
+
+        <!-- GRID DE CARDS DOS MODELOS DE MENSAGENS -->
+        <div id="modelosCardsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 1.5rem;">
+          <!-- Renderizado dinamicamente pelo JS -->
+        </div>
+      </section>
+
+      <!-- ABA 1: PLANOS DE CANAIS IPTV -->
+      <section id="tab-planos" class="tab-content" style="display: none;">
+        <div class="page-header">
+          <div>
+            <h1><i class="fa-solid fa-layer-group" style="color: var(--neon-blue);"></i> Gestão de Planos de Canais</h1>
+            <p>Cadastre, edite e organize seus planos de canais com telas, valores e renovações.</p>
+          </div>
+          <div>
+            <button type="button" id="btnNovoPlano" class="btn-primary" onclick="if (typeof abrirModalNovoPlano === 'function') { abrirModalNovoPlano(); } else { abrirModal('modalPlano'); }">
+              <i class="fa-solid fa-plus"></i> + Cadastrar Novo Plano
+            </button>
+          </div>
+        </div>
+
+        <!-- BARRA DE PESQUISA & FILTRO -->
+        <div class="glass-panel" style="margin-bottom: 1.5rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 260px; position: relative;">
+            <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--neon-blue);"></i>
+            <input type="text" id="filterPlanosInput" class="form-control" style="padding-left: 2.5rem;" placeholder="Buscar plano por nome, categoria ou telas..." oninput="filtrarPlanos()">
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-brown-muted); font-weight: 700;">
+            <i class="fa-solid fa-tv" style="color: var(--neon-green);"></i> Total: <span id="statTotalPlanosCount" style="color: #FFF;">0</span> Planos Cadastrados
+          </div>
+        </div>
+
+        <!-- GRID DE CARDS DOS PLANOS -->
+        <div id="planosCardsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+          <!-- Renderizado dinamicamente pelo JS -->
+        </div>
+      </section>
+
+      <!-- ABA 2: APLICATIVOS (APPS) IPTV -->
+      <section id="tab-apps" class="tab-content" style="display: none;">
+        <div class="page-header">
+          <div>
+            <h1><i class="fa-solid fa-mobile-screen-button" style="color: var(--neon-blue);"></i> Gestão de Aplicativos (Apps)</h1>
+            <p>Cadastre os aplicativos e players que você disponibiliza para os seus clientes.</p>
+          </div>
+          <div>
+            <button type="button" id="btnNovoApp" class="btn-primary" style="background: linear-gradient(135deg, var(--neon-blue), #3b82f6); color: #fff;" onclick="if (typeof abrirModalNovoApp === 'function') { abrirModalNovoApp(); } else { abrirModal('modalApp'); }">
+              <i class="fa-solid fa-plus"></i> + Cadastrar Novo App
+            </button>
+          </div>
+        </div>
+
+        <!-- BARRA DE PESQUISA & FILTRO -->
+        <div class="glass-panel" style="margin-bottom: 1.5rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 260px; position: relative;">
+            <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--neon-blue);"></i>
+            <input type="text" id="filterAppsInput" class="form-control" style="padding-left: 2.5rem;" placeholder="Buscar aplicativo por nome ou plataforma..." oninput="filtrarApps()">
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-brown-muted); font-weight: 700;">
+            <i class="fa-solid fa-mobile-screen-button" style="color: var(--neon-blue);"></i> Total: <span id="statTotalAppsCount" style="color: #FFF;">0</span> Apps Cadastrados
+          </div>
+        </div>
+
+        <!-- GRID DE CARDS DOS APPS -->
+        <div id="appsCardsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+          <!-- Renderizado dinamicamente pelo JS -->
+        </div>
+      </section>
+
+      <!-- ABA 3: SERVIDORES & PAINÉIS -->
+      <section id="tab-servidores" class="tab-content" style="display: none;">
+        <div class="page-header">
+          <div>
+            <h1><i class="fa-solid fa-server" style="color: var(--emerald-primary);"></i> Servidores & Painéis de Transmissão</h1>
+            <p>Gerencie seus servidores e painéis de revenda para vincular aos clientes.</p>
+          </div>
+          <div>
+            <button type="button" id="btnNovoServidor" class="btn-primary" style="background: linear-gradient(135deg, var(--emerald-primary), #10b981); color: #000; font-weight: 800;" onclick="if (typeof abrirModalNovoServidor === 'function') { abrirModalNovoServidor(); } else { abrirModal('modalServidor'); }">
+              <i class="fa-solid fa-plus"></i> + Cadastrar Novo Servidor
+            </button>
+          </div>
+        </div>
+
+        <!-- BARRA DE PESQUISA & FILTRO -->
+        <div class="glass-panel" style="margin-bottom: 1.5rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 260px; position: relative;">
+            <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--emerald-primary);"></i>
+            <input type="text" id="filterServidoresInput" class="form-control" style="padding-left: 2.5rem;" placeholder="Buscar servidor por nome ou tipo..." oninput="filtrarServidores()">
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-brown-muted); font-weight: 700;">
+            <i class="fa-solid fa-server" style="color: var(--emerald-light);"></i> Total: <span id="statTotalServidoresCount" style="color: #FFF;">0</span> Servidores Cadastrados
+          </div>
+        </div>
+
+        <!-- GRID DE CARDS DOS SERVIDORES -->
+        <div id="servidoresCardsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+          <!-- Renderizado dinamicamente pelo JS -->
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL: NOVA COBRANÇA / EDITAR -->
+  <div class="modal-overlay" id="modalCobranca">
+    <div class="modal-box" style="max-width: 650px;">
+      <div class="modal-header">
+        <h3 id="modalCobrancaTitle"><i class="fa-solid fa-plus-circle"></i> Cadastrar Nova Renovação</h3>
+        <button class="modal-close" onclick="fecharModalCobranca()">&times;</button>
+      </div>
+      <form id="formCobranca">
+        <input type="hidden" id="cobrancaId">
+        <div class="modal-body">
+          
+          <!-- SELEÇÃO DE CLIENTE COM BOTÃO + NOVO CLIENTE -->
+          <div class="form-group">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+              <label for="cobClienteId" style="margin: 0;">Cliente *</label>
+              <button type="button" class="btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.55rem;" onclick="abrirModalNovoCliente()">
+                <i class="fa-solid fa-user-plus" style="color: var(--neon-blue);"></i> + Cadastrar Novo Cliente
+              </button>
+            </div>
+            <select id="cobClienteId" class="form-control" required>
+              <option value="">-- Selecione o Cliente --</option>
+            </select>
+          </div>
+
+          <!-- PAINEL DE DADOS DO PLANO ESCOLHIDO PELO CLIENTE -->
+          <div style="background: rgba(0, 240, 255, 0.05); padding: 1rem; border-radius: 12px; border: 1px dashed var(--neon-blue); margin-bottom: 1rem;">
+            <h4 style="font-size: 0.85rem; color: var(--neon-blue); margin-bottom: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between;">
+              <span><i class="fa-solid fa-tv"></i> Plano Escolhido pelo Cliente</span>
+              <span style="font-size: 0.75rem; color: var(--text-brown-muted); font-weight: 400;">Preenchimento automático</span>
+            </h4>
+
+            <div class="form-group">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                <label for="cobPlanoId" style="margin: 0;"><i class="fa-solid fa-tag"></i> Plano de Canais</label>
+                <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoPlano()">
+                  <i class="fa-solid fa-plus"></i> + Novo Plano
+                </button>
+              </div>
+              <select id="cobPlanoId" class="form-control" onchange="calcularValorCobComDesconto()">
+                <option value="">-- Selecione o Plano --</option>
+              </select>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                  <label for="cobServidorId" style="margin: 0;"><i class="fa-solid fa-server"></i> Servidor</label>
+                  <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoServidor()">
+                    <i class="fa-solid fa-plus"></i> + Servidor
+                  </button>
+                </div>
+                <select id="cobServidorId" class="form-control">
+                  <option value="">-- Nenhum Servidor --</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                  <label for="cobAppId" style="margin: 0;"><i class="fa-solid fa-mobile-screen-button"></i> Aplicativo / App</label>
+                  <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoApp()">
+                    <i class="fa-solid fa-plus"></i> + App
+                  </button>
+                </div>
+                <select id="cobAppId" class="form-control">
+                  <option value="">-- Nenhum App --</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- VALOR DO PLANO, TELAS, DESCONTO E VALOR FINAL A COBRAR -->
+          <div style="background: rgba(0, 0, 0, 0.25); padding: 0.9rem; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 1rem;">
+            <div class="form-grid-4">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="cobQtdTelas" style="font-size: 0.8rem; color: var(--neon-blue); font-weight: 700;"><i class="fa-solid fa-desktop"></i> Qtd. Telas</label>
+                <select id="cobQtdTelas" class="form-control" onchange="calcularValorCobComDesconto()">
+                  <option value="1">1 Tela</option>
+                  <option value="2">2 Telas</option>
+                  <option value="3">3 Telas</option>
+                  <option value="4">4 Telas</option>
+                  <option value="5">5 Telas</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="cobValorBruto" style="font-size: 0.8rem;"><i class="fa-solid fa-tag"></i> Valor Bruto (R$)</label>
+                <input type="number" step="0.01" id="cobValorBruto" class="form-control" placeholder="0.00" oninput="calcularValorCobComDesconto()">
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="cobDesconto" style="font-size: 0.8rem; color: var(--neon-pink);"><i class="fa-solid fa-percent"></i> Desconto (R$)</label>
+                <input type="number" step="0.01" id="cobDesconto" class="form-control" placeholder="0.00" value="0.00" oninput="calcularValorCobComDesconto()">
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="cobValor" style="font-size: 0.8rem; color: var(--neon-green); font-weight: 700;"><i class="fa-solid fa-calculator"></i> Valor Final (R$) *</label>
+                <input type="number" step="0.01" id="cobValor" class="form-control" placeholder="0.00" required oninput="calcularDeValorFinalCob()" style="border-color: var(--neon-green); background: rgba(0, 255, 136, 0.08); font-weight: 700; color: #FFF;">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="cobVencimento">Data de Vencimento *</label>
+            <input type="date" id="cobVencimento" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="cobDataHoraEnvio"><i class="fa-brands fa-whatsapp" style="color: var(--emerald-primary);"></i> Data e Hora para Envio Automático no WhatsApp *</label>
+            <input type="datetime-local" id="cobDataHoraEnvio" class="form-control" required>
+          </div>
+
+          <input type="hidden" id="cobDescricao" value="SEU PLANO DE CANAIS O VENCIMENTO É HOJE RENOVE PARA NÃO FICAR SEM ASSISTIR !">
+
+          <div class="form-group">
+            <label for="cobModeloId"><i class="fa-solid fa-comment-dots" style="color: var(--neon-blue);"></i> Modelo de Mensagem do WhatsApp</label>
+            <select id="cobModeloId" class="form-control">
+              <option value="">-- Seleção Automática (Padrão do Sistema) --</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="fecharModalCobranca()">Cancelar</button>
+          <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i> Salvar Renovação</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: NOVO CLIENTE / EDITAR -->
+  <div class="modal-overlay" id="modalCliente">
+    <div class="modal-box" style="max-width: 680px;">
+      <div class="modal-header" style="border-bottom: 2px solid rgba(0, 240, 255, 0.2); padding-bottom: 0.85rem;">
+        <h3 id="modalClienteTitle" style="color: #FFF; font-weight: 800; display: flex; align-items: center; gap: 0.6rem;">
+          <i class="fa-solid fa-user-plus" style="color: var(--neon-blue);"></i> Cadastrar Cliente
+        </h3>
+        <button class="modal-close" onclick="fecharModalCliente()">&times;</button>
+      </div>
+      <form id="formCliente">
+        <input type="hidden" id="clienteId">
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 1.1rem; padding-top: 1rem;">
+          
+          <!-- SEÇÃO 1: DADOS PESSOAIS & CONTATO -->
+          <div style="background: rgba(13, 21, 39, 0.6); padding: 1.1rem; border-radius: 14px; border: 1px solid rgba(0, 240, 255, 0.25); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);">
+            <h4 style="font-size: 0.95rem; color: var(--neon-blue); margin-bottom: 0.85rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-address-card" style="font-size: 1.1rem;"></i> 1. Dados de Identificação & Contato
+            </h4>
+
+            <div class="form-group" style="margin-bottom: 0.85rem;">
+              <label for="cliNome" style="font-weight: 700; color: #FFF;"><i class="fa-solid fa-user"></i> Nome Completo do Cliente *</label>
+              <input type="text" id="cliNome" class="form-control" placeholder="Ex: Carlos Eduardo Silva" required style="background: #090F1D; border-color: rgba(0, 240, 255, 0.3); color: #FFF;">
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="cliTelefone" style="font-weight: 700; color: var(--emerald-light);"><i class="fa-brands fa-whatsapp"></i> WhatsApp (DDD + Número) *</label>
+                <input type="text" id="cliTelefone" class="form-control" placeholder="Ex: 5581999887766" required style="background: #090F1D; border-color: var(--emerald-primary); color: #FFF;">
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="cliEmail" style="color: var(--text-brown-muted);"><i class="fa-regular fa-envelope"></i> E-mail (Opcional)</label>
+                <input type="email" id="cliEmail" class="form-control" placeholder="cliente@email.com" style="background: #090F1D; color: #FFF;">
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ATRIBUIÇÃO DE PLANO & SERVIÇOS -->
+          <div style="background: rgba(0, 240, 255, 0.04); padding: 1.1rem; border-radius: 14px; border: 1px solid var(--neon-blue); box-shadow: 0 4px 15px rgba(0, 240, 255, 0.08);">
+            <h4 style="font-size: 0.95rem; color: var(--neon-blue); margin-bottom: 0.85rem; font-weight: 800; display: flex; align-items: center; justify-content: space-between;">
+              <span><i class="fa-solid fa-tv"></i> 2. Plano de Canais, Servidor & App</span>
+              <span class="badge badge-agendado" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;"><i class="fa-solid fa-bolt"></i> Preenchimento Automático</span>
+            </h4>
+
+            <div class="form-group" style="margin-bottom: 0.85rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                <label for="cliPlanoId" style="font-weight: 700; color: #FFF; margin: 0;"><i class="fa-solid fa-tag" style="color: var(--neon-blue);"></i> Escolha o Plano de Canais</label>
+                <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoPlano()">
+                  <i class="fa-solid fa-plus"></i> + Novo Plano
+                </button>
+              </div>
+              <select id="cliPlanoId" class="form-control" onchange="autoPreencherPlanoCliente()" style="background: #0D1527; border: 1px solid var(--neon-blue); color: #FFF; font-weight: 700;">
+                <option value="">-- Selecione o Plano --</option>
+              </select>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group" style="margin-bottom: 0;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                  <label for="cliServidorId" style="font-weight: 600; color: #E2E8F0; margin: 0;"><i class="fa-solid fa-server" style="color: var(--neon-blue);"></i> Servidor / Painel</label>
+                  <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoServidor()">
+                    <i class="fa-solid fa-plus"></i> + Servidor
+                  </button>
+                </div>
+                <select id="cliServidorId" class="form-control" style="background: #090F1D; color: #FFF;">
+                  <option value="">-- Nenhum Servidor --</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                  <label for="cliAppId" style="font-weight: 600; color: #E2E8F0; margin: 0;"><i class="fa-solid fa-mobile-screen-button" style="color: var(--emerald-light);"></i> Aplicativo / App</label>
+                  <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoApp()">
+                    <i class="fa-solid fa-plus"></i> + App
+                  </button>
+                </div>
+                <select id="cliAppId" class="form-control" style="background: #090F1D; color: #FFF;">
+                  <option value="">-- Nenhum App --</option>
+                </select>
+              </div>
+            </div>
+          <!-- SEÇÃO 3: OBSERVAÇÕES -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="cliNotas" style="color: var(--text-brown-muted); font-size: 0.88rem;"><i class="fa-regular fa-clipboard"></i> Observações / Notas do Cliente</label>
+            <textarea id="cliNotas" class="form-control" rows="2" placeholder="Ex: Preferência para renovar no início do mês..." style="background: #090F1D; color: #FFF;"></textarea>
+          </div>
+
+        </div>
+        <div class="modal-footer" style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1rem;">
+          <button type="button" class="btn-secondary" onclick="fecharModalCliente()">Cancelar</button>
+          <button type="submit" class="btn-primary" style="font-weight: 800; padding: 0.7rem 1.6rem; font-size: 0.95rem;">
+            <i class="fa-solid fa-floppy-disk"></i> Salvar Cliente
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: DAR BAIXA EM COBRANÇA -->
+  <div class="modal-overlay" id="modalBaixa">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-circle-check" style="color: var(--emerald-primary);"></i> Dar Baixa na Renovação</h3>
+        <button class="modal-close" onclick="fecharModalBaixa()">&times;</button>
+      </div>
+      <form id="formBaixa">
+        <input type="hidden" id="baixaCobrancaId">
+        <div class="modal-body">
+          <p style="margin-bottom: 1rem; color: var(--text-brown-muted);">
+            Esta ação marcará a cobrança como <strong style="color: var(--emerald-light);">PAGA</strong> e a transferirá para o setor de <strong>Contas Recebidas</strong>.
+          </p>
+          <div class="form-grid-2" style="margin-bottom: 1rem;">
+            <div class="form-group">
+              <label for="baixaData"><i class="fa-solid fa-calendar-check" style="color: var(--emerald-primary);"></i> Data do Pagamento *</label>
+              <input type="datetime-local" id="baixaData" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="baixaProximoVencimento"><i class="fa-solid fa-calendar-plus" style="color: var(--neon-blue);"></i> Próximo Vencimento do Plano *</label>
+              <input type="date" id="baixaProximoVencimento" class="form-control" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="baixaObservacao">Observações / Comprovante</label>
+            <textarea id="baixaObservacao" class="form-control" rows="2" placeholder="Ex: Confirmado via PIX na conta do Nubank"></textarea>
+          </div>
+          <div class="form-group" style="background: var(--bg-card); padding: 0.85rem; border-radius: 10px; border: 1px dashed var(--neon-blue); display: flex; align-items: center; gap: 0.65rem;">
+            <input type="checkbox" id="baixaEnviarWhatsApp" checked style="width: 18px; height: 18px; accent-color: var(--emerald-primary); cursor: pointer;">
+            <label for="baixaEnviarWhatsApp" style="margin: 0; cursor: pointer; color: #FFF; font-size: 0.85rem;">
+              <i class="fa-brands fa-whatsapp" style="color: var(--emerald-primary);"></i> Enviar mensagem de <strong>confirmação e renovação de plano</strong> no WhatsApp do cliente
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="fecharModalBaixa()">Cancelar</button>
+          <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i> Confirmar Baixa</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- MODAL: DISPARAR PROMOÇÃO DE INDICAÇÃO -->
+  <div class="modal-overlay" id="modalPromocao">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-gift" style="color: #FFD700;"></i> Disparar Promoção de Indicação</h3>
+        <button class="modal-close" onclick="fecharModalPromocao()">&times;</button>
+      </div>
+      <form id="formDispararPromocao">
+        <div class="modal-body">
+          <p style="font-size: 0.9rem; color: var(--text-brown-muted); margin-bottom: 1.25rem;">
+            Envie a mensagem de <strong>"Indique 2 Parentes ou Amigos e Ganhe 1 Mensalidade Grátis"</strong> diretamente pelo WhatsApp.
+          </p>
+
+          <div class="form-group">
+            <label>Público Alvo do Disparo:</label>
+            <select id="promoTargetType" class="form-control" onchange="togglePromoTargetSelect()">
+              <option value="todos">🚀 Todos os Clientes Cadastrados</option>
+              <option value="unico">👤 Cliente Específico</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="promoClienteSelectGroup" style="display: none;">
+            <label>Selecione o Cliente:</label>
+            <select id="promoClienteId" class="form-control">
+              <!-- Renderizado dinamicamente -->
+            </select>
+          </div>
+
+          <div style="background: rgba(255,215,0,0.08); border: 1px solid #FFD700; border-radius: 10px; padding: 0.85rem; font-size: 0.85rem; color: #FFF;">
+            <strong style="color: #FFD700;"><i class="fa-solid fa-circle-info"></i> Nota sobre os envios:</strong>
+            <p style="margin-top: 0.25rem; color: var(--text-brown-muted);">
+              Se o seu WhatsApp estiver conectado no QR Code, as mensagens serão enviadas <strong>automaticamente</strong>. Caso contrário, os links diretos para conversa serão gerados.
+            </p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="fecharModalPromocao()">Cancelar</button>
+          <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%); color: #000; font-weight: 800;">
+            <i class="fa-solid fa-paper-plane"></i> Iniciar Disparo da Promoção
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- MODAL: ENVIAR MENSAGEM DE MODELO PARA CLIENTE -->
+  <div class="modal-overlay" id="modalEnviarModelo">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modalEnviarModeloTitle"><i class="fa-solid fa-paper-plane" style="color: var(--neon-blue);"></i> Enviar Mensagem para Cliente</h3>
+        <button class="modal-close" onclick="fecharModalEnviarModelo()">&times;</button>
+      </div>
+      <form id="formEnviarModeloCustom">
+        <input type="hidden" id="envModeloType">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="envModeloClienteId">Selecione o Cliente *</label>
+            <select id="envModeloClienteId" class="form-control" required onchange="atualizarPreviewModeloCustom()">
+              <option value="">-- Selecione o Cliente --</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Pré-visualização da Mensagem Processada:</label>
+            <div id="envModeloPreviewBox" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 0.85rem; font-size: 0.85rem; color: #FFF; white-space: pre-wrap; max-height: 220px; overflow-y: auto;">
+              Selecione um cliente acima para ver a pré-visualização.
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="fecharModalEnviarModelo()">Cancelar</button>
+          <button type="submit" class="btn-whatsapp-sm" style="font-size: 0.95rem; padding: 0.6rem 1.25rem;">
+            <i class="fa-brands fa-whatsapp"></i> Disparar no WhatsApp
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: NOVO PLANO -->
+  <div class="modal-overlay" id="modalPlano">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modalPlanoTitle"><i class="fa-solid fa-tv" style="color: var(--neon-blue);"></i> Cadastrar Novo Plano de Canais</h3>
+        <button class="modal-close" onclick="fecharModalPlano()">&times;</button>
+      </div>
+      <form id="formPlano">
+        <input type="hidden" id="planoId">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="planoNome">Nome do Plano *</label>
+            <input type="text" id="planoNome" class="form-control" placeholder="Ex: Plano IPTV Completo 4K" required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label for="planoCategoria">Categoria *</label>
+              <select id="planoCategoria" class="form-control" required>
+                <option value="Plano IPTV">Plano IPTV</option>
+                <option value="Plano P2P">Plano P2P</option>
+                <option value="Plano Combo">Combo Família</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="planoTelas">Qtd. de Telas *</label>
+              <select id="planoTelas" class="form-control" required>
+                <option value="1 Tela">1 Tela (Conexão Única)</option>
+                <option value="2 Telas">2 Telas Simultâneas</option>
+                <option value="3 Telas">3 Telas Simultâneas</option>
+                <option value="4 Telas">4 Telas Simultâneas</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="planoValidade">Renovação / Validade *</label>
+              <select id="planoValidade" class="form-control" required>
+                <option value="Mensal (30 dias)">Renovação a cada 30 dias (Mensal)</option>
+                <option value="Trimestral">Trimestral (3 Meses)</option>
+                <option value="Semestral">Semestral (6 Meses)</option>
+                <option value="Anual">Anual (12 Meses)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label for="planoValor">Valor Padrão (R$) *</label>
+              <input type="number" step="0.01" id="planoValor" class="form-control" placeholder="35.00" oninput="calcularValorFinalPlanoModal()" required>
+            </div>
+
+            <div class="form-group">
+              <label for="planoDesconto"><i class="fa-solid fa-tag" style="color: var(--neon-green);"></i> Desconto (R$)</label>
+              <input type="number" step="0.01" id="planoDesconto" class="form-control" placeholder="0.00" value="0.00" oninput="calcularValorFinalPlanoModal()">
+            </div>
+
+            <div class="form-group">
+              <label for="planoCorBadge">Selo do Card *</label>
+              <select id="planoCorBadge" class="form-control" required>
+                <option value="neon-green">🟢 Verde Neon (Destaque)</option>
+                <option value="neon-blue">🔵 Azul Neon (Turbo)</option>
+                <option value="warning">🟡 Dourado VIP</option>
+                <option value="danger">🔴 Vermelho Premium</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- RESUMO DO VALOR COM DESCONTO -->
+          <div id="planoResumoValorBox" style="background: rgba(0, 255, 135, 0.08); border: 1px dashed var(--neon-green); padding: 0.75rem 1rem; border-radius: 10px; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.85rem; color: #FFF; font-weight: 600;"><i class="fa-solid fa-calculator" style="color: var(--neon-green);"></i> Valor Final cobrado ao Cliente:</span>
+            <span id="planoValorFinalCalculado" style="font-size: 1.1rem; font-weight: 800; color: var(--neon-green);">R$ 35,00</span>
+          </div>
+
+          <div class="form-group">
+            <label for="planoDescricao">Descrição & Recursos do Plano *</label>
+            <textarea id="planoDescricao" class="form-control" rows="3" placeholder="Ex: Canais FHD + 4K, Filmes & Séries, 2 Telas, Sem Trava no Futebol" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="fecharModalPlano()">Cancelar</button>
+          <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i> Salvar Plano</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: NOVO APLICATIVO / APP -->
+  <div class="modal-overlay" id="modalApp">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modalAppTitle"><i class="fa-solid fa-mobile-screen-button" style="color: var(--neon-blue);"></i> Cadastrar Aplicativo / App</h3>
+        <button class="modal-close" onclick="fecharModalApp()">&times;</button>
+      </div>
+      <form id="formApp">
+        <input type="hidden" id="appId">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="appNome">Nome do Aplicativo *</label>
+            <input type="text" id="appNome" class="form-control" placeholder="Ex: IBO Player / XCIPTV / Smarters Lite" required>
+          </div>
+
+          <div class="form-group">
+            <label for="appCategoria">Plataforma / Categoria *</label>
+            <input type="text" id="appCategoria" class="form-control" placeholder="Ex: Smart TV LG / Samsung / Android / TV Box" required>
+          </div>
+
+          <div class="form-group">
+            <label for="appDescricao">Descrição / Instruções do App</label>
+            <textarea id="appDescricao" class="form-control" rows="2" placeholder="Ex: Licença anual ou ativado via MAC"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="fecharModalApp()">Cancelar</button>
+          <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i> Salvar Aplicativo</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: NOVO SERVIDOR -->
+  <div class="modal-overlay" id="modalServidor">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modalServidorTitle"><i class="fa-solid fa-server" style="color: var(--emerald-primary);"></i> Cadastrar Servidor / Painel</h3>
+        <button class="modal-close" onclick="fecharModalServidor()">&times;</button>
+      </div>
+      <form id="formServidor">
+        <input type="hidden" id="servidorId">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="servidorNome">Nome do Servidor *</label>
+            <input type="text" id="servidorNome" class="form-control" placeholder="Ex: Servidor Alfa (H265) / Servidor Gold P2P" required>
+          </div>
+
+          <div class="form-group">
+            <label for="servidorCategoria">Tipo / Categoria *</label>
+            <input type="text" id="servidorCategoria" class="form-control" placeholder="Ex: Servidor IPTV / Servidor P2P / Painel Revenda" required>
+          </div>
+
+          <div class="form-group">
+            <label for="servidorDescricao">Observações & Recursos</label>
+            <textarea id="servidorDescricao" class="form-control" rows="2" placeholder="Ex: Servidor sem trava para jogos de futebol e alta demanda"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="fecharModalServidor()">Cancelar</button>
+          <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i> Salvar Servidor</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: CRIAR / EDITAR MODELO DE MENSAGEM -->
+  <div class="modal-overlay" id="modalModeloMensagem">
+    <div class="modal-box" style="max-width: 650px;">
+      <div class="modal-header">
+        <h3 id="modalModeloTitle"><i class="fa-solid fa-comment-dots" style="color: var(--neon-blue);"></i> Cadastrar Modelo de Mensagem</h3>
+        <button class="modal-close" onclick="fecharModalModeloMensagem()">&times;</button>
+      </div>
+      <form id="formModeloMensagem" onsubmit="salvarModeloMensagem(event)">
+        <input type="hidden" id="modeloId">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="modeloTitulo">Título do Modelo *</label>
+            <input type="text" id="modeloTitulo" class="form-control" placeholder="Ex: Aviso de Cobrança Padrão / Oferta Especial IPTV" required>
+          </div>
+
+          <div class="form-group">
+            <label for="modeloCategoria">Categoria *</label>
+            <select id="modeloCategoria" class="form-control" required>
+              <option value="Cobrança">Cobrança (Em Dia)</option>
+              <option value="Atrasados">Atrasados (Plano Vencido)</option>
+              <option value="Renovação">Renovação (Baixa Quitada)</option>
+              <option value="Promoções">Promoções & Ofertas</option>
+              <option value="Personalizada">Outros / Personalizado</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+              <label for="modeloMensagem" style="margin: 0;">Texto da Mensagem *</label>
+              <span style="font-size: 0.75rem; color: var(--neon-green);">Clique nas tags para inserir no texto</span>
+            </div>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.5rem;" id="modalTagChipsContainer">
+              <span class="badge badge-agendado" style="cursor: pointer; font-size: 0.75rem;" onclick="insertTagIntoTextarea('modeloMensagem', '{nome}')"><code>{nome}</code></span>
+              <span class="badge badge-agendado" style="cursor: pointer; font-size: 0.75rem;" onclick="insertTagIntoTextarea('modeloMensagem', '{valor}')"><code>{valor}</code></span>
+              <span class="badge badge-agendado" style="cursor: pointer; font-size: 0.75rem;" onclick="insertTagIntoTextarea('modeloMensagem', '{vencimento}')"><code>{vencimento}</code></span>
+              <span class="badge badge-agendado" style="cursor: pointer; font-size: 0.75rem;" onclick="insertTagIntoTextarea('modeloMensagem', '{proximo_vencimento}')"><code>{proximo_vencimento}</code></span>
+              <span class="badge badge-agendado" style="cursor: pointer; font-size: 0.75rem;" onclick="insertTagIntoTextarea('modeloMensagem', '{data_pagamento}')"><code>{data_pagamento}</code></span>
+              <span class="badge badge-agendado" style="cursor: pointer; font-size: 0.75rem;" onclick="insertTagIntoTextarea('modeloMensagem', '{descricao}')"><code>{descricao}</code></span>
+              <span class="badge badge-agendado" style="cursor: pointer; font-size: 0.75rem;" onclick="insertTagIntoTextarea('modeloMensagem', '{pix_chave}')"><code>{pix_chave}</code></span>
+              <span class="badge badge-agendado" style="cursor: pointer; font-size: 0.75rem;" onclick="insertTagIntoTextarea('modeloMensagem', '{pix_banco}')"><code>{pix_banco}</code></span>
+              <span class="badge badge-agendado" style="cursor: pointer; font-size: 0.75rem;" onclick="insertTagIntoTextarea('modeloMensagem', '{pix_titular}')"><code>{pix_titular}</code></span>
+            </div>
+
+            <textarea id="modeloMensagem" class="form-control" rows="8" style="font-family: monospace; font-size: 0.85rem; line-height: 1.4;" placeholder="Digite aqui o modelo de mensagem..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="fecharModalModeloMensagem()">Cancelar</button>
+          <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i> Salvar Modelo</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: DISPARAR MENSAGEM ESCOLHIDA PARA CLIENTE -->
+  <div class="modal-overlay" id="modalDispararModelo">
+    <div class="modal-box" style="max-width: 700px;">
+      <div class="modal-header">
+        <h3 id="modalDispararModeloTitle"><i class="fa-solid fa-paper-plane" style="color: var(--neon-blue);"></i> Escolher Modelo & Disparar no WhatsApp</h3>
+        <button class="modal-close" onclick="fecharModalDispararModelo()">&times;</button>
+      </div>
+      <form id="formDispararModelo" onsubmit="dispararModeloSelecionado(event)">
+        <div class="modal-body">
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div class="form-group" style="margin: 0;">
+              <label for="disparoClienteId"><i class="fa-solid fa-user"></i> Cliente Destinatário *</label>
+              <select id="disparoClienteId" class="form-control" onchange="atualizarPreviewDisparoCustom()" required>
+                <option value="">-- Selecione o Cliente --</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin: 0;">
+              <label for="disparoModeloId"><i class="fa-solid fa-comment-dots"></i> Modelo de Mensagem *</label>
+              <select id="disparoModeloId" class="form-control" onchange="carregarTextoModeloSelecionado()" required>
+                <option value="">-- Selecione o Modelo --</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+              <label for="disparoMensagemTexto" style="margin: 0;"><i class="fa-solid fa-pen-to-square"></i> Texto da Mensagem (Editável antes do Envio)</label>
+              <span style="font-size: 0.75rem; color: var(--text-brown-muted);">Ajuste livremente antes do envio</span>
+            </div>
+            <textarea id="disparoMensagemTexto" class="form-control" rows="6" style="font-family: monospace; font-size: 0.85rem; line-height: 1.4;" oninput="atualizarPreviewDisparoCustom()"></textarea>
+          </div>
+
+          <!-- PRÉ-VISUALIZAÇÃO EM TEMPO REAL -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label style="color: var(--neon-green); font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 0.4rem;">
+              <i class="fa-brands fa-whatsapp" style="font-size: 1rem;"></i> Pré-visualização da Mensagem Formatada:
+            </label>
+            <div id="disparoLivePreviewBox" style="background: rgba(16, 185, 129, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid var(--emerald-primary); color: #E2E8F0; font-family: monospace; font-size: 0.85rem; white-space: pre-wrap; word-break: break-word; min-height: 100px; max-height: 200px; overflow-y: auto;">
+              Selecione um cliente e um modelo acima para ver a pré-visualização.
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="fecharModalDispararModelo()">Cancelar</button>
+          <button type="submit" class="btn-whatsapp-sm" style="padding: 0.65rem 1.5rem; font-size: 0.95rem;">
+            <i class="fa-brands fa-whatsapp"></i> 🚀 Disparar para WhatsApp Agora
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: INSTRUÇÕES DE INSTALAÇÃO PWA NO IPHONE / ANDROID -->
+  <div class="modal-overlay" id="modalPwaInstalar">
+    <div class="modal-box" style="max-width: 520px; text-align: center;">
+      <div class="modal-header" style="justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.1);">
+        <h3 style="color: #FFF; font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; justify-content: center;">
+          <img src="icon-192.png" alt="App Icon" style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--emerald-primary);">
+          Instalar App no Seu Celular
+        </h3>
+        <button class="modal-close" onclick="fecharModalPwaInstalar()" style="position: absolute; right: 1rem;">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 1.5rem 1rem;">
+        
+        <!-- GUIA PARA ANDROID -->
+        <div id="pwaAndroidInstructions" style="text-align: left; background: rgba(0, 240, 255, 0.05); padding: 1.2rem; border-radius: 12px; border: 1px solid rgba(0,240,255,0.3); margin-bottom: 1rem;">
+          <div style="font-weight: 800; color: var(--neon-blue); font-size: 1.05rem; margin-bottom: 0.75rem; text-align: center;">
+            <i class="fa-brands fa-android"></i> Para Android (Google Chrome):
+          </div>
+          <ol style="color: #E2E8F0; font-size: 0.9rem; line-height: 1.7; padding-left: 1.2rem; margin: 0;">
+            <li>No navegador Chrome, toque no menu de <strong>3 pontinhos <i class="fa-solid fa-ellipsis-vertical" style="color: var(--neon-blue);"></i></strong> (canto superior direito).</li>
+            <li>Toque em <strong>"Adicionar à Tela de Início"</strong> (ou <strong>"Instalar Aplicativo"</strong>).</li>
+            <li>Confirme tocando em <strong>Adicionar / Instalar</strong>.</li>
+          </ol>
+        </div>
+
+        <!-- GUIA PARA IPHONE -->
+        <div id="pwaIosInstructions" style="text-align: left; background: rgba(0, 255, 136, 0.05); padding: 1.2rem; border-radius: 12px; border: 1px solid rgba(0,255,136,0.3);">
+          <div style="font-weight: 800; color: var(--emerald-light); font-size: 1.05rem; margin-bottom: 0.75rem; text-align: center;">
+            <i class="fa-brands fa-apple"></i> Para iPhone / iPad (Safari):
+          </div>
+          <ol style="color: #E2E8F0; font-size: 0.9rem; line-height: 1.7; padding-left: 1.2rem; margin: 0;">
+            <li>No navegador Safari, toque no botão <strong>Compartilhar <i class="fa-solid fa-share-from-square" style="color: var(--neon-blue);"></i></strong> (na barra inferior).</li>
+            <li>Role as opções e toque em <strong>"Adicionar à Tela de Início" <i class="fa-solid fa-plus-square" style="color: var(--neon-green);"></i></strong>.</li>
+            <li>Confirme tocando em <strong>Adicionar</strong>.</li>
+          </ol>
+        </div>
+
+        <div style="margin-top: 1.2rem; font-size: 0.8rem; color: var(--text-muted);">
+          ✨ O app rodará direto em tela cheia como um aplicativo nativo!
+        </div>
+
+      </div>
+      <div class="modal-footer" style="justify-content: center;">
+        <button type="button" class="btn-secondary" onclick="fecharModalPwaInstalar()" style="padding: 0.6rem 2rem;">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS da Aplicação -->
+  <script src="js/app.js?v=71.0"></script>
+</body>
+</html>
