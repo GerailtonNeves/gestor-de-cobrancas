@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="GestorCob">
   
   <!-- CSS Principal -->
-  <link rel="stylesheet" href="css/styles.css?v=67.0">
+  <link rel="stylesheet" href="css/styles.css?v=68.0">
   
   <!-- Icones Remixicon & FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -605,7 +605,7 @@
             <p>Cadastre, edite e organize seus planos de canais com telas, valores e renovações.</p>
           </div>
           <div>
-            <button type="button" class="btn-primary" onclick="abrirModalNovoPlano()">
+            <button type="button" id="btnNovoPlano" class="btn-primary" onclick="if (typeof abrirModalNovoPlano === 'function') { abrirModalNovoPlano(); } else { abrirModal('modalPlano'); }">
               <i class="fa-solid fa-plus"></i> + Cadastrar Novo Plano
             </button>
           </div>
@@ -636,7 +636,7 @@
             <p>Cadastre os aplicativos e players que você disponibiliza para os seus clientes.</p>
           </div>
           <div>
-            <button type="button" class="btn-primary" style="background: linear-gradient(135deg, var(--neon-blue), #3b82f6); color: #fff;" onclick="abrirModalNovoApp()">
+            <button type="button" id="btnNovoApp" class="btn-primary" style="background: linear-gradient(135deg, var(--neon-blue), #3b82f6); color: #fff;" onclick="if (typeof abrirModalNovoApp === 'function') { abrirModalNovoApp(); } else { abrirModal('modalApp'); }">
               <i class="fa-solid fa-plus"></i> + Cadastrar Novo App
             </button>
           </div>
@@ -667,7 +667,7 @@
             <p>Gerencie seus servidores e painéis de revenda para vincular aos clientes.</p>
           </div>
           <div>
-            <button type="button" class="btn-primary" style="background: linear-gradient(135deg, var(--emerald-primary), #10b981); color: #000; font-weight: 800;" onclick="abrirModalNovoServidor()">
+            <button type="button" id="btnNovoServidor" class="btn-primary" style="background: linear-gradient(135deg, var(--emerald-primary), #10b981); color: #000; font-weight: 800;" onclick="if (typeof abrirModalNovoServidor === 'function') { abrirModalNovoServidor(); } else { abrirModal('modalServidor'); }">
               <i class="fa-solid fa-plus"></i> + Cadastrar Novo Servidor
             </button>
           </div>
@@ -1315,6 +1315,6 @@
   </div>
 
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=67.0"></script>
+  <script src="js/app.js?v=68.0"></script>
 </body>
 </html>
