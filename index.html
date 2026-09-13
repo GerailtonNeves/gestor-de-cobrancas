@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="GestorCob">
   
   <!-- CSS Principal -->
-  <link rel="stylesheet" href="css/styles.css?v=69.0">
+  <link rel="stylesheet" href="css/styles.css?v=70.0">
   
   <!-- Icones Remixicon & FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -26,6 +26,95 @@
 
   <!-- Chart.js para Gráficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Inline Modal Controller Garantia Zero Delay -->
+  <script>
+    window.abrirModal = function(modalId) {
+      const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
+      if (!modal) return;
+      document.querySelectorAll('.modal-overlay').forEach(m => {
+        m.classList.remove('active');
+        m.style.display = 'none';
+        m.style.opacity = '0';
+        m.style.visibility = 'hidden';
+        m.style.pointerEvents = 'none';
+        const b = m.querySelector('.modal-box');
+        if (b) { b.style.opacity = '0'; b.style.visibility = 'hidden'; }
+      });
+      modal.style.setProperty('display', 'flex', 'important');
+      modal.style.setProperty('opacity', '1', 'important');
+      modal.style.setProperty('visibility', 'visible', 'important');
+      modal.style.setProperty('pointer-events', 'auto', 'important');
+      modal.classList.add('active');
+      const box = modal.querySelector('.modal-box');
+      if (box) {
+        box.style.setProperty('display', 'block', 'important');
+        box.style.setProperty('opacity', '1', 'important');
+        box.style.setProperty('visibility', 'visible', 'important');
+        box.style.setProperty('transform', 'translateY(0)', 'important');
+      }
+    };
+
+    window.fecharModal = function(modalId) {
+      const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
+      if (!modal) return;
+      modal.classList.remove('active');
+      modal.style.display = 'none';
+      modal.style.opacity = '0';
+      modal.style.visibility = 'hidden';
+      modal.style.pointerEvents = 'none';
+      const box = modal.querySelector('.modal-box');
+      if (box) box.style.transform = 'translateY(20px)';
+    };
+
+    window.abrirModalNovoPlano = function() {
+      try {
+        const pId = document.getElementById('planoId'); if (pId) pId.value = '';
+        const fPlano = document.getElementById('formPlano'); if (fPlano) fPlano.reset();
+        if (document.getElementById('planoDesconto')) document.getElementById('planoDesconto').value = '0.00';
+        if (typeof calcularValorFinalPlanoModal === 'function') calcularValorFinalPlanoModal();
+      } catch(e) {}
+      window.abrirModal('modalPlano');
+    };
+
+    window.abrirModalNovoApp = function() {
+      try {
+        const aId = document.getElementById('appId'); if (aId) aId.value = '';
+        const fApp = document.getElementById('formApp'); if (fApp) fApp.reset();
+      } catch(e) {}
+      window.abrirModal('modalApp');
+    };
+
+    window.abrirModalNovoServidor = function() {
+      try {
+        const sId = document.getElementById('servidorId'); if (sId) sId.value = '';
+        const fSrv = document.getElementById('formServidor'); if (fSrv) fSrv.reset();
+      } catch(e) {}
+      window.abrirModal('modalServidor');
+    };
+
+    window.abrirModalNovoCliente = function() {
+      try {
+        const cId = document.getElementById('clienteId'); if (cId) cId.value = '';
+        const fCli = document.getElementById('formCliente'); if (fCli) fCli.reset();
+      } catch(e) {}
+      window.abrirModal('modalCliente');
+    };
+
+    window.abrirModalNovaCobranca = function() {
+      try {
+        const cobId = document.getElementById('cobrancaId'); if (cobId) cobId.value = '';
+        const fCob = document.getElementById('formCobranca'); if (fCob) fCob.reset();
+      } catch(e) {}
+      window.abrirModal('modalCobranca');
+    };
+
+    window.fecharModalPlano = function() { window.fecharModal('modalPlano'); };
+    window.fecharModalApp = function() { window.fecharModal('modalApp'); };
+    window.fecharModalServidor = function() { window.fecharModal('modalServidor'); };
+    window.fecharModalCliente = function() { window.fecharModal('modalCliente'); };
+    window.fecharModalCobranca = function() { window.fecharModal('modalCobranca'); };
+  </script>
 </head>
 <body>
 
@@ -1315,6 +1404,6 @@
   </div>
 
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=69.0"></script>
+  <script src="js/app.js?v=70.0"></script>
 </body>
 </html>
