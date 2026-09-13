@@ -119,21 +119,21 @@ const defaultModelosMensagensArray = [
     id: "tpl_lembrete",
     titulo: "📌 Lembrete de Cobrança (Em Dia)",
     categoria: "Cobrança",
-    mensagem: `Olá *{nome}*, tudo bem? 👋\n\nPassando para lembrar referente à cobrança do seu plano:\n📌 *Descrição:* {descricao}\n💰 *Valor:* {valor}\n📅 *Vencimento:* {vencimento}\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* {pix_titular}\n• *Banco:* {pix_banco}\n• *Chave PIX ({pix_tipo}):* {pix_chave}\n\nℹ️ {pix_instrucoes}\n\nEQUIPE: *Gerailton Neves*`,
+    mensagem: `Olá *{nome}*, tudo bem? 👋\n\nPassando para lembrar referente à cobrança do seu plano:\n📌 *Descrição:* {descricao}\n💻 *Telas:* {telas}\n💰 *Valor:* {valor}\n📅 *Vencimento:* {vencimento}\n🗓️ *Próxima Renovação:* {proximo_vencimento}\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* {pix_titular}\n• *Banco:* {pix_banco}\n• *Chave PIX ({pix_tipo}):* {pix_chave}\n\nℹ️ {pix_instrucoes}\n\nEQUIPE: *Gerailton Neves*`,
     padrao: true
   },
   {
     id: "tpl_vencido",
     titulo: "⚠️ Notificação de Plano Vencido",
     categoria: "Atrasados",
-    mensagem: `⚠️ *AVISO DE PLANO VENCIDO*\n\nOlá *{nome}*, identificamos que a sua assinatura do plano de canais encontra-se *VENCIDA* desde {vencimento}.\n\n💰 *Valor em Aberto:* {valor}\n\nPara evitar o bloqueio automático do seu sinal, efetue o pagamento via PIX:\n💳 *Chave PIX ({pix_tipo}):* {pix_chave}\n• *Banco:* {pix_banco}\n• *Titular:* {pix_titular}\n\nPor gentileza, nos envie o comprovante respondendo a esta mensagem.\n\nEQUIPE: *Gerailton Neves*`,
+    mensagem: `⚠️ *AVISO DE PLANO VENCIDO*\n\nOlá *{nome}*, identificamos que a sua assinatura do plano de canais encontra-se *VENCIDA* desde {vencimento}.\n\n💻 *Telas:* {telas}\n💰 *Valor em Aberto:* {valor}\n🗓️ *Próxima Renovação:* {proximo_vencimento}\n\nPara evitar o bloqueio automático do seu sinal, efetue o pagamento via PIX:\n💳 *Chave PIX ({pix_tipo}):* {pix_chave}\n• *Banco:* {pix_banco}\n• *Titular:* {pix_titular}\n\nPor gentileza, nos envie o comprovante respondendo a esta mensagem.\n\nEQUIPE: *Gerailton Neves*`,
     padrao: true
   },
   {
     id: "tpl_renovacao",
     titulo: "🎉 Aviso de Renovação (Baixa Quitada)",
     categoria: "Renovação",
-    mensagem: `🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!*\n\nOlá *{nome}*, confirmamos o recebimento do seu pagamento e seu plano foi renovado com sucesso!\n\n💰 *Valor Pago:* {valor}\n📅 *Data do Pagamento:* {data_pagamento}\n🗓️ *Próximo Vencimento:* {proximo_vencimento}\n\nAgradecemos a confiança e parceria!\n\nEQUIPE: *Gerailton Neves*`,
+    mensagem: `🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!*\n\nOlá *{nome}*, confirmamos o recebimento do seu pagamento e seu plano foi renovado com sucesso!\n\n💻 *Telas:* {telas}\n💰 *Valor Pago:* {valor}\n📅 *Vencimento Atual:* {vencimento}\n🗓️ *Próxima Renovação:* {proximo_vencimento}\n🗓️ *Data do Pagamento:* {data_pagamento}\n\nAgradecemos a confiança e parceria!\n\nEQUIPE: *Gerailton Neves*`,
     padrao: true
   },
   {
@@ -204,7 +204,7 @@ function processarTemplateMensagem(template, data = {}, meusDados = {}) {
   let msg = template;
 
   const dtVenc = data.dataVencimento ? (data.dataVencimento.includes('T') ? formatDateBR(data.dataVencimento.split('T')[0]) : formatDateBR(data.dataVencimento)) : '-';
-  const dtPagto = data.dataPagamento ? (data.dataPagamento.includes('T') ? formatDateBR(data.dataPagamento.split('T')[0]) : formatDateBR(data.dataPagamento)) : formatDateBR(new Date().toISOString().split('T')[0]);
+  const dtPagto = data.dataPagamento ? (data.dataPagamento.includes('T') ? formatDateBR(data.dataPagamento.split('T')[0]) : formatDateBR(data.dataPagamento)) : formatDateBR(getLocalIsoString().split('T')[0]);
   
   let dtProxVenc = '-';
   if (data.proximoVencimento) {
@@ -213,12 +213,12 @@ function processarTemplateMensagem(template, data = {}, meusDados = {}) {
     const baseDate = data.dataVencimento.split('T')[0];
     const parts = baseDate.split('-').map(Number);
     if (parts.length === 3) {
-      const d = new Date(parts[0], parts[1] - 1, parts[2]);
-      d.setDate(d.getDate() + 30);
-      const yyyy = d.getFullYear();
-      const mm = String(d.getMonth() + 1).padStart(2, '0');
-      const dd = String(d.getDate()).padStart(2, '0');
-      dtProxVenc = `${dd}/${mm}/${yyyy}`;
+      let y = parts[0], m = parts[1] + 1, d = parts[2];
+      if (m > 12) { m = 1; y += 1; }
+      const maxDays = new Date(y, m, 0).getDate();
+      if (d > maxDays) d = maxDays;
+      const pad = n => String(n).padStart(2, '0');
+      dtProxVenc = `${pad(d)}/${pad(m)}/${y}`;
     }
   }
 
@@ -297,8 +297,9 @@ function gerarTextoCob(cobranca) {
     qtdTelas: cobranca.qtdTelas || (clienteObj ? clienteObj.qtdTelas : 1),
     planoNome: planoNome,
     dataVencimento: cobranca.dataVencimento,
+    proximoVencimento: cobranca.proximoVencimento,
     descricao: cobranca.descricao
-  }, db.meusDados || meusDados);
+  }, db.meusDados);
 }
 
 function getDB() {
@@ -364,7 +365,11 @@ function gerarMensagemWhatsApp(cobranca, meusDados) {
     clienteNome: cobranca.clienteNome,
     nome: cobranca.clienteNome,
     valor: cobranca.valor,
+    valorBruto: cobranca.valorBruto,
+    desconto: cobranca.desconto,
+    qtdTelas: cobranca.qtdTelas,
     dataVencimento: cobranca.dataVencimento,
+    proximoVencimento: cobranca.proximoVencimento,
     descricao: cobranca.descricao
   }, db.meusDados || meusDados);
 }
@@ -926,12 +931,17 @@ app.delete('/api/cobrancas/:id', (req, res) => {
 
 function gerarMensagemRenovacaoWhatsApp(cobranca, proximoVencimento, dataPagamento) {
   const db = getDB();
-  const modelos = db.modelosMensagens || defaultModelosMensagens;
-  const template = modelos.avisoRenovacao || defaultModelosMensagens.avisoRenovacao;
+  const modeloObj = getModeloMensagem('avisoRenovacao', db);
+  const template = modeloObj ? modeloObj.mensagem : defaultModelosMensagensArray[2].mensagem;
 
   return processarTemplateMensagem(template, {
     clienteNome: cobranca.clienteNome,
+    nome: cobranca.clienteNome,
     valor: cobranca.valor,
+    valorBruto: cobranca.valorBruto,
+    desconto: cobranca.desconto,
+    qtdTelas: cobranca.qtdTelas,
+    dataVencimento: cobranca.dataVencimento,
     dataPagamento: dataPagamento,
     proximoVencimento: proximoVencimento,
     descricao: cobranca.descricao
@@ -945,12 +955,26 @@ app.post('/api/cobrancas/:id/dar-baixa', async (req, res) => {
 
   const { observacao, dataPagamento, proximoVencimento, enviarNotificacaoWhatsApp } = req.body;
 
+  let proxVenc = proximoVencimento;
+  if (!proxVenc && cobranca.dataVencimento) {
+    const clean = cobranca.dataVencimento.split('T')[0];
+    const parts = clean.split('-').map(Number);
+    if (parts.length === 3) {
+      let y = parts[0], m = parts[1] + 1, d = parts[2];
+      if (m > 12) { m = 1; y += 1; }
+      const maxDays = new Date(y, m, 0).getDate();
+      if (d > maxDays) d = maxDays;
+      const pad = n => String(n).padStart(2, '0');
+      proxVenc = `${y}-${pad(m)}-${pad(d)}`;
+    }
+  }
+
   cobranca.status = "PAGO";
-  cobranca.dataPagamento = dataPagamento || new Date().toISOString();
-  cobranca.proximoVencimento = proximoVencimento || null;
+  cobranca.dataPagamento = dataPagamento || getLocalIsoString().split('T')[0];
+  cobranca.proximoVencimento = proxVenc || null;
   cobranca.observacaoBaixa = observacao || "Baixa efetuada manualmente pelo usuário";
 
-  const msgRenovacao = gerarMensagemRenovacaoWhatsApp(cobranca, proximoVencimento, dataPagamento);
+  const msgRenovacao = gerarMensagemRenovacaoWhatsApp(cobranca, proxVenc, cobranca.dataPagamento);
   const telefoneLimpo = sanitizePhone(cobranca.clienteTelefone);
   const linkWhatsAppRenovacao = `https://wa.me/${telefoneLimpo}?text=${encodeURIComponent(msgRenovacao)}`;
 
@@ -972,7 +996,7 @@ app.post('/api/cobrancas/:id/dar-baixa', async (req, res) => {
     clienteNome: cobranca.clienteNome,
     clienteTelefone: telefoneLimpo,
     valor: cobranca.valor,
-    dataEnvio: new Date().toISOString(),
+    dataEnvio: getLocalIsoString(),
     mensagem: msgRenovacao,
     tipoEnvio: enviouDireto ? "AUTOMATICO_RENOVACAO" : "BAIXA_MANUAL",
     link: linkWhatsAppRenovacao
@@ -1026,7 +1050,7 @@ app.post('/api/cobrancas/:id/disparar-whatsapp', async (req, res) => {
   }
 
   cobranca.statusEnvio = "ENVIADO";
-  cobranca.dataEnvioRealizado = new Date().toISOString();
+  cobranca.dataEnvioRealizado = getLocalIsoString();
 
   db.historicoEnvios.push({
     id: `env_${Date.now()}`,
@@ -1034,7 +1058,7 @@ app.post('/api/cobrancas/:id/disparar-whatsapp', async (req, res) => {
     clienteNome: cobranca.clienteNome,
     clienteTelefone: telefoneLimpo,
     valor: cobranca.valor,
-    dataEnvio: new Date().toISOString(),
+    dataEnvio: getLocalIsoString(),
     mensagem: mensagemTexto,
     tipoEnvio: enviouDireto ? "AUTOMATICO_DIRECT" : "LINK_MANUAL",
     link: linkWhatsApp

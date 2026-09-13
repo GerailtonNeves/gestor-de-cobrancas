@@ -878,7 +878,7 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.75rem;">
               <div class="form-group" style="margin-bottom: 0;">
                 <label for="cliQtdTelas" style="font-size: 0.82rem; color: var(--neon-blue); font-weight: 800;"><i class="fa-solid fa-desktop"></i> Qtd. Telas</label>
-                <select id="cliQtdTelas" class="form-control" onchange="calcularValorClienteComDesconto()" style="background: #0D1527; border: 1.5px solid var(--neon-blue); color: #FFF; font-weight: 800;">
+                <select id="cliQtdTelas" class="form-control" onchange="calcularValorClienteComDesconto()" oninput="calcularValorClienteComDesconto()" style="background: #0D1527; border: 1.5px solid var(--neon-blue); color: #FFF; font-weight: 800;">
                   <option value="1">1 Tela</option>
                   <option value="2">2 Telas</option>
                   <option value="3">3 Telas</option>
@@ -1388,6 +1388,6 @@
   </div>
 
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=26.0"></script>
+  <script src="js/app.js?v=27.0"></script>
 </body>
 </html>
