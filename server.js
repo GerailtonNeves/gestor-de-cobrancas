@@ -807,6 +807,15 @@ app.put('/api/clientes/:id', (req, res) => {
     if (cob.clienteId === req.params.id) {
       cob.clienteNome = db.clientes[index].nome;
       cob.clienteTelefone = db.clientes[index].telefone;
+      if (cob.status === 'PENDENTE') {
+        if (qtdTelas !== undefined) cob.qtdTelas = parseInt(qtdTelas) || 1;
+        if (valorBruto !== undefined) cob.valorBruto = parseFloat(valorBruto) || 0;
+        if (desconto !== undefined) cob.desconto = parseFloat(desconto) || 0;
+        if (valorBruto !== undefined || desconto !== undefined) {
+          cob.valor = Math.max(0, (cob.valorBruto || 0) - (cob.desconto || 0));
+        }
+        if (modeloMensagemId !== undefined) cob.modeloMensagemId = modeloMensagemId || null;
+      }
     }
   });
 
