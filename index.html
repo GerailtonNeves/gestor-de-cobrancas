@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="GestorCob">
   
   <!-- CSS Principal -->
-  <link rel="stylesheet" href="css/styles.css?v=70.0">
+  <link rel="stylesheet" href="css/styles.css?v=71.0">
   
   <!-- Icones Remixicon & FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -252,9 +252,21 @@
             <h1><i class="fa-solid fa-chart-line"></i> Dashboard Financeiro</h1>
             <p>Visão geral de recebimentos, cobranças pendentes e automações do WhatsApp.</p>
           </div>
-          <div style="display: flex; gap: 0.75rem;">
+          <div style="display: flex; gap: 0.65rem; flex-wrap: wrap;">
             <button class="btn-primary" onclick="abrirModalNovaCobranca()">
-              <i class="fa-solid fa-plus"></i> Nova Renovação
+              <i class="fa-solid fa-plus"></i> + Nova Renovação
+            </button>
+            <button class="btn-success-sm" style="padding: 0.6rem 1rem; font-size: 0.88rem; font-weight: 700;" onclick="abrirModalNovoCliente()">
+              <i class="fa-solid fa-user-plus"></i> + Novo Cliente
+            </button>
+            <button class="btn-secondary" style="padding: 0.6rem 1rem; font-size: 0.85rem;" onclick="abrirModalNovoPlano()">
+              <i class="fa-solid fa-tv" style="color: var(--neon-blue);"></i> + Novo Plano
+            </button>
+            <button class="btn-secondary" style="padding: 0.6rem 1rem; font-size: 0.85rem;" onclick="abrirModalNovoApp()">
+              <i class="fa-solid fa-mobile-screen-button" style="color: var(--emerald-light);"></i> + Novo App
+            </button>
+            <button class="btn-secondary" style="padding: 0.6rem 1rem; font-size: 0.85rem;" onclick="abrirModalNovoServidor()">
+              <i class="fa-solid fa-server" style="color: var(--emerald-primary);"></i> + Novo Servidor
             </button>
           </div>
         </div>
@@ -814,7 +826,12 @@
             </h4>
 
             <div class="form-group">
-              <label for="cobPlanoId"><i class="fa-solid fa-tag"></i> Plano de Canais</label>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                <label for="cobPlanoId" style="margin: 0;"><i class="fa-solid fa-tag"></i> Plano de Canais</label>
+                <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoPlano()">
+                  <i class="fa-solid fa-plus"></i> + Novo Plano
+                </button>
+              </div>
               <select id="cobPlanoId" class="form-control" onchange="calcularValorCobComDesconto()">
                 <option value="">-- Selecione o Plano --</option>
               </select>
@@ -822,14 +839,24 @@
 
             <div class="form-grid-2">
               <div class="form-group">
-                <label for="cobServidorId"><i class="fa-solid fa-server"></i> Servidor</label>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                  <label for="cobServidorId" style="margin: 0;"><i class="fa-solid fa-server"></i> Servidor</label>
+                  <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoServidor()">
+                    <i class="fa-solid fa-plus"></i> + Servidor
+                  </button>
+                </div>
                 <select id="cobServidorId" class="form-control">
                   <option value="">-- Nenhum Servidor --</option>
                 </select>
               </div>
 
               <div class="form-group">
-                <label for="cobAppId"><i class="fa-solid fa-mobile-screen-button"></i> Aplicativo / App</label>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                  <label for="cobAppId" style="margin: 0;"><i class="fa-solid fa-mobile-screen-button"></i> Aplicativo / App</label>
+                  <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoApp()">
+                    <i class="fa-solid fa-plus"></i> + App
+                  </button>
+                </div>
                 <select id="cobAppId" class="form-control">
                   <option value="">-- Nenhum App --</option>
                 </select>
@@ -936,7 +963,12 @@
             </h4>
 
             <div class="form-group" style="margin-bottom: 0.85rem;">
-              <label for="cliPlanoId" style="font-weight: 700; color: #FFF;"><i class="fa-solid fa-tag" style="color: var(--neon-blue);"></i> Escolha o Plano de Canais</label>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                <label for="cliPlanoId" style="font-weight: 700; color: #FFF; margin: 0;"><i class="fa-solid fa-tag" style="color: var(--neon-blue);"></i> Escolha o Plano de Canais</label>
+                <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoPlano()">
+                  <i class="fa-solid fa-plus"></i> + Novo Plano
+                </button>
+              </div>
               <select id="cliPlanoId" class="form-control" onchange="autoPreencherPlanoCliente()" style="background: #0D1527; border: 1px solid var(--neon-blue); color: #FFF; font-weight: 700;">
                 <option value="">-- Selecione o Plano --</option>
               </select>
@@ -944,14 +976,24 @@
 
             <div class="form-grid-2">
               <div class="form-group" style="margin-bottom: 0;">
-                <label for="cliServidorId" style="font-weight: 600; color: #E2E8F0;"><i class="fa-solid fa-server" style="color: var(--neon-blue);"></i> Servidor / Painel</label>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                  <label for="cliServidorId" style="font-weight: 600; color: #E2E8F0; margin: 0;"><i class="fa-solid fa-server" style="color: var(--neon-blue);"></i> Servidor / Painel</label>
+                  <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoServidor()">
+                    <i class="fa-solid fa-plus"></i> + Servidor
+                  </button>
+                </div>
                 <select id="cliServidorId" class="form-control" style="background: #090F1D; color: #FFF;">
                   <option value="">-- Nenhum Servidor --</option>
                 </select>
               </div>
 
               <div class="form-group" style="margin-bottom: 0;">
-                <label for="cliAppId" style="font-weight: 600; color: #E2E8F0;"><i class="fa-solid fa-mobile-screen-button" style="color: var(--emerald-light);"></i> Aplicativo / App</label>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                  <label for="cliAppId" style="font-weight: 600; color: #E2E8F0; margin: 0;"><i class="fa-solid fa-mobile-screen-button" style="color: var(--emerald-light);"></i> Aplicativo / App</label>
+                  <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoApp()">
+                    <i class="fa-solid fa-plus"></i> + App
+                  </button>
+                </div>
                 <select id="cliAppId" class="form-control" style="background: #090F1D; color: #FFF;">
                   <option value="">-- Nenhum App --</option>
                 </select>
@@ -1404,6 +1446,6 @@
   </div>
 
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=70.0"></script>
+  <script src="js/app.js?v=71.0"></script>
 </body>
 </html>
