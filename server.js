@@ -133,7 +133,7 @@ const defaultModelosMensagensArray = [
     id: "tpl_renovacao",
     titulo: "🎉 Aviso de Renovação (Baixa Quitada)",
     categoria: "Renovação",
-    mensagem: `🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!*\n\nOlá *{nome}*, confirmamos o recebimento do seu pagamento e seu plano foi renovado com sucesso!\n\n💻 *Telas:* {telas}\n💰 *Valor Pago:* {valor}\n📅 *Vencimento Atual:* {vencimento}\n🗓️ *Próxima Renovação:* {proximo_vencimento}\n🗓️ *Data do Pagamento:* {data_pagamento}\n\nAgradecemos a confiança e parceria!\n\nEQUIPE: *Gerailton Neves*`,
+    mensagem: `🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!* 🚀✨\n\nOlá *{nome}*, confirmamos o recebimento do seu pagamento e a sua assinatura foi renovada com sucesso!\n\n📌 *Resumo da Renovação:*\n💻 *Telas:* {telas}\n💰 *Valor Pago:* {valor}\n📅 *Vencimento Atual:* {vencimento}\n🗓️ *Data do Pagamento:* {data_pagamento}\n🗓️ *Próxima Renovação:* {proximo_vencimento}\n\nAgradecemos a preferência e a confiança! Qualquer dúvida, estamos à disposição no WhatsApp.\n\nEQUIPE: *Gerailton Neves*`,
     padrao: true
   },
   {
