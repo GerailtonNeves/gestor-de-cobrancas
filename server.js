@@ -1399,7 +1399,7 @@ setInterval(async () => {
 
     for (let cob of db.cobrancas) {
       // Checa qualquer cobrança pendente que ainda NÃO foi enviada
-      if (cob.status === 'PENDENTE' && cob.statusEnvio !== 'ENVIADO' && cob.dataHoraEnvio) {
+      if (cob.status === 'PENDENTE' && (cob.statusEnvio === 'AGENDADO' || !cob.statusEnvio) && cob.dataHoraEnvio) {
         
         if (agoraLocalStr >= cob.dataHoraEnvio) {
           const mensagemTexto = gerarMensagemWhatsApp(cob, db.meusDados);
