@@ -376,16 +376,48 @@ let waSock = null;
 let waStatus = 'DISCONNECTED';
 let waQrCodeDataUrl = null;
 let waUserNumber = null;
+let isConnecting = false;
 
-async function connectToWhatsApp() {
+async function connectToWhatsApp(forceClean = false) {
+  if (isConnecting && !forceClean) {
+    console.log("⚡ Conexão WhatsApp já em andamento. Aguardando...");
+    return;
+  }
+  isConnecting = true;
+
   try {
-    console.log("⚡ Inicializando motor de automação do WhatsApp...");
+    console.log(`⚡ Inicializando motor de automação do WhatsApp (forceClean: ${forceClean})...`);
+    waStatus = 'GENERATING_QR';
+
+    if (waSock) {
+      try {
+        waSock.ev.removeAllListeners('connection.update');
+        waSock.ev.removeAllListeners('creds.update');
+        waSock.end(undefined);
+      } catch (e) {
+        // ignora erro ao fechar socket anterior
+      }
+      waSock = null;
+    }
+
+    if (forceClean && fs.existsSync(AUTH_DIR)) {
+      console.log("🧹 Limpando credenciais desatualizadas/inválidas do WhatsApp...");
+      fs.rmSync(AUTH_DIR, { recursive: true, force: true });
+    }
+
+    if (!fs.existsSync(AUTH_DIR)) {
+      fs.mkdirSync(AUTH_DIR, { recursive: true });
+    }
+
     const { state, saveCreds } = await useMultiFileAuthState(AUTH_DIR);
 
     waSock = makeWASocket({
       auth: state,
       printQRInTerminal: false,
-      browser: ['GESTOR DE COBRANÇAS', 'Desktop', '1.0.0']
+      browser: ['GESTOR DE COBRANÇAS', 'Desktop', '1.0.0'],
+      connectTimeoutMs: 15000,
+      keepAliveIntervalMs: 25000,
+      retryRequestDelayMs: 2000
     });
 
     waSock.ev.on('creds.update', saveCreds);
@@ -396,7 +428,7 @@ async function connectToWhatsApp() {
       if (qr) {
         waStatus = 'SCAN_QR';
         waQrCodeDataUrl = await QRCode.toDataURL(qr);
-        console.log("📲 QR Code do WhatsApp atualizado! Aguardando leitura no celular...");
+        console.log("📲 QR Code do WhatsApp GERADO COM SUCESSO! Aguardando leitura no celular...");
       }
 
       if (connection === 'open') {
@@ -408,12 +440,25 @@ async function connectToWhatsApp() {
 
       if (connection === 'close') {
         const statusCode = lastDisconnect?.error?.output?.statusCode;
-        const shouldReconnect = (statusCode !== DisconnectReason.loggedOut);
+        const shouldReconnect = (statusCode !== DisconnectReason.loggedOut && statusCode !== 401);
         waStatus = 'DISCONNECTED';
         waQrCodeDataUrl = null;
         console.log(`⚠️ Conexão WhatsApp encerrada (code ${statusCode}). Reconectando: ${shouldReconnect}`);
+
+        if (statusCode === DisconnectReason.loggedOut || statusCode === 401) {
+          if (fs.existsSync(AUTH_DIR)) {
+            console.log("🧹 Removendo credenciais revogadas pelo celular...");
+            fs.rmSync(AUTH_DIR, { recursive: true, force: true });
+          }
+        }
+
         if (shouldReconnect) {
-          setTimeout(connectToWhatsApp, 5000);
+          setTimeout(() => {
+            isConnecting = false;
+            connectToWhatsApp(false);
+          }, 3000);
+        } else {
+          isConnecting = false;
         }
       }
     });
@@ -421,12 +466,14 @@ async function connectToWhatsApp() {
   } catch (err) {
     console.error("Erro ao conectar WhatsApp Baileys:", err);
     waStatus = 'DISCONNECTED';
+  } finally {
+    setTimeout(() => { isConnecting = false; }, 3000);
   }
 }
 
 // Inicializa o robô de forma não-bloqueante após o servidor subir
 setTimeout(() => {
-  connectToWhatsApp().catch(err => console.error("Erro assíncrono ao conectar WhatsApp:", err));
+  connectToWhatsApp(false).catch(err => console.error("Erro assíncrono ao conectar WhatsApp:", err));
 }, 1000);
 
 app.get('/health', (req, res) => {
@@ -466,9 +513,10 @@ app.get('/api/whatsapp/status', (req, res) => {
   });
 });
 
-app.post('/api/whatsapp/connect', (req, res) => {
-  connectToWhatsApp();
-  res.json({ success: true, message: "Tentativa de reconexão iniciada" });
+app.post('/api/whatsapp/connect', async (req, res) => {
+  isConnecting = false;
+  connectToWhatsApp(true); // Limpa credenciais antigas e gera QR Code novo em 1-2 segundos
+  res.json({ success: true, message: "Gerando novo QR Code ultra rápido..." });
 });
 
 app.post('/api/whatsapp/test-send', async (req, res) => {
