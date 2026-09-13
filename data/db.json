@@ -1,0 +1,689 @@
+{
+  "meusDados": {
+    "nomeTitular": "Gerailton Neves ",
+    "tipoChave": "Celular",
+    "chavePix": "11985897774",
+    "banco": "Celcoin ",
+    "instrucoes": "Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp."
+  },
+  "clientes": [
+    {
+      "id": "cli_1789316056838",
+      "nome": "Gerailton Neves ",
+      "telefone": "5511985897774",
+      "email": "",
+      "notas": "",
+      "planoId": "plano_1",
+      "servidorId": "srv_1",
+      "appId": "app_1",
+      "modeloMensagemId": "",
+      "qtdTelas": 1,
+      "valorBruto": 0,
+      "desconto": 0,
+      "dataCriacao": "2026-09-13T16:14:16.838Z"
+    }
+  ],
+  "cobrancas": [
+    {
+      "id": "cob_1789313086878",
+      "clienteId": "cli_1789316056838",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "qtdTelas": 2,
+      "valorBruto": 70,
+      "desconto": 0,
+      "valor": 70,
+      "dataVencimento": "2026-09-12",
+      "dataHoraEnvio": "2026-09-13T12:25",
+      "descricao": "SEU PLANO DE CANAIS O VENCIMENTO É HOJE RENOVE PARA NÃO FICAR SEM ASSISTIR !",
+      "modeloMensagemId": "tpl_lembrete",
+      "status": "PAGO",
+      "statusEnvio": "AGENDADO",
+      "dataEnvioRealizado": null,
+      "dataPagamento": "2026-09-13T12:27",
+      "observacaoBaixa": "Pagamento recebido e confirmado via PIX",
+      "proximoVencimento": "2026-10-13"
+    },
+    {
+      "id": "cob_1789316119157",
+      "clienteId": "cli_1789316056838",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "qtdTelas": 3,
+      "valorBruto": 105,
+      "desconto": 15,
+      "valor": 90,
+      "dataVencimento": "2026-09-13",
+      "dataHoraEnvio": "2026-09-13T13:16",
+      "descricao": "SEU PLANO DE CANAIS O VENCIMENTO É HOJE RENOVE PARA NÃO FICAR SEM ASSISTIR !",
+      "modeloMensagemId": null,
+      "status": "PENDENTE",
+      "statusEnvio": "PRONTO_PARA_DISPARO",
+      "dataEnvioRealizado": null,
+      "dataPagamento": null,
+      "observacaoBaixa": null
+    }
+  ],
+  "historicoEnvios": [
+    {
+      "id": "env_auto_1789139188117_cob_1789137285194",
+      "cobrancaId": "cob_1789137285194",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511972560991",
+      "valor": 35,
+      "dataEnvio": "2026-09-11T15:06:28.117Z",
+      "mensagem": "Olá *Gerailton Neves *, tudo bem?\n\nPassando para lembrar referente à cobrança:\n📌 *Descrição:* Renove Hoje Seu Plano De Canais \n💰 *Valor:* R$ 35,00\n📅 *Vencimento:* 11/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Banco : Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nAgradecemos a parceria! Qualquer dúvida, estamos à disposição.",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789139403714_cob_1789139369756",
+      "cobrancaId": "cob_1789139369756",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511972560991",
+      "valor": 35,
+      "dataEnvio": "2026-09-11T15:10:03.714Z",
+      "mensagem": "Olá *Gerailton Neves *, tudo bem?\n\nPassando para lembrar referente à cobrança:\n📌 *Descrição:* TESTE TESTE \n💰 *Valor:* R$ 35,00\n📅 *Vencimento:* 11/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Banco : Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nAgradecemos a parceria! Qualquer dúvida, estamos à disposição.",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_1789139651758",
+      "cobrancaId": "cob_1789139369756",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511972560991",
+      "valor": 35,
+      "dataEnvio": "2026-09-11T15:14:11.758Z",
+      "mensagem": "Olá *Gerailton Neves *, tudo bem?\n\nPassando para lembrar referente à cobrança:\n📌 *Descrição:* TESTE TESTE \n💰 *Valor:* R$ 35,00\n📅 *Vencimento:* 11/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Banco : Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nAgradecemos a parceria! Qualquer dúvida, estamos à disposição.",
+      "tipoEnvio": "AUTOMATICO_DIRECT",
+      "link": "https://wa.me/5511972560991?text=Ol%C3%A1%20*Gerailton%20Neves%20*%2C%20tudo%20bem%3F%0A%0APassando%20para%20lembrar%20referente%20%C3%A0%20cobran%C3%A7a%3A%0A%F0%9F%93%8C%20*Descri%C3%A7%C3%A3o%3A*%20TESTE%20TESTE%20%0A%F0%9F%92%B0%20*Valor%3A*%20R%24%C2%A035%2C00%0A%F0%9F%93%85%20*Vencimento%3A*%2011%2F09%2F2026%0A%0A%F0%9F%92%B3%20*DADOS%20PARA%20PAGAMENTO%20(PIX)%3A*%0A%E2%80%A2%20*Titular%3A*%20Gerailton%20Neves%20%0A%E2%80%A2%20*Banco%3A*%20Banco%20%3A%20Celcoin%20%0A%E2%80%A2%20*Chave%20PIX%20(Celular)%3A*%2011985897774%0A%0A%E2%84%B9%EF%B8%8F%20Ao%20efetuar%20o%20pagamento%20via%20PIX%2C%20favor%20enviar%20o%20comprovante%20respondendo%20a%20esta%20mensagem%20no%20WhatsApp.%0A%0AAgradecemos%20a%20parceria!%20Qualquer%20d%C3%BAvida%2C%20estamos%20%C3%A0%20disposi%C3%A7%C3%A3o."
+    },
+    {
+      "id": "env_1789139693093",
+      "cobrancaId": "cob_1789139369756",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511972560991",
+      "valor": 35,
+      "dataEnvio": "2026-09-11T15:14:53.093Z",
+      "mensagem": "Olá *Gerailton Neves *, tudo bem?\n\nPassando para lembrar referente à cobrança:\n📌 *Descrição:* TESTE TESTE \n💰 *Valor:* R$ 35,00\n📅 *Vencimento:* 11/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nAgradecemos a parceria! Qualquer dúvida, estamos à disposição.",
+      "tipoEnvio": "AUTOMATICO_DIRECT",
+      "link": "https://wa.me/5511972560991?text=Ol%C3%A1%20*Gerailton%20Neves%20*%2C%20tudo%20bem%3F%0A%0APassando%20para%20lembrar%20referente%20%C3%A0%20cobran%C3%A7a%3A%0A%F0%9F%93%8C%20*Descri%C3%A7%C3%A3o%3A*%20TESTE%20TESTE%20%0A%F0%9F%92%B0%20*Valor%3A*%20R%24%C2%A035%2C00%0A%F0%9F%93%85%20*Vencimento%3A*%2011%2F09%2F2026%0A%0A%F0%9F%92%B3%20*DADOS%20PARA%20PAGAMENTO%20(PIX)%3A*%0A%E2%80%A2%20*Titular%3A*%20Gerailton%20Neves%20%0A%E2%80%A2%20*Banco%3A*%20Celcoin%20%0A%E2%80%A2%20*Chave%20PIX%20(Celular)%3A*%2011985897774%0A%0A%E2%84%B9%EF%B8%8F%20Ao%20efetuar%20o%20pagamento%20via%20PIX%2C%20favor%20enviar%20o%20comprovante%20respondendo%20a%20esta%20mensagem%20no%20WhatsApp.%0A%0AAgradecemos%20a%20parceria!%20Qualquer%20d%C3%BAvida%2C%20estamos%20%C3%A0%20disposi%C3%A7%C3%A3o."
+    },
+    {
+      "id": "env_auto_1789164908638_cob_1789164843049",
+      "cobrancaId": "cob_1789164843049",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-11T22:15:08.638Z",
+      "mensagem": "Olá *Gerailton Neves *, tudo bem?\n\nPassando para lembrar referente à cobrança:\n📌 *Descrição:* SEU PLANO DE CANAIS O VENCIMENTO É HOJE RENOVE PARA NÃO FICAR SEM ASSISTIR !\n💰 *Valor:* R$ 35,00\n📅 *Vencimento:* 11/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nAgradecemos a parceria! Qualquer dúvida, estamos à disposição.",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789165569054_cob_1789164843049",
+      "cobrancaId": "cob_1789164843049",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-11T22:26:09.054Z",
+      "mensagem": "Olá *Gerailton Neves*, tudo bem?\n\nPassando para lembrar referente à cobrança:\n📌 *Descrição:* SEU PLANO DE CANAIS O VENCIMENTO É HOJE RENOVE PARA NÃO FICAR SEM ASSISTIR !\n💰 *Valor:* R$ 35,00\n📅 *Vencimento:* 11/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789165868674_cob_1789164843049",
+      "cobrancaId": "cob_1789164843049",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-11T22:31:08.674Z",
+      "mensagem": "Olá *Gerailton Neves*, tudo bem?\n\nPassando para lembrar referente à cobrança:\n📌 *Descrição:* SEU PLANO DE CANAIS O VENCIMENTO É HOJE RENOVE PARA NÃO FICAR SEM ASSISTIR !\n💰 *Valor:* R$ 35,00\n📅 *Vencimento:* 11/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789165929414_cob_1789165823677",
+      "cobrancaId": "cob_1789165823677",
+      "clienteNome": "Andressa Gois ",
+      "clienteTelefone": "5511982651858",
+      "valor": 35,
+      "dataEnvio": "2026-09-11T22:32:09.414Z",
+      "mensagem": "Olá *Andressa Gois*, tudo bem?\n\nPassando para lembrar referente à cobrança:\n📌 *Descrição:* SEU PLANO DE CANAIS O VENCIMENTO É HOJE RENOVE PARA NÃO FICAR SEM ASSISTIR !\n💰 *Valor:* R$ 35,00\n📅 *Vencimento:* 11/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789166502206_cob_1789164843049",
+      "cobrancaId": "cob_1789164843049",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-11T22:41:42.206Z",
+      "mensagem": "Olá *Gerailton Neves*, tudo bem?\n\nPassando para lembrar referente à cobrança:\n📌 *Descrição:* SEU PLANO DE CANAIS O VENCIMENTO É HOJE RENOVE PARA NÃO FICAR SEM ASSISTIR !\n💰 *Valor:* R$ 35,00\n📅 *Vencimento:* 11/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789168684490_cob_1789164843049",
+      "cobrancaId": "cob_1789164843049",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-11T23:18:04.490Z",
+      "mensagem": "Olá *Gerailton Neves*, tudo bem?\n\nPassando para lembrar referente à cobrança:\n📌 *Descrição:* RENOVE SEU PLANO DE CANAIS HOJE É O VENCIMENTO DO SEU PLANO (Plano De Canais 1 Telas) - Servidor: Servidor: X3 - App: Bleessd Player\n💰 *Valor:* R$ 35,00\n📅 *Vencimento:* 11/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789171632368_cob_1789164843049",
+      "cobrancaId": "cob_1789164843049",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T00:07:12.368Z",
+      "mensagem": "Olá *Gerailton Neves*, tudo bem?\n\nPassando para lembrar referente à cobrança:\n📌 *Descrição:* Passando para avisa que seu plano de canais o vencimento é hoje  vamos renovar para não ficar sem assistir seus canais preferidos.\n💰 *Valor:* R$ 35,00\n📅 *Vencimento:* 11/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789171731770_cob_1789164843049",
+      "cobrancaId": "cob_1789164843049",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T00:08:51.770Z",
+      "mensagem": "Olá *Gerailton Neves*, tudo bem?\n\nPassando para lembrar referente à cobrança:\n📌 *Descrição:* RENOVE SEU PLANO DE CANAIS O VENCIMENTO É HOJE,  VAMOS RENOVAR AGORA.\n💰 *Valor:* R$ 35,00\n📅 *Vencimento:* 11/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789171752313_cob_1789165823677",
+      "cobrancaId": "cob_1789165823677",
+      "clienteNome": "Andressa Gois ",
+      "clienteTelefone": "5511982651858",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T00:09:12.313Z",
+      "mensagem": "Olá *Andressa Gois*, tudo bem?\n\nPassando para lembrar referente à cobrança:\n📌 *Descrição:* RENOVE SEU PLANO DE CANAIS O VENCIMENTO É HOJE,  VAMOS RENOVAR AGORA.\n💰 *Valor:* R$ 35,00\n📅 *Vencimento:* 11/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789171921945_cob_1789165823677",
+      "cobrancaId": "cob_1789165823677",
+      "clienteNome": "Andressa Gois ",
+      "clienteTelefone": "5511982651858",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T00:12:01.945Z",
+      "mensagem": "Olá *Andressa Gois*, tudo bem?\n\nPassando para lembrar referente à cobrança:\n📌 *Descrição:* SEU PLANO DE CANAIS O VENCIMENTO É HOJE RENOVE PARA NÃO FICAR SEM ASSISTIR !\n💰 *Valor:* R$ 35,00\n📅 *Vencimento:* 11/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789171982444_cob_1789164843049",
+      "cobrancaId": "cob_1789164843049",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T00:13:02.444Z",
+      "mensagem": "Olá *Gerailton Neves*, tudo bem?\n\nPassando para lembrar referente à cobrança:\n📌 *Descrição:* RENOVE SEU PLANO DE CANAIS O VENCIMENTO É HOJE,  VAMOS RENOVAR AGORA.\n💰 *Valor:* R$ 35,00\n📅 *Vencimento:* 11/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "renov_1789172626813",
+      "cobrancaId": "cob_1789164843049",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T00:23:46.813Z",
+      "mensagem": "🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!*\n\nOlá *Gerailton Neves*, confirmamos o recebimento do seu pagamento!\n\n📌 *Descrição:* RENOVE SEU PLANO DE CANAIS O VENCIMENTO É HOJE,  VAMOS RENOVAR AGORA.\n💰 *Valor Pago:* R$ 35,00\n📅 *Data do Pagamento:* 12/09/2026\n🗓️ *Próximo Vencimento:* 12/10/2026\n\nAgradecemos a confiança e parceria!\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_RENOVACAO",
+      "link": "https://wa.me/5511985897774?text=%F0%9F%8E%89%20*PAGAMENTO%20CONFIRMADO%20E%20PLANO%20RENOVADO!*%0A%0AOl%C3%A1%20*Gerailton%20Neves*%2C%20confirmamos%20o%20recebimento%20do%20seu%20pagamento!%0A%0A%F0%9F%93%8C%20*Descri%C3%A7%C3%A3o%3A*%20RENOVE%20SEU%20PLANO%20DE%20CANAIS%20O%20VENCIMENTO%20%C3%89%20HOJE%2C%20%20VAMOS%20RENOVAR%20AGORA.%0A%F0%9F%92%B0%20*Valor%20Pago%3A*%20R%24%C2%A035%2C00%0A%F0%9F%93%85%20*Data%20do%20Pagamento%3A*%2012%2F09%2F2026%0A%F0%9F%97%93%EF%B8%8F%20*Pr%C3%B3ximo%20Vencimento%3A*%2012%2F10%2F2026%0A%0AAgradecemos%20a%20confian%C3%A7a%20e%20parceria!%0A%0AEQUIPE%3A%20*Gerailton%20Neves*"
+    },
+    {
+      "id": "env_auto_1789172833231_cob_1789164843049",
+      "cobrancaId": "cob_1789164843049",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T00:27:13.231Z",
+      "mensagem": "Olá *Gerailton Neves*, tudo bem?\n\nPassando para lembrar referente à cobrança:\n📌 *Descrição:* RENOVE SEU PLANO DE CANAIS O VENCIMENTO É HOJE,  VAMOS RENOVAR AGORA.\n💰 *Valor:* R$ 35,00\n📅 *Vencimento:* 11/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "renov_1789172947310",
+      "cobrancaId": "cob_1789164843049",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T00:29:07.310Z",
+      "mensagem": "🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!*\n\nOlá *Gerailton Neves*, confirmamos o recebimento do seu pagamento e seu plano foi renovado com sucesso!\n\n💰 *Valor Pago:* R$ 35,00\n📅 *Data do Pagamento:* 12/09/2026\n🗓️ *Próximo Vencimento:* 12/10/2026\n\nAgradecemos a confiança e parceria!\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_RENOVACAO",
+      "link": "https://wa.me/5511985897774?text=%F0%9F%8E%89%20*PAGAMENTO%20CONFIRMADO%20E%20PLANO%20RENOVADO!*%0A%0AOl%C3%A1%20*Gerailton%20Neves*%2C%20confirmamos%20o%20recebimento%20do%20seu%20pagamento%20e%20seu%20plano%20foi%20renovado%20com%20sucesso!%0A%0A%F0%9F%92%B0%20*Valor%20Pago%3A*%20R%24%C2%A035%2C00%0A%F0%9F%93%85%20*Data%20do%20Pagamento%3A*%2012%2F09%2F2026%0A%F0%9F%97%93%EF%B8%8F%20*Pr%C3%B3ximo%20Vencimento%3A*%2012%2F10%2F2026%0A%0AAgradecemos%20a%20confian%C3%A7a%20e%20parceria!%0A%0AEQUIPE%3A%20*Gerailton%20Neves*"
+    },
+    {
+      "id": "env_auto_1789174289903_cob_1789164843049",
+      "cobrancaId": "cob_1789164843049",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T00:51:29.903Z",
+      "mensagem": "Olá *Gerailton Neves*, tudo bem?\n\nPassando para lembrar referente à cobrança:\n📌 *Descrição:* RENOVE SEU PLANO DE CANAIS O VENCIMENTO É HOJE,  VAMOS RENOVAR AGORA.\n💰 *Valor:* R$ 35,00\n📅 *Vencimento:* 11/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789176542838_cob_1789164843049",
+      "cobrancaId": "cob_1789164843049",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T01:29:02.838Z",
+      "mensagem": "🎁 *PROMOÇÃO IMPERDÍVEL: INDIQUE E GANHE MENSALIDADE GRÁTIS!* 🚀\n\nOlá *Gerailton Neves*, temos um presente especial para você!\n\nIndique *2 amigos ou parentes* para assinar nossos planos de canais IPTV e *sua próxima mensalidade sairá 100% GRÁTIS!* 💥🎉\n\nComo funciona?\n1️⃣ Indique nossos planos para 2 amigos/familiares.\n2️⃣ Assim que eles ativarem a assinatura, você ganha 1 mês totalmente gratuito!\n\nAproveite essa oportunidade! Qualquer dúvida, conte conosco.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_1789176621504",
+      "cobrancaId": "cob_1789164843049",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T01:30:21.504Z",
+      "mensagem": "Olá *Gerailton Neves*, tudo bem? 👋\n\nPassando para lembrar referente à cobrança do seu plano:\n📌 *Descrição:* SEU PLANO DE CANAIS O VENCIMENTO É HOJE RENOVE PARA NÃO FICAR SEM ASSISTIR !\n💰 *Valor:* R$ 35,00\n📅 *Vencimento:* 11/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_DIRECT",
+      "link": "https://wa.me/5511985897774?text=Ol%C3%A1%20*Gerailton%20Neves*%2C%20tudo%20bem%3F%20%F0%9F%91%8B%0A%0APassando%20para%20lembrar%20referente%20%C3%A0%20cobran%C3%A7a%20do%20seu%20plano%3A%0A%F0%9F%93%8C%20*Descri%C3%A7%C3%A3o%3A*%20RENOVE%20SEU%20PLANO%20DE%20CANAIS%20HOJE%20%C3%89%20O%20VENCIMENTO%20DO%20SEU%20PLANO.%0A%F0%9F%92%B0%20*Valor%3A*%20R%24%C2%A035%2C00%0A%F0%9F%93%85%20*Vencimento%3A*%2011%2F09%2F2026%0A%0A%F0%9F%92%B3%20*DADOS%20PARA%20PAGAMENTO%20(PIX)%3A*%0A%E2%80%A2%20*Titular%3A*%20Gerailton%20Neves%20%0A%E2%80%A2%20*Banco%3A*%20Celcoin%20%0A%E2%80%A2%20*Chave%20PIX%20(Celular)%3A*%2011985897774%0A%0A%E2%84%B9%EF%B8%8F%20Ao%20efetuar%20o%20pagamento%20via%20PIX%2C%20favor%20enviar%20o%20comprovante%20respondendo%20a%20esta%20mensagem%20no%20WhatsApp.%0A%0AEQUIPE%3A%20*Gerailton%20Neves*"
+    },
+    {
+      "id": "env_1789176669355",
+      "cobrancaId": "cob_1789164843049",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T01:31:09.355Z",
+      "mensagem": "⚠️ *AVISO DE PLANO VENCIDO*\n\nOlá *Gerailton Neves*, identificamos que a sua assinatura do plano de canais encontra-se *VENCIDA* desde 11/09/2026.\n\n💰 *Valor em Aberto:* R$ 35,00\n\nPara evitar o bloqueio automático do seu sinal, efetue o pagamento via PIX:\n💳 *Chave PIX (Celular):* 11985897774\n• *Banco:* Celcoin \n• *Titular:* Gerailton Neves \n\nPor gentileza, nos envie o comprovante respondendo a esta mensagem.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_DIRECT",
+      "link": "https://wa.me/5511985897774?text=%E2%9A%A0%EF%B8%8F%20*AVISO%20DE%20PLANO%20VENCIDO*%0A%0AOl%C3%A1%20*Gerailton%20Neves*%2C%20identificamos%20que%20a%20sua%20assinatura%20do%20plano%20de%20canais%20encontra-se%20*VENCIDA*%20desde%2011%2F09%2F2026.%0A%0A%F0%9F%92%B0%20*Valor%20em%20Aberto%3A*%20R%24%C2%A035%2C00%0A%0APara%20evitar%20o%20bloqueio%20autom%C3%A1tico%20do%20seu%20sinal%2C%20efetue%20o%20pagamento%20via%20PIX%3A%0A%F0%9F%92%B3%20*Chave%20PIX%20(Celular)%3A*%2011985897774%0A%E2%80%A2%20*Banco%3A*%20Celcoin%20%0A%E2%80%A2%20*Titular%3A*%20Gerailton%20Neves%20%0A%0APor%20gentileza%2C%20nos%20envie%20o%20comprovante%20respondendo%20a%20esta%20mensagem.%0A%0AEQUIPE%3A%20*Gerailton%20Neves*"
+    },
+    {
+      "id": "env_auto_1789176721979_cob_1789164843049",
+      "cobrancaId": "cob_1789164843049",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T01:32:01.979Z",
+      "mensagem": "🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!*\n\nOlá *Gerailton Neves*, confirmamos o recebimento do seu pagamento e seu plano foi renovado com sucesso!\n\n💰 *Valor Pago:* R$ 35,00\n📅 *Data do Pagamento:* 12/09/2026\n🗓️ *Próximo Vencimento:* -\n\nAgradecemos a confiança e parceria!\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_1789176722534",
+      "cobrancaId": "cob_1789164843049",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T01:32:02.534Z",
+      "mensagem": "🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!*\n\nOlá *Gerailton Neves*, confirmamos o recebimento do seu pagamento e seu plano foi renovado com sucesso!\n\n💰 *Valor Pago:* R$ 35,00\n📅 *Data do Pagamento:* 12/09/2026\n🗓️ *Próximo Vencimento:* -\n\nAgradecemos a confiança e parceria!\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_DIRECT",
+      "link": "https://wa.me/5511985897774?text=%F0%9F%8E%89%20*PAGAMENTO%20CONFIRMADO%20E%20PLANO%20RENOVADO!*%0A%0AOl%C3%A1%20*Gerailton%20Neves*%2C%20confirmamos%20o%20recebimento%20do%20seu%20pagamento%20e%20seu%20plano%20foi%20renovado%20com%20sucesso!%0A%0A%F0%9F%92%B0%20*Valor%20Pago%3A*%20R%24%C2%A035%2C00%0A%F0%9F%93%85%20*Data%20do%20Pagamento%3A*%2012%2F09%2F2026%0A%F0%9F%97%93%EF%B8%8F%20*Pr%C3%B3ximo%20Vencimento%3A*%20-%0A%0AAgradecemos%20a%20confian%C3%A7a%20e%20parceria!%0A%0AEQUIPE%3A%20*Gerailton%20Neves*"
+    },
+    {
+      "id": "env_auto_1789176762035_cob_1789164843049",
+      "cobrancaId": "cob_1789164843049",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T01:32:42.035Z",
+      "mensagem": "🎁 *PROMOÇÃO IMPERDÍVEL: INDIQUE E GANHE MENSALIDADE GRÁTIS!* 🚀\n\nOlá *Gerailton Neves*, temos um presente especial para você!\n\nIndique *2 amigos ou parentes* para assinar nossos planos de canais IPTV e *sua próxima mensalidade sairá 100% GRÁTIS!* 💥🎉\n\nComo funciona?\n1️⃣ Indique nossos planos para 2 amigos/familiares.\n2️⃣ Assim que eles ativarem a assinatura, você ganha 1 mês totalmente gratuito!\n\nAproveite essa oportunidade! Qualquer dúvida, conte conosco.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_1789176763195",
+      "cobrancaId": "cob_1789164843049",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T01:32:43.195Z",
+      "mensagem": "🎁 *PROMOÇÃO IMPERDÍVEL: INDIQUE E GANHE MENSALIDADE GRÁTIS!* 🚀\n\nOlá *Gerailton Neves*, temos um presente especial para você!\n\nIndique *2 amigos ou parentes* para assinar nossos planos de canais IPTV e *sua próxima mensalidade sairá 100% GRÁTIS!* 💥🎉\n\nComo funciona?\n1️⃣ Indique nossos planos para 2 amigos/familiares.\n2️⃣ Assim que eles ativarem a assinatura, você ganha 1 mês totalmente gratuito!\n\nAproveite essa oportunidade! Qualquer dúvida, conte conosco.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_DIRECT",
+      "link": "https://wa.me/5511985897774?text=%F0%9F%8E%81%20*PROMO%C3%87%C3%83O%20IMPERD%C3%8DVEL%3A%20INDIQUE%20E%20GANHE%20MENSALIDADE%20GR%C3%81TIS!*%20%F0%9F%9A%80%0A%0AOl%C3%A1%20*Gerailton%20Neves*%2C%20temos%20um%20presente%20especial%20para%20voc%C3%AA!%0A%0AIndique%20*2%20amigos%20ou%20parentes*%20para%20assinar%20nossos%20planos%20de%20canais%20IPTV%20e%20*sua%20pr%C3%B3xima%20mensalidade%20sair%C3%A1%20100%25%20GR%C3%81TIS!*%20%F0%9F%92%A5%F0%9F%8E%89%0A%0AComo%20funciona%3F%0A1%EF%B8%8F%E2%83%A3%20Indique%20nossos%20planos%20para%202%20amigos%2Ffamiliares.%0A2%EF%B8%8F%E2%83%A3%20Assim%20que%20eles%20ativarem%20a%20assinatura%2C%20voc%C3%AA%20ganha%201%20m%C3%AAs%20totalmente%20gratuito!%0A%0AAproveite%20essa%20oportunidade!%20Qualquer%20d%C3%BAvida%2C%20conte%20conosco.%0A%0AEQUIPE%3A%20*Gerailton%20Neves*"
+    },
+    {
+      "id": "env_auto_1789178401241_cob_1789178339500",
+      "cobrancaId": "cob_1789178339500",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T02:00:01.241Z",
+      "mensagem": "⚠️ *AVISO DE PLANO VENCIDO*\n\nOlá *Gerailton Neves*, identificamos que a sua assinatura do plano de canais encontra-se *VENCIDA* desde 11/09/2026.\n\n💰 *Valor em Aberto:* R$ 35,00\n\nPara evitar o bloqueio automático do seu sinal, efetue o pagamento via PIX:\n💳 *Chave PIX (Celular):* 11985897774\n• *Banco:* Celcoin \n• *Titular:* Gerailton Neves \n\nPor gentileza, nos envie o comprovante respondendo a esta mensagem.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789183025875_cob_1789178339500",
+      "cobrancaId": "cob_1789178339500",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T03:17:05.875Z",
+      "mensagem": "⚠️ *AVISO DE PLANO VENCIDO*\n\nOlá *Gerailton Neves*, identificamos que a sua assinatura do plano de canais encontra-se *VENCIDA* desde 11/09/2026.\n\n💰 *Valor em Aberto:* R$ 35,00\n\nPara evitar o bloqueio automático do seu sinal, efetue o pagamento via PIX:\n💳 *Chave PIX (Celular):* 11985897774\n• *Banco:* Celcoin \n• *Titular:* Gerailton Neves \n\nPor gentileza, nos envie o comprovante respondendo a esta mensagem.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_1789183038659",
+      "cobrancaId": "cob_1789178339500",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T03:17:18.659Z",
+      "mensagem": "⚠️ *AVISO DE PLANO VENCIDO*\n\nOlá *Gerailton Neves*, identificamos que a sua assinatura do plano de canais encontra-se *VENCIDA* desde 11/09/2026.\n\n💰 *Valor em Aberto:* R$ 35,00\n\nPara evitar o bloqueio automático do seu sinal, efetue o pagamento via PIX:\n💳 *Chave PIX (Celular):* 11985897774\n• *Banco:* Celcoin \n• *Titular:* Gerailton Neves \n\nPor gentileza, nos envie o comprovante respondendo a esta mensagem.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_DIRECT",
+      "link": "https://wa.me/5511985897774?text=%E2%9A%A0%EF%B8%8F%20*AVISO%20DE%20PLANO%20VENCIDO*%0A%0AOl%C3%A1%20*Gerailton%20Neves*%2C%20identificamos%20que%20a%20sua%20assinatura%20do%20plano%20de%20canais%20encontra-se%20*VENCIDA*%20desde%2011%2F09%2F2026.%0A%0A%F0%9F%92%B0%20*Valor%20em%20Aberto%3A*%20R%24%C2%A035%2C00%0A%0APara%20evitar%20o%20bloqueio%20autom%C3%A1tico%20do%20seu%20sinal%2C%20efetue%20o%20pagamento%20via%20PIX%3A%0A%F0%9F%92%B3%20*Chave%20PIX%20(Celular)%3A*%2011985897774%0A%E2%80%A2%20*Banco%3A*%20Celcoin%20%0A%E2%80%A2%20*Titular%3A*%20Gerailton%20Neves%20%0A%0APor%20gentileza%2C%20nos%20envie%20o%20comprovante%20respondendo%20a%20esta%20mensagem.%0A%0AEQUIPE%3A%20*Gerailton%20Neves*"
+    },
+    {
+      "id": "env_auto_1789183184552_cob_1789178339500",
+      "cobrancaId": "cob_1789178339500",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T03:19:44.552Z",
+      "mensagem": "⚠️ *AVISO DE PLANO VENCIDO*\n\nOlá *Gerailton Neves*, identificamos que a sua assinatura do plano de canais encontra-se *VENCIDA* desde 11/09/2026.\n\n💰 *Valor em Aberto:* R$ 35,00\n\nPara evitar o bloqueio automático do seu sinal, efetue o pagamento via PIX:\n💳 *Chave PIX (Celular):* 11985897774\n• *Banco:* Celcoin \n• *Titular:* Gerailton Neves \n\nPor gentileza, nos envie o comprovante respondendo a esta mensagem.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789183445673_cob_1789183357650",
+      "cobrancaId": "cob_1789183357650",
+      "clienteNome": "Andressa Gois ",
+      "clienteTelefone": "5511985621859",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T03:24:05.673Z",
+      "mensagem": "🎁 *PROMOÇÃO IMPERDÍVEL: INDIQUE E GANHE MENSALIDADE GRÁTIS!* 🚀\n\nOlá *Andressa Gois*, temos um presente especial para você!\n\nIndique *2 amigos ou parentes* para assinar nossos planos de canais IPTV e *sua próxima mensalidade sairá 100% GRÁTIS!* 💥🎉\n\nComo funciona?\n1️⃣ Indique nossos planos para 2 amigos/familiares.\n2️⃣ Assim que eles ativarem a assinatura, você ganha 1 mês totalmente gratuito!\n\nAproveite essa oportunidade! Qualquer dúvida, conte conosco.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789183566459_cob_1789183357650",
+      "cobrancaId": "cob_1789183357650",
+      "clienteNome": "Andressa Gois ",
+      "clienteTelefone": "5511985621858",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T03:26:06.459Z",
+      "mensagem": "🎁 *PROMOÇÃO IMPERDÍVEL: INDIQUE E GANHE MENSALIDADE GRÁTIS!* 🚀\n\nOlá *Andressa Gois*, temos um presente especial para você!\n\nIndique *2 amigos ou parentes* para assinar nossos planos de canais IPTV e *sua próxima mensalidade sairá 100% GRÁTIS!* 💥🎉\n\nComo funciona?\n1️⃣ Indique nossos planos para 2 amigos/familiares.\n2️⃣ Assim que eles ativarem a assinatura, você ganha 1 mês totalmente gratuito!\n\nAproveite essa oportunidade! Qualquer dúvida, conte conosco.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789183685620_cob_1789183357650",
+      "cobrancaId": "cob_1789183357650",
+      "clienteNome": "Andressa Gois ",
+      "clienteTelefone": "5511985621858",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T03:28:05.620Z",
+      "mensagem": "🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!*\n\nOlá *Andressa Gois*, confirmamos o recebimento do seu pagamento e seu plano foi renovado com sucesso!\n\n💰 *Valor Pago:* R$ 35,00\n📅 *Data do Pagamento:* 12/09/2026\n🗓️ *Próximo Vencimento:* -\n\nAgradecemos a confiança e parceria!\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789229709351_cob_1789229660489",
+      "cobrancaId": "cob_1789229660489",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 35,
+      "dataEnvio": "2026-09-12T16:15:09.352Z",
+      "mensagem": "Olá *Gerailton Neves*, tudo bem? 👋\n\nPassando para lembrar referente à cobrança do seu plano:\n📌 *Descrição:* SEU PLANO DE CANAIS O VENCIMENTO É HOJE RENOVE PARA NÃO FICAR SEM ASSISTIR !\n💰 *Valor:* R$ 35,00\n📅 *Vencimento:* 12/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789230609781_cob_1789229660489",
+      "cobrancaId": "cob_1789229660489",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 60,
+      "dataEnvio": "2026-09-12T16:30:09.781Z",
+      "mensagem": "Olá *Gerailton Neves*, tudo bem? 👋\n\nPassando para lembrar referente à cobrança do seu plano:\n📌 *Descrição:* SEU PLANO DE CANAIS O VENCIMENTO É HOJE RENOVE PARA NÃO FICAR SEM ASSISTIR !\n💰 *Valor:* R$ 60,00\n📅 *Vencimento:* 12/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789258654509_cob_1789257318851",
+      "cobrancaId": "cob_1789257318851",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 90,
+      "dataEnvio": "2026-09-13T00:17:34.509Z",
+      "mensagem": "Olá *Gerailton Neves*, tudo bem? 👋\n\nPassando para lembrar referente à cobrança do seu plano:\n📌 *Descrição:* SEU PLANO DE CANAIS O VENCIMENTO É HOJE RENOVE PARA NÃO FICAR SEM ASSISTIR !\n💰 *Valor:* R$ 90,00\n📅 *Vencimento:* 12/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789258803154_cob_1789257318851",
+      "cobrancaId": "cob_1789257318851",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 90,
+      "dataEnvio": "2026-09-13T00:20:03.154Z",
+      "mensagem": "🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!*\n\nOlá *Gerailton Neves*, confirmamos o recebimento do seu pagamento e seu plano foi renovado com sucesso!\n\n💰 *Valor Pago:* R$ 90,00\n📅 *Data do Pagamento:* 13/09/2026\n🗓️ *Próximo Vencimento:* 12/10/2026\n\nAgradecemos a confiança e parceria!\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_1789259387167",
+      "cobrancaId": "cob_1789257318851",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 90,
+      "dataEnvio": "2026-09-13T00:29:47.167Z",
+      "mensagem": "🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!*\n\nOlá *Gerailton Neves*, confirmamos o recebimento do seu pagamento e seu plano foi renovado com sucesso!\n\n💰 *Valor Pago:* R$ 90,00\n📅 *Data do Pagamento:* 13/09/2026\n🗓️ *Próximo Vencimento:* 12/10/2026\n\nAgradecemos a confiança e parceria!\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_DIRECT",
+      "link": "https://wa.me/5511985897774?text=%F0%9F%8E%89%20*PAGAMENTO%20CONFIRMADO%20E%20PLANO%20RENOVADO!*%0A%0AOl%C3%A1%20*Gerailton%20Neves*%2C%20confirmamos%20o%20recebimento%20do%20seu%20pagamento%20e%20seu%20plano%20foi%20renovado%20com%20sucesso!%0A%0A%F0%9F%92%B0%20*Valor%20Pago%3A*%20R%24%C2%A090%2C00%0A%F0%9F%93%85%20*Data%20do%20Pagamento%3A*%2013%2F09%2F2026%0A%F0%9F%97%93%EF%B8%8F%20*Pr%C3%B3ximo%20Vencimento%3A*%2012%2F10%2F2026%0A%0AAgradecemos%20a%20confian%C3%A7a%20e%20parceria!%0A%0AEQUIPE%3A%20*Gerailton%20Neves*"
+    },
+    {
+      "id": "env_1789259670456",
+      "cobrancaId": "cob_1789257318851",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 90,
+      "dataEnvio": "2026-09-12T21:34",
+      "mensagem": "🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!*\n\nOlá *Gerailton Neves*, confirmamos o recebimento do seu pagamento e seu plano foi renovado com sucesso!\n\n💰 *Valor Pago:* R$ 90,00\n📅 *Data do Pagamento:* 12/09/2026\n🗓️ *Próximo Vencimento:* 12/10/2026\n\nAgradecemos a confiança e parceria!\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_DIRECT",
+      "link": "https://wa.me/5511985897774?text=%F0%9F%8E%89%20*PAGAMENTO%20CONFIRMADO%20E%20PLANO%20RENOVADO!*%0A%0AOl%C3%A1%20*Gerailton%20Neves*%2C%20confirmamos%20o%20recebimento%20do%20seu%20pagamento%20e%20seu%20plano%20foi%20renovado%20com%20sucesso!%0A%0A%F0%9F%92%B0%20*Valor%20Pago%3A*%20R%24%C2%A090%2C00%0A%F0%9F%93%85%20*Data%20do%20Pagamento%3A*%2012%2F09%2F2026%0A%F0%9F%97%93%EF%B8%8F%20*Pr%C3%B3ximo%20Vencimento%3A*%2012%2F10%2F2026%0A%0AAgradecemos%20a%20confian%C3%A7a%20e%20parceria!%0A%0AEQUIPE%3A%20*Gerailton%20Neves*"
+    },
+    {
+      "id": "env_1789262247518",
+      "cobrancaId": "cob_1789257318851",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 90,
+      "dataEnvio": "2026-09-12T22:17",
+      "mensagem": "🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!*\n\nOlá *Gerailton Neves*, confirmamos o recebimento do seu pagamento e seu plano foi renovado com sucesso!\n\n💰 *Valor Pago:* R$ 90,00\n📅 *Data do Pagamento:* 12/09/2026\n🗓️ *Próximo Vencimento:* 12/10/2026\n\nAgradecemos a confiança e parceria!\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_DIRECT",
+      "link": "https://wa.me/5511985897774?text=%F0%9F%8E%89%20*PAGAMENTO%20CONFIRMADO%20E%20PLANO%20RENOVADO!*%0A%0AOl%C3%A1%20*Gerailton%20Neves*%2C%20confirmamos%20o%20recebimento%20do%20seu%20pagamento%20e%20seu%20plano%20foi%20renovado%20com%20sucesso!%0A%0A%F0%9F%92%B0%20*Valor%20Pago%3A*%20R%24%C2%A090%2C00%0A%F0%9F%93%85%20*Data%20do%20Pagamento%3A*%2012%2F09%2F2026%0A%F0%9F%97%93%EF%B8%8F%20*Pr%C3%B3ximo%20Vencimento%3A*%2012%2F10%2F2026%0A%0AAgradecemos%20a%20confian%C3%A7a%20e%20parceria!%0A%0AEQUIPE%3A%20*Gerailton%20Neves*"
+    },
+    {
+      "id": "env_auto_1789262529301_cob_1789262366546",
+      "cobrancaId": "cob_1789262366546",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 90,
+      "dataEnvio": "2026-09-13T01:22:09.301Z",
+      "mensagem": "🎁 *PROMOÇÃO IMPERDÍVEL: INDIQUE E GANHE MENSALIDADE GRÁTIS!* 🚀\n\nOlá *Gerailton Neves*, temos um presente especial para você!\n\nIndique *2 amigos ou parentes* para assinar nossos planos de canais IPTV e *sua próxima mensalidade sairá 100% GRÁTIS!* 💥🎉\n\nComo funciona?\n1️⃣ Indique nossos planos para 2 amigos/familiares.\n2️⃣ Assim que eles ativarem a assinatura, você ganha 1 mês totalmente gratuito!\n\nAproveite essa oportunidade! Qualquer dúvida, conte conosco.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789264146749_cob_1789264095723",
+      "cobrancaId": "cob_1789264095723",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 90.01,
+      "dataEnvio": "2026-09-13T01:49:06.749Z",
+      "mensagem": "Olá *Gerailton Neves*, tudo bem? 👋\n\nPassando para lembrar referente à cobrança do seu plano:\n📌 *Descrição:* SEU PLANO DE CANAIS O VENCIMENTO É HOJE RENOVE PARA NÃO FICAR SEM ASSISTIR !\n💰 *Valor:* R$ 90,01\n📅 *Vencimento:* 12/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789264256353_cob_1789264095723",
+      "cobrancaId": "cob_1789264095723",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 90,
+      "dataEnvio": "2026-09-13T01:50:56.353Z",
+      "mensagem": "Olá *Gerailton Neves*, tudo bem? 👋\n\nPassando para lembrar referente à cobrança do seu plano:\n📌 *Descrição:* SEU PLANO DE CANAIS O VENCIMENTO É HOJE RENOVE PARA NÃO FICAR SEM ASSISTIR !\n💰 *Valor:* R$ 90,00\n📅 *Vencimento:* 12/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789264778707_cob_1789264095723",
+      "cobrancaId": "cob_1789264095723",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 90,
+      "dataEnvio": "2026-09-13T01:59:38.707Z",
+      "mensagem": "🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!* 🚀✨\n\nOlá *Gerailton Neves*, confirmamos o recebimento do seu pagamento e a sua assinatura foi renovada com sucesso!\n\n📌 *Resumo da Renovação:*\n💻 *Telas:* 3 Telas\n💰 *Valor Pago:* R$ 90,00\n📅 *Vencimento Atual:* 12/09/2026\n🗓️ *Data do Pagamento:* 12/09/2026\n🗓️ *Próxima Renovação:* 12/10/2026\n\nAgradecemos a preferência e a confiança! Qualquer dúvida, estamos à disposição no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789264858302_cob_1789264095723",
+      "cobrancaId": "cob_1789264095723",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 90,
+      "dataEnvio": "2026-09-13T02:00:58.302Z",
+      "mensagem": "🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!* 🚀✨\n\nOlá *Gerailton Neves*, confirmamos o recebimento do seu pagamento e a sua assinatura foi renovada com sucesso!\n\n📌 *Resumo da Renovação:*\n💻 *Telas:* 3 Telas\n💰 *Valor Pago:* R$ 90,00\n📅 *Vencimento Atual:* 12/09/2026\n🗓️ *Data do Pagamento:* 12/09/2026\n🗓️ *Próxima Renovação:* 12/10/2026\n\nAgradecemos a preferência e a confiança! Qualquer dúvida, estamos à disposição no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "env_auto_1789313109585_cob_1789313086878",
+      "cobrancaId": "cob_1789313086878",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 60.01,
+      "dataEnvio": "2026-09-13T15:25:09.585Z",
+      "mensagem": "Olá *Gerailton Neves*, tudo bem? 👋\n\nPassando para lembrar referente à cobrança do seu plano:\n📌 *Descrição:* SEU PLANO DE CANAIS O VENCIMENTO É HOJE RENOVE PARA NÃO FICAR SEM ASSISTIR !\n💰 *Valor:* R$ 60,01\n📅 *Vencimento:* 13/09/2026\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* Gerailton Neves \n• *Banco:* Celcoin \n• *Chave PIX (Celular):* 11985897774\n\nℹ️ Ao efetuar o pagamento via PIX, favor enviar o comprovante respondendo a esta mensagem no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_ROBOT"
+    },
+    {
+      "id": "custom_1789313184905",
+      "cobrancaId": "cob_1789313086878",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 60.01,
+      "dataEnvio": "2026-09-13T15:26:24.905Z",
+      "mensagem": "🎁 *PROMOÇÃO IMPERDÍVEL: INDIQUE E GANHE MENSALIDADE GRÁTIS!* 🚀\n\nOlá *Gerailton Neves*, temos um presente especial para você!\n\nIndique *2 amigos ou parentes* para assinar nossos planos de canais IPTV e *sua próxima mensalidade sairá 100% GRÁTIS!* 💥🎉\n\nComo funciona?\n1️⃣ Indique nossos planos para 2 amigos/familiares.\n2️⃣ Assim que eles ativarem a assinatura, você ganha 1 mês totalmente gratuito!\n\nAproveite essa oportunidade! Qualquer dúvida, conte conosco.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_CUSTOM",
+      "link": "https://wa.me/5511985897774?text=%F0%9F%8E%81%20*PROMO%C3%87%C3%83O%20IMPERD%C3%8DVEL%3A%20INDIQUE%20E%20GANHE%20MENSALIDADE%20GR%C3%81TIS!*%20%F0%9F%9A%80%0A%0AOl%C3%A1%20*Gerailton%20Neves*%2C%20temos%20um%20presente%20especial%20para%20voc%C3%AA!%0A%0AIndique%20*2%20amigos%20ou%20parentes*%20para%20assinar%20nossos%20planos%20de%20canais%20IPTV%20e%20*sua%20pr%C3%B3xima%20mensalidade%20sair%C3%A1%20100%25%20GR%C3%81TIS!*%20%F0%9F%92%A5%F0%9F%8E%89%0A%0AComo%20funciona%3F%0A1%EF%B8%8F%E2%83%A3%20Indique%20nossos%20planos%20para%202%20amigos%2Ffamiliares.%0A2%EF%B8%8F%E2%83%A3%20Assim%20que%20eles%20ativarem%20a%20assinatura%2C%20voc%C3%AA%20ganha%201%20m%C3%AAs%20totalmente%20gratuito!%0A%0AAproveite%20essa%20oportunidade!%20Qualquer%20d%C3%BAvida%2C%20conte%20conosco.%0A%0AEQUIPE%3A%20*Gerailton%20Neves*"
+    },
+    {
+      "id": "renov_1789313238503",
+      "cobrancaId": "cob_1789313086878",
+      "clienteNome": "Gerailton Neves ",
+      "clienteTelefone": "5511985897774",
+      "valor": 60.01,
+      "dataEnvio": "2026-09-13T12:27",
+      "mensagem": "🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!* 🚀✨\n\nOlá *Gerailton Neves*, confirmamos o recebimento do seu pagamento e a sua assinatura foi renovada com sucesso!\n\n📌 *Resumo da Renovação:*\n💻 *Telas:* 2 Telas\n💰 *Valor Pago:* R$ 60,01\n📅 *Vencimento Atual:* 13/09/2026\n🗓️ *Data do Pagamento:* 13/09/2026\n🗓️ *Próxima Renovação:* 13/10/2026\n\nAgradecemos a preferência e a confiança! Qualquer dúvida, estamos à disposição no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "tipoEnvio": "AUTOMATICO_RENOVACAO",
+      "link": "https://wa.me/5511985897774?text=%F0%9F%8E%89%20*PAGAMENTO%20CONFIRMADO%20E%20PLANO%20RENOVADO!*%20%F0%9F%9A%80%E2%9C%A8%0A%0AOl%C3%A1%20*Gerailton%20Neves*%2C%20confirmamos%20o%20recebimento%20do%20seu%20pagamento%20e%20a%20sua%20assinatura%20foi%20renovada%20com%20sucesso!%0A%0A%F0%9F%93%8C%20*Resumo%20da%20Renova%C3%A7%C3%A3o%3A*%0A%F0%9F%92%BB%20*Telas%3A*%202%20Telas%0A%F0%9F%92%B0%20*Valor%20Pago%3A*%20R%24%C2%A060%2C01%0A%F0%9F%93%85%20*Vencimento%20Atual%3A*%2013%2F09%2F2026%0A%F0%9F%97%93%EF%B8%8F%20*Data%20do%20Pagamento%3A*%2013%2F09%2F2026%0A%F0%9F%97%93%EF%B8%8F%20*Pr%C3%B3xima%20Renova%C3%A7%C3%A3o%3A*%2013%2F10%2F2026%0A%0AAgradecemos%20a%20prefer%C3%AAncia%20e%20a%20confian%C3%A7a!%20Qualquer%20d%C3%BAvida%2C%20estamos%20%C3%A0%20disposi%C3%A7%C3%A3o%20no%20WhatsApp.%0A%0AEQUIPE%3A%20*Gerailton%20Neves*"
+    }
+  ],
+  "alertasPendentes": [],
+  "planos": [
+    {
+      "id": "plano_1",
+      "nome": "Plano De Canais 1 Telas",
+      "categoria": "Plano IPTV",
+      "valor": 35,
+      "validade": "Mensal",
+      "descricao": "Canais FHD + 4K, Filmes & Séries atualizados diariamente, Guia EPG, 1 Tela",
+      "corBadge": "warning",
+      "dataCriacao": "2026-09-11T22:45:00.000Z"
+    },
+    {
+      "id": "plano_2",
+      "nome": "Plano De Canais  2 Telas ",
+      "categoria": "Plano IPTV",
+      "valor": 70,
+      "validade": "Mensal",
+      "descricao": "Tecnologia P2P Sem Trava para jogos ao vivo, Futebol Premiere + HBO, 2 Telas",
+      "corBadge": "neon-blue",
+      "dataCriacao": "2026-09-11T22:45:00.000Z"
+    },
+    {
+      "id": "plano_3",
+      "nome": "Plano De Canais 3 Telas",
+      "categoria": "Plano IPTV",
+      "valor": 90,
+      "validade": "Mensal",
+      "descricao": "Tecnologia P2P Sem Trava para jogos ao vivo, Futebol Premiere + HBO, 3 Telas",
+      "corBadge": "danger",
+      "dataCriacao": "2026-09-11T22:45:00.000Z"
+    },
+    {
+      "id": "plano_1789228996625",
+      "nome": "Plano De Canais ",
+      "categoria": "Plano Combo",
+      "valor": 70,
+      "validade": "Mensal (30 dias)",
+      "descricao": "Tecnologia P2P Sem Trava para jogos ao vivo, Futebol Premiere + HBO, 2 Telas",
+      "corBadge": "neon-blue",
+      "dataCriacao": "2026-09-12T16:03:16.625Z"
+    }
+  ],
+  "apps": [
+    {
+      "id": "app_1",
+      "nome": "Bleessd Player",
+      "categoria": "Smart TV / Firestick / Celular / Tv Box ",
+      "descricao": "Player profissional para Samsung Tizen e LG webOS",
+      "dataCriacao": "2026-09-11T22:50:00.000Z"
+    },
+    {
+      "id": "app_2",
+      "nome": "Fun Play",
+      "categoria": "Smart TV / Firestick / Celular / Tv Box ",
+      "descricao": "Interface moderna para Android TV e TV Box",
+      "dataCriacao": "2026-09-11T22:50:00.000Z"
+    },
+    {
+      "id": "app_3",
+      "nome": "Lazer Play",
+      "categoria": "Smart TV / Firestick / Celular / Tv Box ",
+      "descricao": "Compatível com iOS, Android e Smart TVs",
+      "dataCriacao": "2026-09-11T22:50:00.000Z"
+    },
+    {
+      "id": "app_1789168248216",
+      "nome": "IPTV IO ",
+      "categoria": "APP ",
+      "descricao": "Smart TV / Firestick / Celular / Tv Box ",
+      "dataCriacao": "2026-09-11T23:10:48.216Z"
+    }
+  ],
+  "servidores": [
+    {
+      "id": "srv_1",
+      "nome": "Servidor: X3",
+      "categoria": "Servidor Principal",
+      "descricao": "Servidor ultrarrápido com canais H265 e VoD atualizado",
+      "dataCriacao": "2026-09-11T22:50:00.000Z"
+    },
+    {
+      "id": "srv_2",
+      "nome": "Servidor: BR PRO VIP",
+      "categoria": "Servidor ",
+      "descricao": "Rede P2P dedicada para esportes ao vivo e jogos",
+      "dataCriacao": "2026-09-11T22:50:00.000Z"
+    },
+    {
+      "id": "srv_1789168200250",
+      "nome": "WPlay",
+      "categoria": "Servidor",
+      "descricao": "Smart TV / Firestick / Celular / Tv Box ",
+      "dataCriacao": "2026-09-11T23:10:00.250Z"
+    }
+  ],
+  "modelosMensagens": [
+    {
+      "id": "tpl_lembrete",
+      "titulo": "📌 Lembrete de Cobrança (Em Dia)",
+      "categoria": "Cobrança",
+      "mensagem": "Olá *{nome}*, tudo bem? 👋\n\nPassando para lembrar referente à cobrança do seu plano:\n📌 *Descrição:* {descricao}\n💰 *Valor:* {valor}\n📅 *Vencimento:* {vencimento}\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* {pix_titular}\n• *Banco:* {pix_banco}\n• *Chave PIX ({pix_tipo}):* {pix_chave}\n\nℹ️ {pix_instrucoes}\n\nEQUIPE: *Gerailton Neves*",
+      "padrao": true
+    },
+    {
+      "id": "tpl_vencido",
+      "titulo": "⚠️ Notificação de Plano Vencido",
+      "categoria": "Atrasados",
+      "mensagem": "⚠️ *AVISO DE PLANO VENCIDO*\n\nOlá *{nome}*, identificamos que a sua assinatura do plano de canais encontra-se *VENCIDA* desde {vencimento}.\n\n💰 *Valor em Aberto:* {valor}\n\nPara evitar o bloqueio automático do seu sinal, efetue o pagamento via PIX:\n💳 *Chave PIX ({pix_tipo}):* {pix_chave}\n• *Banco:* {pix_banco}\n• *Titular:* {pix_titular}\n\nPor gentileza, nos envie o comprovante respondendo a esta mensagem.\n\nEQUIPE: *Gerailton Neves*",
+      "padrao": true
+    },
+    {
+      "id": "tpl_renovacao",
+      "titulo": "🎉 Aviso de Renovação (Baixa Quitada)",
+      "categoria": "Renovação",
+      "mensagem": "🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!* 🚀✨\n\nOlá *{nome}*, confirmamos o recebimento do seu pagamento e a sua assinatura foi renovada com sucesso!\n\n📌 *Resumo da Renovação:*\n💻 *Telas:* {telas}\n💰 *Valor Pago:* {valor}\n📅 *Vencimento Atual:* {vencimento}\n🗓️ *Próxima Renovação:* {proximo_vencimento}\n\nAgradecemos a preferência e a confiança! Qualquer dúvida, estamos à disposição no WhatsApp.\n\nEQUIPE: *Gerailton Neves*",
+      "padrao": true
+    },
+    {
+      "id": "tpl_promocao_indicacao",
+      "titulo": "🎁 Promoção: Indique 2 Amigos & Ganhe Mensalidade Grátis",
+      "categoria": "Promoções",
+      "mensagem": "🎁 *PROMOÇÃO IMPERDÍVEL: INDIQUE E GANHE MENSALIDADE GRÁTIS!* 🚀\n\nOlá *{nome}*, temos um presente especial para você!\n\nIndique *2 amigos ou parentes* para assinar nossos planos de canais IPTV e *sua próxima mensalidade sairá 100% GRÁTIS!* 💥🎉\n\nComo funciona?\n1️⃣ Indique nossos planos para 2 amigos/familiares.\n2️⃣ Assim que eles ativarem a assinatura, você ganha 1 mês totalmente gratuito!\n\nAproveite essa oportunidade! Qualquer dúvida, conte conosco.\n\nEQUIPE: *Gerailton Neves*",
+      "padrao": true
+    }
+  ]
+}
