@@ -84,16 +84,20 @@ if (!fs.existsSync(DATA_DIR)) {
 
 function getLocalIsoString(d = new Date()) {
   try {
-    const brDateStr = d.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" });
-    const brDate = new Date(brDateStr);
+    const parts = new Intl.DateTimeFormat('pt-BR', {
+      timeZone: 'America/Sao_Paulo',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    }).formatToParts(d);
 
-    const pad = (n) => String(n).padStart(2, '0');
-    const year = brDate.getFullYear();
-    const month = pad(brDate.getMonth() + 1);
-    const day = pad(brDate.getDate());
-    const hours = pad(brDate.getHours());
-    const minutes = pad(brDate.getMinutes());
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
+    const getPart = (type) => parts.find(p => p.type === type)?.value || '00';
+    let hour = getPart('hour');
+    if (hour === '24') hour = '00';
+    return `${getPart('year')}-${getPart('month')}-${getPart('day')}T${hour}:${getPart('minute')}`;
   } catch (err) {
     const pad = (n) => String(n).padStart(2, '0');
     const year = d.getFullYear();
