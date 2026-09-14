@@ -1067,8 +1067,16 @@
       <form id="formBaixa">
         <input type="hidden" id="baixaCobrancaId">
         <div class="modal-body">
-          <p style="margin-bottom: 1rem; color: var(--text-brown-muted);">
-            Esta ação marcará a cobrança como <strong style="color: var(--emerald-light);">PAGA</strong> e a transferirá para o setor de <strong>Contas Recebidas</strong>.
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="baixaClienteSelect" style="font-weight: 700; color: #FFF; margin-bottom: 0.35rem; display: block;">
+              <i class="fa-solid fa-user-check" style="color: var(--emerald-primary);"></i> Cliente / Cobrança a Dar Baixa *
+            </label>
+            <select id="baixaClienteSelect" class="form-control" style="background: #090F1D; color: #FFF; font-weight: 700; border: 1.5px solid var(--emerald-primary);" required onchange="if (typeof onBaixaClienteSelectChange === 'function') onBaixaClienteSelectChange(this.value)">
+              <option value="">-- Selecione o Cliente --</option>
+            </select>
+          </div>
+          <p style="margin-bottom: 1rem; color: var(--text-brown-muted); font-size: 0.85rem;">
+            Esta ação marcará o plano do cliente como <strong style="color: var(--emerald-light);">PAGO & ATIVO (Em Dia)</strong> e agendará a renovação para o mês seguinte.
           </p>
           <div class="form-grid-2" style="margin-bottom: 1rem;">
             <div class="form-group">
