@@ -958,7 +958,7 @@ async function deletarCobranca(id) {
     cancelButtonColor: '#3E2418',
     confirmButtonText: 'Sim, excluir!',
     cancelButtonText: 'Cancelar',
-    background: '#0D1527',
+    background: '#FFFFFF',
     color: '#000000'
   });
 
@@ -966,7 +966,7 @@ async function deletarCobranca(id) {
     try {
       const res = await fetch(`/api/cobrancas/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        Swal.fire({ icon: 'success', title: 'Cobrança excluída!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
+        Swal.fire({ icon: 'success', title: 'Cobrança excluída!', timer: 1500, showConfirmButton: false, background: '#FFFFFF', color: '#000000' });
         await fetchCobrancas();
         loadDashboardData();
       }
@@ -1125,7 +1125,7 @@ async function darBaixaRapida(id) {
     confirmButtonColor: '#059669',
     denyButtonColor: '#0284C7',
     cancelButtonColor: '#64748B',
-    background: '#FAF7EE',
+    background: '#FFFFFF',
     color: '#1E293B'
   });
 
@@ -1136,7 +1136,7 @@ async function darBaixaRapida(id) {
         text: 'Aguarde um instante',
         allowOutsideClick: false,
         didOpen: () => Swal.showLoading(),
-        background: '#FAF7EE',
+        background: '#FFFFFF',
         color: '#1E293B'
       });
 
@@ -1172,7 +1172,7 @@ async function darBaixaRapida(id) {
           title: '🎉 Baixa Concluída com Sucesso!',
           text: msgSucesso,
           confirmButtonColor: '#059669',
-          background: '#FAF7EE',
+          background: '#FFFFFF',
           color: '#1E293B'
         };
 
@@ -1194,7 +1194,7 @@ async function darBaixaRapida(id) {
           icon: 'error',
           title: 'Erro ao Dar Baixa',
           text: data.error || 'Não foi possível registrar a baixa.',
-          background: '#FAF7EE',
+          background: '#FFFFFF',
           color: '#1E293B'
         });
       }
@@ -1204,7 +1204,7 @@ async function darBaixaRapida(id) {
         icon: 'error',
         title: 'Erro de Conexão',
         text: 'Servidor não respondeu.',
-        background: '#FAF7EE',
+        background: '#FFFFFF',
         color: '#1E293B'
       });
     }
@@ -1334,7 +1334,7 @@ async function reverterBaixa(id) {
     cancelButtonColor: '#3E2418',
     confirmButtonText: 'Sim, Reverter Baixa!',
     cancelButtonText: 'Cancelar',
-    background: '#0D1527',
+    background: '#FFFFFF',
     color: '#000000'
   });
 
@@ -1342,7 +1342,7 @@ async function reverterBaixa(id) {
     try {
       const res = await fetch(`/api/cobrancas/${id}/reverter-baixa`, { method: 'POST' });
       if (res.ok) {
-        Swal.fire({ icon: 'success', title: 'Cobrança Revertida!', text: 'Retornou para a lista de A Receber.', timer: 1800, showConfirmButton: false, background: '#0D1527', color: '#000000' });
+        Swal.fire({ icon: 'success', title: 'Cobrança Revertida!', text: 'Retornou para a lista de A Receber.', timer: 1800, showConfirmButton: false, background: '#FFFFFF', color: '#000000' });
         await fetchCobrancas();
         loadDashboardData();
       }
@@ -1369,7 +1369,7 @@ async function dispararWhatsApp(id) {
         title: 'Mensagem do WhatsApp Gerada!',
         text: 'A janela de envio do WhatsApp foi aberta com a mensagem formatada contendo seus dados PIX.',
         confirmButtonColor: '#10B981',
-        background: '#0D1527',
+        background: '#FFFFFF',
         color: '#000000'
       });
 
@@ -1855,7 +1855,7 @@ async function deletarCliente(id) {
     cancelButtonColor: '#3E2418',
     confirmButtonText: 'Sim, excluir!',
     cancelButtonText: 'Cancelar',
-    background: '#0D1527',
+    background: '#FFFFFF',
     color: '#000000'
   });
 
@@ -1863,7 +1863,7 @@ async function deletarCliente(id) {
     try {
       const res = await fetch(`/api/clientes/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        Swal.fire({ icon: 'success', title: 'Cliente excluído!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
+        Swal.fire({ icon: 'success', title: 'Cliente excluído!', timer: 1500, showConfirmButton: false, background: '#FFFFFF', color: '#000000' });
         await fetchClientes();
       }
     } catch (err) {
@@ -1972,15 +1972,15 @@ function setupForms() {
 
       if (res.ok) {
         fecharModalCobranca();
-        Swal.fire({ icon: 'success', title: id ? 'Cobrança Atualizada!' : 'Cobrança Cadastrada!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
+        Swal.fire({ icon: 'success', title: id ? 'Cobrança Atualizada!' : 'Cobrança Cadastrada!', timer: 1500, showConfirmButton: false, background: '#FFFFFF', color: '#000000' });
         await fetchCobrancas();
         loadDashboardData();
       } else {
-        Swal.fire({ icon: 'error', title: 'Erro ao Salvar Cobrança', text: data.error || 'Preencha todos os campos obrigatórios.', background: '#0D1527', color: '#000000' });
+        Swal.fire({ icon: 'error', title: 'Erro ao Salvar Cobrança', text: data.error || 'Preencha todos os campos obrigatórios.', background: '#FFFFFF', color: '#000000' });
       }
     } catch (err) {
       console.error('Erro ao salvar cobrança:', err);
-      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível se comunicar com o servidor.', background: '#0D1527', color: '#000000' });
+      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível se comunicar com o servidor.', background: '#FFFFFF', color: '#000000' });
     }
   });
 
@@ -2048,7 +2048,7 @@ function setupForms() {
         }
 
         fecharModalCliente();
-        Swal.fire({ icon: 'success', title: id ? 'Cliente Atualizado!' : 'Cliente e Cobrança Agendada com Sucesso!', timer: 1800, showConfirmButton: false, background: '#0D1527', color: '#000000' });
+        Swal.fire({ icon: 'success', title: id ? 'Cliente Atualizado!' : 'Cliente e Cobrança Agendada com Sucesso!', timer: 1800, showConfirmButton: false, background: '#FFFFFF', color: '#000000' });
         await fetchClientes();
         await fetchCobrancas();
         loadDashboardData();
@@ -2059,11 +2059,11 @@ function setupForms() {
           switchTab('cobrancas');
         }
       } else {
-        Swal.fire({ icon: 'error', title: 'Erro ao Salvar Cliente', text: data.error || 'Nome e WhatsApp são obrigatórios.', background: '#0D1527', color: '#000000' });
+        Swal.fire({ icon: 'error', title: 'Erro ao Salvar Cliente', text: data.error || 'Nome e WhatsApp são obrigatórios.', background: '#FFFFFF', color: '#000000' });
       }
     } catch (err) {
       console.error('Erro ao salvar cliente:', err);
-      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível salvar o cliente no servidor.', background: '#0D1527', color: '#000000' });
+      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível salvar o cliente no servidor.', background: '#FFFFFF', color: '#000000' });
     }
   });
 
@@ -2096,7 +2096,7 @@ function setupForms() {
             title: '🎉 Plano Renovado & Baixa Efetuada!',
             text: `Baixa confirmada! O plano do cliente agora está ATIVO (Em Dia) e a nova data de vencimento foi alterada para ${proxDataBr}. A mensagem de renovação foi enviada via robô para o WhatsApp!`,
             confirmButtonColor: '#059669',
-            background: '#FAF7EE',
+            background: '#FFFFFF',
             color: '#1E293B'
           });
         } else if (bodyData.enviarNotificacaoWhatsApp && data.linkWhatsAppRenovacao) {
@@ -2109,7 +2109,7 @@ function setupForms() {
             cancelButtonText: 'OK / Fechar',
             confirmButtonColor: '#059669',
             cancelButtonColor: '#64748B',
-            background: '#FAF7EE',
+            background: '#FFFFFF',
             color: '#1E293B'
           }).then((r) => {
             if (r.isConfirmed && data.linkWhatsAppRenovacao) {
@@ -2122,7 +2122,7 @@ function setupForms() {
             title: '🎉 Baixa Efetuada com Sucesso!',
             text: `O plano do cliente agora está ATIVO (Em Dia) com novo vencimento em ${proxDataBr}. A cobrança foi transferida para Contas Recebidas.`,
             confirmButtonColor: '#059669',
-            background: '#FAF7EE',
+            background: '#FFFFFF',
             color: '#1E293B'
           });
         }
@@ -2136,7 +2136,7 @@ function setupForms() {
       }
     } catch (err) {
       console.error('Erro ao dar baixa:', err);
-      Swal.fire({ icon: 'error', title: 'Erro ao Dar Baixa', text: 'Não foi possível processar a baixa no servidor.', background: '#0D1527', color: '#000000' });
+      Swal.fire({ icon: 'error', title: 'Erro ao Dar Baixa', text: 'Não foi possível processar a baixa no servidor.', background: '#FFFFFF', color: '#000000' });
     }
   });
 
@@ -2159,7 +2159,7 @@ function setupForms() {
       });
 
       if (res.ok) {
-        Swal.fire({ icon: 'success', title: 'Dados PIX Salvos com Sucesso!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
+        Swal.fire({ icon: 'success', title: 'Dados PIX Salvos com Sucesso!', timer: 1500, showConfirmButton: false, background: '#FFFFFF', color: '#000000' });
         await fetchMeusDados();
       }
     } catch (err) {
@@ -2179,7 +2179,7 @@ function setupForms() {
     const nomeVal = document.getElementById('planoNome') ? document.getElementById('planoNome').value.trim() : '';
 
     if (!nomeVal || valParsed <= 0) {
-      Swal.fire({ icon: 'warning', title: 'Campos Obrigatórios', text: 'Informe o Nome do Plano e um Valor válido.', background: '#0D1527', color: '#000000' });
+      Swal.fire({ icon: 'warning', title: 'Campos Obrigatórios', text: 'Informe o Nome do Plano e um Valor válido.', background: '#FFFFFF', color: '#000000' });
       return;
     }
 
@@ -2207,14 +2207,14 @@ function setupForms() {
 
       if (res.ok) {
         fecharModalPlano();
-        Swal.fire({ icon: 'success', title: id ? 'Plano Atualizado!' : 'Plano Cadastrado com Sucesso!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
+        Swal.fire({ icon: 'success', title: id ? 'Plano Atualizado!' : 'Plano Cadastrado com Sucesso!', timer: 1500, showConfirmButton: false, background: '#FFFFFF', color: '#000000' });
         await fetchPlanos();
       } else {
-        Swal.fire({ icon: 'error', title: 'Erro ao Salvar Plano', text: data.error || 'Verifique se preencheu os campos corretamente.', background: '#0D1527', color: '#000000' });
+        Swal.fire({ icon: 'error', title: 'Erro ao Salvar Plano', text: data.error || 'Verifique se preencheu os campos corretamente.', background: '#FFFFFF', color: '#000000' });
       }
     } catch (err) {
       console.error('Erro ao salvar plano:', err);
-      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível salvar o plano no servidor.', background: '#0D1527', color: '#000000' });
+      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível salvar o plano no servidor.', background: '#FFFFFF', color: '#000000' });
     }
   });
 
@@ -2225,7 +2225,7 @@ function setupForms() {
     const nomeVal = document.getElementById('appNome') ? document.getElementById('appNome').value.trim() : '';
 
     if (!nomeVal) {
-      Swal.fire({ icon: 'warning', title: 'Nome Obrigatório', text: 'Informe o Nome do Aplicativo.', background: '#0D1527', color: '#000000' });
+      Swal.fire({ icon: 'warning', title: 'Nome Obrigatório', text: 'Informe o Nome do Aplicativo.', background: '#FFFFFF', color: '#000000' });
       return;
     }
 
@@ -2248,14 +2248,14 @@ function setupForms() {
 
       if (res.ok) {
         fecharModalApp();
-        Swal.fire({ icon: 'success', title: id ? 'App Atualizado!' : 'App Cadastrado com Sucesso!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
+        Swal.fire({ icon: 'success', title: id ? 'App Atualizado!' : 'App Cadastrado com Sucesso!', timer: 1500, showConfirmButton: false, background: '#FFFFFF', color: '#000000' });
         await fetchApps();
       } else {
-        Swal.fire({ icon: 'error', title: 'Erro ao Salvar App', text: data.error || 'Preencha o nome do aplicativo.', background: '#0D1527', color: '#000000' });
+        Swal.fire({ icon: 'error', title: 'Erro ao Salvar App', text: data.error || 'Preencha o nome do aplicativo.', background: '#FFFFFF', color: '#000000' });
       }
     } catch (err) {
       console.error('Erro ao salvar app:', err);
-      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível salvar o app no servidor.', background: '#0D1527', color: '#000000' });
+      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível salvar o app no servidor.', background: '#FFFFFF', color: '#000000' });
     }
   });
 
@@ -2266,7 +2266,7 @@ function setupForms() {
     const nomeVal = document.getElementById('servidorNome') ? document.getElementById('servidorNome').value.trim() : '';
 
     if (!nomeVal) {
-      Swal.fire({ icon: 'warning', title: 'Nome Obrigatório', text: 'Informe o Nome do Servidor.', background: '#0D1527', color: '#000000' });
+      Swal.fire({ icon: 'warning', title: 'Nome Obrigatório', text: 'Informe o Nome do Servidor.', background: '#FFFFFF', color: '#000000' });
       return;
     }
 
@@ -2289,14 +2289,14 @@ function setupForms() {
 
       if (res.ok) {
         fecharModalServidor();
-        Swal.fire({ icon: 'success', title: id ? 'Servidor Atualizado!' : 'Servidor Cadastrado com Sucesso!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
+        Swal.fire({ icon: 'success', title: id ? 'Servidor Atualizado!' : 'Servidor Cadastrado com Sucesso!', timer: 1500, showConfirmButton: false, background: '#FFFFFF', color: '#000000' });
         await fetchServidores();
       } else {
-        Swal.fire({ icon: 'error', title: 'Erro ao Salvar Servidor', text: data.error || 'Preencha o nome do servidor.', background: '#0D1527', color: '#000000' });
+        Swal.fire({ icon: 'error', title: 'Erro ao Salvar Servidor', text: data.error || 'Preencha o nome do servidor.', background: '#FFFFFF', color: '#000000' });
       }
     } catch (err) {
       console.error('Erro ao salvar servidor:', err);
-      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível salvar o servidor no servidor.', background: '#0D1527', color: '#000000' });
+      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível salvar o servidor no servidor.', background: '#FFFFFF', color: '#000000' });
     }
   });
 
@@ -2341,7 +2341,7 @@ async function checkAlertasPendentes() {
         cancelButtonText: 'Depois',
         confirmButtonColor: '#25D366',
         cancelButtonColor: '#3E2418',
-        background: '#0D1527',
+        background: '#FFFFFF',
         color: '#000000'
       }).then((result) => {
         if (result.isConfirmed && alerta.linkWhatsApp) {
@@ -2456,7 +2456,7 @@ async function reconectarWhatsApp() {
       text: 'O QR Code aparecerá na tela em instantes.',
       timer: 1500,
       showConfirmButton: false,
-      background: '#0D1527',
+      background: '#FFFFFF',
       color: '#000000'
     });
 
@@ -2493,7 +2493,7 @@ async function testarEnvioWhatsApp() {
     cancelButtonText: 'Cancelar',
     confirmButtonColor: '#25D366',
     cancelButtonColor: '#3E2418',
-    background: '#0D1527',
+    background: '#FFFFFF',
     color: '#000000',
     preConfirm: () => {
       const tel = document.getElementById('swal-input-tel').value;
@@ -2511,7 +2511,7 @@ async function testarEnvioWhatsApp() {
       text: 'Aguarde um momento enquanto o robô entrega a mensagem.',
       allowOutsideClick: false,
       didOpen: () => Swal.showLoading(),
-      background: '#0D1527',
+      background: '#FFFFFF',
       color: '#000000'
     });
 
@@ -2529,7 +2529,7 @@ async function testarEnvioWhatsApp() {
           title: 'Mensagem Entregue com Sucesso!',
           text: data.message,
           confirmButtonColor: '#10B981',
-          background: '#0D1527',
+          background: '#FFFFFF',
           color: '#000000'
         });
       } else {
@@ -2538,7 +2538,7 @@ async function testarEnvioWhatsApp() {
           title: 'Falha no Envio',
           text: data.error || 'Não foi possível entregar a mensagem. Verifique se o QR Code está conectado.',
           confirmButtonColor: '#EF4444',
-          background: '#0D1527',
+          background: '#FFFFFF',
           color: '#000000'
         });
       }
@@ -2667,37 +2667,57 @@ function renderCardsPlanos() {
 }
 
 function abrirModalNovoPlano() {
-  const pId = document.getElementById('planoId');
-  if (pId) pId.value = '';
+  const pId = document.getElementById('planoId'); if (pId) pId.value = '';
   const pTitle = document.getElementById('modalPlanoTitle');
   if (pTitle) pTitle.innerHTML = `<i class="fa-solid fa-tv" style="color: var(--neon-blue);"></i> Cadastrar Novo Plano de Canais`;
-  const fPlano = document.getElementById('formPlano');
-  if (fPlano) fPlano.reset();
+  const fPlano = document.getElementById('formPlano'); if (fPlano) fPlano.reset();
   if (document.getElementById('planoDesconto')) document.getElementById('planoDesconto').value = '0.00';
-  calcularValorFinalPlanoModal();
+  if (typeof calcularValorFinalPlanoModal === 'function') calcularValorFinalPlanoModal();
   abrirModal('modalPlano');
 }
 
 function editarPlano(id) {
-  const p = globalPlanos.find(item => item.id === id);
+  const p = globalPlanos.find(item => String(item.id) === String(id));
   if (!p) return;
 
-  document.getElementById('planoId').value = p.id;
-  document.getElementById('modalPlanoTitle').innerHTML = `<i class="fa-solid fa-pen"></i> Editar Plano de Canais`;
-  document.getElementById('planoNome').value = p.nome;
-  document.getElementById('planoCategoria').value = p.categoria;
-  document.getElementById('planoValidade').value = p.validade;
-  if (document.getElementById('planoTelas')) {
-    document.getElementById('planoTelas').value = p.telas || '1 Tela';
+  const pId = document.getElementById('planoId'); if (pId) pId.value = p.id;
+  const pTitle = document.getElementById('modalPlanoTitle');
+  if (pTitle) pTitle.innerHTML = `<i class="fa-solid fa-pen"></i> Editar Plano de Canais`;
+  const pNome = document.getElementById('planoNome'); if (pNome) pNome.value = p.nome || '';
+  
+  const pCat = document.getElementById('planoCategoria');
+  if (pCat) {
+    pCat.value = p.categoria || 'Plano IPTV';
+    if (!pCat.value && p.categoria) {
+      const opt = Array.from(pCat.options).find(o => o.value.toLowerCase().includes(String(p.categoria).toLowerCase()));
+      if (opt) pCat.value = opt.value;
+    }
   }
-  document.getElementById('planoValor').value = p.valor;
-  if (document.getElementById('planoDesconto')) {
-    document.getElementById('planoDesconto').value = p.desconto || 0;
-  }
-  document.getElementById('planoCorBadge').value = p.corBadge || 'neon-green';
-  document.getElementById('planoDescricao').value = p.descricao;
-  calcularValorFinalPlanoModal();
 
+  const pVal = document.getElementById('planoValidade');
+  if (pVal) {
+    pVal.value = p.validade || 'Mensal (30 dias)';
+    if (!pVal.value && p.validade) {
+      const opt = Array.from(pVal.options).find(o => o.value.toLowerCase().includes(String(p.validade).toLowerCase()));
+      if (opt) pVal.value = opt.value;
+    }
+  }
+
+  const pTelas = document.getElementById('planoTelas');
+  if (pTelas) {
+    pTelas.value = p.telas || '1 Tela';
+    if (!pTelas.value && p.telas) {
+      const opt = Array.from(pTelas.options).find(o => o.value.includes(String(p.telas)));
+      if (opt) pTelas.value = opt.value;
+    }
+  }
+
+  const pValor = document.getElementById('planoValor'); if (pValor) pValor.value = p.valor || '';
+  const pDesc = document.getElementById('planoDesconto'); if (pDesc) pDesc.value = p.desconto || 0;
+  const pCor = document.getElementById('planoCorBadge'); if (pCor) pCor.value = p.corBadge || 'neon-green';
+  const pDet = document.getElementById('planoDescricao'); if (pDet) pDet.value = p.descricao || '';
+  
+  if (typeof calcularValorFinalPlanoModal === 'function') calcularValorFinalPlanoModal();
   abrirModal('modalPlano');
 }
 
@@ -2715,7 +2735,7 @@ async function deletarPlano(id) {
     cancelButtonColor: '#3E2418',
     confirmButtonText: 'Sim, excluir!',
     cancelButtonText: 'Cancelar',
-    background: '#0D1527',
+    background: '#FFFFFF',
     color: '#000000'
   });
 
@@ -2723,7 +2743,7 @@ async function deletarPlano(id) {
     try {
       const res = await fetch(`/api/planos/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        Swal.fire({ icon: 'success', title: 'Plano excluído!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
+        Swal.fire({ icon: 'success', title: 'Plano excluído!', timer: 1500, showConfirmButton: false, background: '#FFFFFF', color: '#000000' });
         await fetchPlanos();
       }
     } catch (err) {
@@ -2777,7 +2797,7 @@ function copiarPromoPlano(planoId) {
       text: 'Texto promocional pronto para colar no WhatsApp!',
       timer: 2000,
       showConfirmButton: false,
-      background: '#0D1527',
+      background: '#FFFFFF',
       color: '#000000'
     });
   });
@@ -2842,14 +2862,15 @@ function abrirModalNovoApp() {
 }
 
 function editarApp(id) {
-  const app = globalApps.find(a => a.id === id);
+  const app = globalApps.find(a => String(a.id) === String(id));
   if (!app) return;
 
-  document.getElementById('appId').value = app.id;
-  document.getElementById('modalAppTitle').innerHTML = `<i class="fa-solid fa-pen"></i> Editar Aplicativo`;
-  document.getElementById('appNome').value = app.nome;
-  document.getElementById('appCategoria').value = app.categoria;
-  document.getElementById('appDescricao').value = app.descricao || '';
+  const aId = document.getElementById('appId'); if (aId) aId.value = app.id;
+  const aTitle = document.getElementById('modalAppTitle');
+  if (aTitle) aTitle.innerHTML = `<i class="fa-solid fa-pen"></i> Editar Aplicativo`;
+  const aNome = document.getElementById('appNome'); if (aNome) aNome.value = app.nome || '';
+  const aCat = document.getElementById('appCategoria'); if (aCat) aCat.value = app.categoria || '';
+  const aDesc = document.getElementById('appDescricao'); if (aDesc) aDesc.value = app.descricao || '';
 
   abrirModal('modalApp');
 }
@@ -2865,18 +2886,18 @@ async function deletarApp(id) {
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#EF4444',
-    cancelButtonColor: '#3E2418',
+    cancelButtonColor: '#64748B',
     confirmButtonText: 'Sim, excluir!',
     cancelButtonText: 'Cancelar',
-    background: '#0D1527',
-    color: '#000000'
+    background: '#FFFFFF',
+    color: '#1E293B'
   });
 
   if (confirm.isConfirmed) {
     try {
       const res = await fetch(`/api/apps/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        Swal.fire({ icon: 'success', title: 'Aplicativo excluído!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
+        Swal.fire({ icon: 'success', title: 'Aplicativo excluído!', timer: 1500, showConfirmButton: false, background: '#FFFFFF', color: '#1E293B' });
         await fetchApps();
       }
     } catch (err) {
@@ -2944,14 +2965,15 @@ function abrirModalNovoServidor() {
 }
 
 function editarServidor(id) {
-  const srv = globalServidores.find(s => s.id === id);
+  const srv = globalServidores.find(s => String(s.id) === String(id));
   if (!srv) return;
 
-  document.getElementById('servidorId').value = srv.id;
-  document.getElementById('modalServidorTitle').innerHTML = `<i class="fa-solid fa-pen"></i> Editar Servidor`;
-  document.getElementById('servidorNome').value = srv.nome;
-  document.getElementById('servidorCategoria').value = srv.categoria;
-  document.getElementById('servidorDescricao').value = srv.descricao || '';
+  const sId = document.getElementById('servidorId'); if (sId) sId.value = srv.id;
+  const sTitle = document.getElementById('modalServidorTitle');
+  if (sTitle) sTitle.innerHTML = `<i class="fa-solid fa-pen"></i> Editar Servidor`;
+  const sNome = document.getElementById('servidorNome'); if (sNome) sNome.value = srv.nome || '';
+  const sCat = document.getElementById('servidorCategoria'); if (sCat) sCat.value = srv.categoria || '';
+  const sDesc = document.getElementById('servidorDescricao'); if (sDesc) sDesc.value = srv.descricao || '';
 
   abrirModal('modalServidor');
 }
@@ -2970,7 +2992,7 @@ async function deletarServidor(id) {
     cancelButtonColor: '#3E2418',
     confirmButtonText: 'Sim, excluir!',
     cancelButtonText: 'Cancelar',
-    background: '#0D1527',
+    background: '#FFFFFF',
     color: '#000000'
   });
 
@@ -2978,7 +3000,7 @@ async function deletarServidor(id) {
     try {
       const res = await fetch(`/api/servidores/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        Swal.fire({ icon: 'success', title: 'Servidor excluído!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
+        Swal.fire({ icon: 'success', title: 'Servidor excluído!', timer: 1500, showConfirmButton: false, background: '#FFFFFF', color: '#000000' });
         await fetchServidores();
       }
     } catch (err) {
@@ -3150,7 +3172,7 @@ async function deletarModelo(id) {
     cancelButtonColor: '#3E2418',
     confirmButtonText: 'Sim, excluir!',
     cancelButtonText: 'Cancelar',
-    background: '#0D1527',
+    background: '#FFFFFF',
     color: '#000000'
   });
 
@@ -3158,7 +3180,7 @@ async function deletarModelo(id) {
     try {
       const res = await fetch(`/api/modelos-mensagens/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        Swal.fire({ icon: 'success', title: 'Modelo excluído!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
+        Swal.fire({ icon: 'success', title: 'Modelo excluído!', timer: 1500, showConfirmButton: false, background: '#FFFFFF', color: '#000000' });
         await fetchModelosMensagens();
       }
     } catch (err) {
@@ -3193,7 +3215,7 @@ async function salvarModeloMensagem(e) {
 
     if (res.ok) {
       fecharModalModeloMensagem();
-      Swal.fire({ icon: 'success', title: id ? 'Modelo Atualizado!' : 'Modelo Cadastrado!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
+      Swal.fire({ icon: 'success', title: id ? 'Modelo Atualizado!' : 'Modelo Cadastrado!', timer: 1500, showConfirmButton: false, background: '#FFFFFF', color: '#000000' });
       await fetchModelosMensagens();
     }
   } catch (err) {
@@ -3298,7 +3320,7 @@ async function dispararModeloSelecionado(e) {
   const textoCustomizado = document.getElementById('disparoMensagemTexto').value;
 
   if (!clienteId) {
-    Swal.fire({ icon: 'warning', title: 'Atenção', text: 'Selecione um cliente para receber a mensagem.', confirmButtonColor: '#00F0FF', background: '#0D1527', color: '#000000' });
+    Swal.fire({ icon: 'warning', title: 'Atenção', text: 'Selecione um cliente para receber a mensagem.', confirmButtonColor: '#00F0FF', background: '#FFFFFF', color: '#000000' });
     return;
   }
 
@@ -3319,7 +3341,7 @@ async function dispararModeloSelecionado(e) {
           title: '🚀 Mensagem Entregue com Sucesso!',
           text: 'O modelo de mensagem escolhido foi entregue diretamente no WhatsApp do cliente!',
           confirmButtonColor: '#00FF87',
-          background: '#0D1527',
+          background: '#FFFFFF',
           color: '#000000'
         });
       } else if (data.linkWhatsApp) {
@@ -3329,7 +3351,7 @@ async function dispararModeloSelecionado(e) {
           title: 'Aba do WhatsApp Aberta!',
           text: 'A janela do WhatsApp Web foi aberta com o texto preenchido contendo as variáveis substituídas!',
           confirmButtonColor: '#00F0FF',
-          background: '#0D1527',
+          background: '#FFFFFF',
           color: '#000000'
         });
       }
