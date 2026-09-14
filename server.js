@@ -1094,13 +1094,109 @@ app.post(['/api/cobrancas/:id/dar-baixa', '/api/cobrancas/dar-baixa'], async (re
   });
 
   saveDB(db);
+
+  const idRecibo = `REC-${cobranca.id.replace('cob_', '')}`;
+  const dtPagto = cobranca.dataPagamento || getLocalIsoString().split('T')[0];
+  const dtVenc = cobranca.dataVencimento || '-';
+  const dtProx = cobranca.proximoVencimento || '-';
+  const dtPagtoBr = dtPagto.includes('T') ? dtPagto.split('T')[0].split('-').reverse().join('/') : dtPagto.split('-').reverse().join('/');
+  const dtProxBr = (dtProx && dtProx !== '-') ? (dtProx.includes('T') ? dtProx.split('T')[0].split('-').reverse().join('/') : dtProx.split('-').reverse().join('/')) : '-';
+
+  const msgRecibo = `📄 *RECIBO DE PAGAMENTO & RENOVAÇÃO* 📄\n` +
+    `--------------------------------------\n` +
+    `*Nº Recibo:* ${idRecibo}\n` +
+    `*Cliente:* ${cobranca.clienteNome}\n` +
+    `*Plano/Serviço:* ${cobranca.descricao}\n` +
+    `*Telas:* ${cobranca.qtdTelas || 1}\n` +
+    `*Valor Pago:* R$ ${Number(cobranca.valor).toFixed(2).replace('.', ',')}\n` +
+    `*Data do Pagamento:* ${dtPagtoBr}\n` +
+    `*Próxima Renovação:* ${dtProxBr}\n` +
+    `--------------------------------------\n` +
+    `*Emitido por:* ${(db.meusDados && db.meusDados.nomeTitular) || 'Gerailton Cobranças'}\n` +
+    `Obrigado pela preferência! 😊`;
+
+  const linkWhatsAppRecibo = `https://wa.me/${telefoneLimpo}?text=${encodeURIComponent(msgRecibo)}`;
+
+  const reciboObj = {
+    idRecibo,
+    cobrancaId: cobranca.id,
+    clienteId: cobranca.clienteId,
+    clienteNome: cobranca.clienteNome,
+    clienteTelefone: cobranca.clienteTelefone,
+    descricao: cobranca.descricao,
+    qtdTelas: cobranca.qtdTelas || 1,
+    valorBruto: cobranca.valorBruto || cobranca.valor,
+    desconto: cobranca.desconto || 0,
+    valor: cobranca.valor,
+    dataPagamento: dtPagto,
+    dataVencimento: dtVenc,
+    proximoVencimento: dtProx,
+    observacaoBaixa: cobranca.observacaoBaixa || '',
+    empresa: db.meusDados || {},
+    mensagemTexto: msgRecibo,
+    linkWhatsApp: linkWhatsAppRecibo
+  };
+
   res.json({
     success: true,
     message: "Baixa efetuada e plano renovado com sucesso para o próximo mês!",
     enviouDireto,
     msgRenovacao,
     linkWhatsAppRenovacao,
-    cobranca
+    cobranca,
+    recibo: reciboObj
+  });
+});
+
+app.get('/api/cobrancas/:id/recibo', (req, res) => {
+  const db = getDB();
+  const cobranca = db.cobrancas.find(c => c.id === req.params.id);
+  if (!cobranca) return res.status(404).json({ error: "Cobrança não encontrada" });
+
+  const cliente = db.clientes.find(c => c.id === cobranca.clienteId);
+  const meusDados = db.meusDados || {};
+  const idRecibo = `REC-${cobranca.id.replace('cob_', '')}`;
+  const dtPagto = cobranca.dataPagamento || getLocalIsoString().split('T')[0];
+  const dtVenc = cobranca.dataVencimento || '-';
+  const dtProx = cobranca.proximoVencimento || '-';
+
+  const dtPagtoBr = dtPagto.includes('T') ? dtPagto.split('T')[0].split('-').reverse().join('/') : dtPagto.split('-').reverse().join('/');
+  const dtProxBr = (dtProx && dtProx !== '-') ? (dtProx.includes('T') ? dtProx.split('T')[0].split('-').reverse().join('/') : dtProx.split('-').reverse().join('/')) : '-';
+
+  const msgRecibo = `📄 *RECIBO DE PAGAMENTO & RENOVAÇÃO* 📄\n` +
+    `--------------------------------------\n` +
+    `*Nº Recibo:* ${idRecibo}\n` +
+    `*Cliente:* ${cobranca.clienteNome}\n` +
+    `*Plano/Serviço:* ${cobranca.descricao}\n` +
+    `*Telas:* ${cobranca.qtdTelas || (cliente ? cliente.qtdTelas : 1)}\n` +
+    `*Valor Pago:* R$ ${Number(cobranca.valor).toFixed(2).replace('.', ',')}\n` +
+    `*Data do Pagamento:* ${dtPagtoBr}\n` +
+    `*Próxima Renovação:* ${dtProxBr}\n` +
+    `--------------------------------------\n` +
+    `*Emitido por:* ${meusDados.nomeTitular || 'Gerailton Cobranças'}\n` +
+    `Obrigado pela preferência! 😊`;
+
+  const telSanitizado = sanitizePhone(cobranca.clienteTelefone);
+  const linkWhatsAppRecibo = `https://wa.me/${telSanitizado}?text=${encodeURIComponent(msgRecibo)}`;
+
+  res.json({
+    idRecibo,
+    cobrancaId: cobranca.id,
+    clienteId: cobranca.clienteId,
+    clienteNome: cobranca.clienteNome,
+    clienteTelefone: cobranca.clienteTelefone,
+    descricao: cobranca.descricao,
+    qtdTelas: cobranca.qtdTelas || (cliente ? cliente.qtdTelas : 1),
+    valorBruto: cobranca.valorBruto || cobranca.valor,
+    desconto: cobranca.desconto || 0,
+    valor: cobranca.valor,
+    dataPagamento: dtPagto,
+    dataVencimento: dtVenc,
+    proximoVencimento: dtProx,
+    observacaoBaixa: cobranca.observacaoBaixa || '',
+    empresa: meusDados,
+    mensagemTexto: msgRecibo,
+    linkWhatsApp: linkWhatsAppRecibo
   });
 });
 
