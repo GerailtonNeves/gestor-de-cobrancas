@@ -149,8 +149,8 @@ window.fecharModalCobranca = function() { fecharModal('modalCobranca'); };
 window.fecharModalBaixa = function() { fecharModal('modalBaixa'); };
 
 window.abrirModalBaixa = function(id) {
-  if (typeof abrirModalBaixa === 'function') {
-    abrirModalBaixa(id);
+  if (typeof window.abrirModalBaixaFn === 'function') {
+    window.abrirModalBaixaFn(id);
   } else {
     if (id && document.getElementById('baixaCobrancaId')) document.getElementById('baixaCobrancaId').value = id;
     abrirModal('modalBaixa');
