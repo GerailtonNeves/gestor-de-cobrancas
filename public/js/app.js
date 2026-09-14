@@ -53,9 +53,23 @@ function abrirModal(modalId) {
   document.querySelectorAll('.modal-overlay').forEach(m => {
     m.classList.remove('active');
     m.style.display = 'none';
+    m.style.opacity = '0';
+    m.style.visibility = 'hidden';
+    m.style.pointerEvents = 'none';
   });
   modal.classList.add('active');
   modal.style.display = 'flex';
+  modal.style.opacity = '1';
+  modal.style.visibility = 'visible';
+  modal.style.pointerEvents = 'auto';
+
+  const modalBox = modal.querySelector('.modal-box');
+  if (modalBox) {
+    modalBox.style.display = 'block';
+    modalBox.style.opacity = '1';
+    modalBox.style.visibility = 'visible';
+    modalBox.style.transform = 'translateY(0)';
+  }
 }
 
 function fecharModal(modalId) {
@@ -63,6 +77,15 @@ function fecharModal(modalId) {
   if (!modal) return;
   modal.classList.remove('active');
   modal.style.display = 'none';
+  modal.style.opacity = '0';
+  modal.style.visibility = 'hidden';
+  modal.style.pointerEvents = 'none';
+
+  const modalBox = modal.querySelector('.modal-box');
+  if (modalBox) {
+    modalBox.style.opacity = '0';
+    modalBox.style.visibility = 'hidden';
+  }
 }
 
 window.abrirModal = abrirModal;
@@ -2668,7 +2691,7 @@ function renderCardsPlanos() {
 function abrirModalNovoPlano() {
   const pId = document.getElementById('planoId'); if (pId) pId.value = '';
   const pTitle = document.getElementById('modalPlanoTitle');
-  if (pTitle) pTitle.innerHTML = `<i class="fa-solid fa-tv" style="color: var(--neon-blue);"></i> Cadastrar Novo Plano de Canais`;
+  if (pTitle) pTitle.innerHTML = '<i class="fa-solid fa-tv" style="color: var(--neon-blue);"></i> Cadastrar Novo Plano de Canais';
   const fPlano = document.getElementById('formPlano'); if (fPlano) fPlano.reset();
   if (document.getElementById('planoDesconto')) document.getElementById('planoDesconto').value = '0.00';
   if (typeof calcularValorFinalPlanoModal === 'function') calcularValorFinalPlanoModal();
@@ -2689,7 +2712,7 @@ function editarPlano(id) {
 
   const pId = document.getElementById('planoId'); if (pId) pId.value = p.id;
   const pTitle = document.getElementById('modalPlanoTitle');
-  if (pTitle) pTitle.innerHTML = `<i class="fa-solid fa-pen"></i> Editar Plano de Canais`;
+  if (pTitle) pTitle.innerHTML = '<i class="fa-solid fa-pen"></i> Editar Plano de Canais';
   const pNome = document.getElementById('planoNome'); if (pNome) pNome.value = p.nome || '';
   
   const pCat = document.getElementById('planoCategoria');
@@ -2859,12 +2882,10 @@ function renderCardsApps() {
 }
 
 function abrirModalNovoApp() {
-  const aId = document.getElementById('appId');
-  if (aId) aId.value = '';
+  const aId = document.getElementById('appId'); if (aId) aId.value = '';
   const aTitle = document.getElementById('modalAppTitle');
-  if (aTitle) aTitle.innerHTML = `<i class="fa-solid fa-mobile-screen-button" style="color: var(--neon-blue);"></i> Cadastrar Aplicativo / App`;
-  const fApp = document.getElementById('formApp');
-  if (fApp) fApp.reset();
+  if (aTitle) aTitle.innerHTML = '<i class="fa-solid fa-mobile-screen-button" style="color: var(--neon-blue);"></i> Cadastrar Aplicativo / App';
+  const fApp = document.getElementById('formApp'); if (fApp) fApp.reset();
   abrirModal('modalApp');
 }
 
@@ -2882,7 +2903,7 @@ function editarApp(id) {
 
   const aId = document.getElementById('appId'); if (aId) aId.value = app.id;
   const aTitle = document.getElementById('modalAppTitle');
-  if (aTitle) aTitle.innerHTML = `<i class="fa-solid fa-pen"></i> Editar Aplicativo`;
+  if (aTitle) aTitle.innerHTML = '<i class="fa-solid fa-pen"></i> Editar Aplicativo';
   const aNome = document.getElementById('appNome'); if (aNome) aNome.value = app.nome || '';
   const aCat = document.getElementById('appCategoria'); if (aCat) aCat.value = app.categoria || '';
   const aDesc = document.getElementById('appDescricao'); if (aDesc) aDesc.value = app.descricao || '';
@@ -2970,12 +2991,10 @@ function renderCardsServidores() {
 }
 
 function abrirModalNovoServidor() {
-  const sId = document.getElementById('servidorId');
-  if (sId) sId.value = '';
+  const sId = document.getElementById('servidorId'); if (sId) sId.value = '';
   const sTitle = document.getElementById('modalServidorTitle');
-  if (sTitle) sTitle.innerHTML = `<i class="fa-solid fa-server" style="color: var(--emerald-primary);"></i> Cadastrar Servidor / Painel`;
-  const fSrv = document.getElementById('formServidor');
-  if (fSrv) fSrv.reset();
+  if (sTitle) sTitle.innerHTML = '<i class="fa-solid fa-server" style="color: var(--emerald-primary);"></i> Cadastrar Servidor / Painel';
+  const fSrv = document.getElementById('formServidor'); if (fSrv) fSrv.reset();
   abrirModal('modalServidor');
 }
 
@@ -2993,7 +3012,7 @@ function editarServidor(id) {
 
   const sId = document.getElementById('servidorId'); if (sId) sId.value = srv.id;
   const sTitle = document.getElementById('modalServidorTitle');
-  if (sTitle) sTitle.innerHTML = `<i class="fa-solid fa-pen"></i> Editar Servidor`;
+  if (sTitle) sTitle.innerHTML = '<i class="fa-solid fa-pen"></i> Editar Servidor';
   const sNome = document.getElementById('servidorNome'); if (sNome) sNome.value = srv.nome || '';
   const sCat = document.getElementById('servidorCategoria'); if (sCat) sCat.value = srv.categoria || '';
   const sDesc = document.getElementById('servidorDescricao'); if (sDesc) sDesc.value = srv.descricao || '';
