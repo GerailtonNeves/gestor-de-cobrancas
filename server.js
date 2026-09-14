@@ -562,6 +562,31 @@ app.get('/api/meus-dados', (req, res) => {
 // -----------------------------------------------------------------
 // PLANOS, APPS E SERVIDORES IPTV
 // -----------------------------------------------------------------
+
+app.get('/api/planos/:id', (req, res) => {
+  const db = getDB();
+  const cleanId = String(req.params.id || '').trim().toLowerCase();
+  const p = db.planos.find(item => String(item.id).trim().toLowerCase() === cleanId);
+  if (!p) return res.status(404).json({ error: "Plano não encontrado" });
+  res.json(p);
+});
+
+app.get('/api/apps/:id', (req, res) => {
+  const db = getDB();
+  const cleanId = String(req.params.id || '').trim().toLowerCase();
+  const appItem = db.apps.find(item => String(item.id).trim().toLowerCase() === cleanId);
+  if (!appItem) return res.status(404).json({ error: "Aplicativo não encontrado" });
+  res.json(appItem);
+});
+
+app.get('/api/servidores/:id', (req, res) => {
+  const db = getDB();
+  const cleanId = String(req.params.id || '').trim().toLowerCase();
+  const srv = db.servidores.find(item => String(item.id).trim().toLowerCase() === cleanId);
+  if (!srv) return res.status(404).json({ error: "Servidor não encontrado" });
+  res.json(srv);
+});
+
 app.get('/api/planos', (req, res) => {
   const db = getDB();
   res.json(db.planos || []);
