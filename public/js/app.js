@@ -1680,6 +1680,7 @@ function renderTabelaClientes() {
       const appObj = globalApps.find(a => a.id === cli.appId);
       const modeloObj = globalModelosMensagens.find(m => m.id === cli.modeloMensagemId);
       const statusObj = obterStatusCliente(cli);
+      const cobPendente = globalCobrancas.find(c => c.clienteId === cli.id && c.status === 'PENDENTE');
 
       const badgePlano = planoObj 
         ? `<span class="badge badge-agendado" style="font-size: 0.8rem; padding: 0.25rem 0.6rem;"><i class="fa-solid fa-tv"></i> ${planoObj.nome} (${formatCurrency(planoObj.valor)})</span>` 
