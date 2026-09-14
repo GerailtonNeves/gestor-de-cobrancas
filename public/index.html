@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="GestorCob">
   
   <!-- CSS Principal -->
-  <link rel="stylesheet" href="css/styles.css?v=75.0">
+  <link rel="stylesheet" href="css/styles.css?v=77.0">
   
   <!-- Icones Remixicon & FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -171,7 +171,7 @@
     <div style="display: flex; align-items: center; gap: 0.85rem;">
       <img src="icon-192.png" alt="App Icon" style="width: 44px; height: 44px; border-radius: 12px; border: 1.5px solid var(--emerald-primary); box-shadow: 0 2px 10px rgba(0,0,0,0.4);">
       <div>
-        <div style="font-weight: 800; color: #FFF; font-size: 1rem; display: flex; align-items: center; gap: 0.4rem;">
+        <div style="font-weight: 800; color: #000000; font-size: 1rem; display: flex; align-items: center; gap: 0.4rem;">
           <i class="fa-solid fa-mobile-screen-button" style="color: var(--emerald-light);"></i> Instalar o App no Celular
         </div>
         <div style="font-size: 0.8rem; color: #CBD5E1; margin-top: 0.1rem;">Instale como aplicativo nativo para acessar rapidamente da tela inicial!</div>
@@ -191,7 +191,7 @@
   <header class="mobile-header">
     <div style="display: flex; align-items: center; gap: 0.75rem;">
       <img src="icon-192.png" alt="Logo" style="width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--emerald-primary);">
-      <span style="font-weight: 800; font-size: 1.1rem; color: #FFF;">GESTOR DE COBRANÇAS</span>
+      <span style="font-weight: 800; font-size: 1.1rem; color: #000000;">GESTOR DE COBRANÇAS</span>
     </div>
     <div style="display: flex; align-items: center; gap: 0.5rem;">
       <button id="mobileHeaderInstallBtn" class="btn-success-sm" style="display: none; padding: 0.4rem 0.75rem; font-size: 0.8rem; border-radius: 8px;" onclick="iniciarInstalacaoPwa()">
@@ -719,7 +719,7 @@
 
         <!-- Tags / Variáveis Disponíveis -->
         <div class="glass-panel" style="margin-bottom: 1.5rem; border-left: 4px solid var(--neon-blue);">
-          <h4 style="color: #FFF; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <h4 style="color: #000000; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
             <i class="fa-solid fa-tags" style="color: var(--neon-green);"></i> Variáveis Dinâmicas de Preenchimento Automático (Clique para inserir):
           </h4>
           <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;" id="tagChipsContainer">
@@ -767,7 +767,7 @@
             <input type="text" id="filterPlanosInput" class="form-control" style="padding-left: 2.5rem;" placeholder="Buscar plano por nome, categoria ou telas..." oninput="filtrarPlanos()">
           </div>
           <div style="font-size: 0.85rem; color: var(--text-brown-muted); font-weight: 700;">
-            <i class="fa-solid fa-tv" style="color: var(--neon-green);"></i> Total: <span id="statTotalPlanosCount" style="color: #FFF;">0</span> Planos Cadastrados
+            <i class="fa-solid fa-tv" style="color: var(--neon-green);"></i> Total: <span id="statTotalPlanosCount" style="color: #000000;">0</span> Planos Cadastrados
           </div>
         </div>
 
@@ -785,7 +785,7 @@
             <p>Cadastre os aplicativos e players que você disponibiliza para os seus clientes.</p>
           </div>
           <div>
-            <button type="button" id="btnNovoApp" class="btn-primary" style="background: linear-gradient(135deg, var(--neon-blue), #3b82f6); color: #fff;" onclick="if (typeof abrirModalNovoApp === 'function') { abrirModalNovoApp(); } else { abrirModal('modalApp'); }">
+            <button type="button" id="btnNovoApp" class="btn-primary" style="background: linear-gradient(135deg, var(--neon-blue), #3b82f6); color: #000000;" onclick="if (typeof abrirModalNovoApp === 'function') { abrirModalNovoApp(); } else { abrirModal('modalApp'); }">
               <i class="fa-solid fa-plus"></i> + Cadastrar Novo App
             </button>
           </div>
@@ -798,7 +798,7 @@
             <input type="text" id="filterAppsInput" class="form-control" style="padding-left: 2.5rem;" placeholder="Buscar aplicativo por nome ou plataforma..." oninput="filtrarApps()">
           </div>
           <div style="font-size: 0.85rem; color: var(--text-brown-muted); font-weight: 700;">
-            <i class="fa-solid fa-mobile-screen-button" style="color: var(--neon-blue);"></i> Total: <span id="statTotalAppsCount" style="color: #FFF;">0</span> Apps Cadastrados
+            <i class="fa-solid fa-mobile-screen-button" style="color: var(--neon-blue);"></i> Total: <span id="statTotalAppsCount" style="color: #000000;">0</span> Apps Cadastrados
           </div>
         </div>
 
@@ -829,7 +829,7 @@
             <input type="text" id="filterServidoresInput" class="form-control" style="padding-left: 2.5rem;" placeholder="Buscar servidor por nome ou tipo..." oninput="filtrarServidores()">
           </div>
           <div style="font-size: 0.85rem; color: var(--text-brown-muted); font-weight: 700;">
-            <i class="fa-solid fa-server" style="color: var(--emerald-light);"></i> Total: <span id="statTotalServidoresCount" style="color: #FFF;">0</span> Servidores Cadastrados
+            <i class="fa-solid fa-server" style="color: var(--emerald-light);"></i> Total: <span id="statTotalServidoresCount" style="color: #000000;">0</span> Servidores Cadastrados
           </div>
         </div>
 
@@ -935,7 +935,7 @@
               </div>
               <div class="form-group" style="margin-bottom: 0;">
                 <label for="cobValor" style="font-size: 0.8rem; color: var(--neon-green); font-weight: 700;"><i class="fa-solid fa-calculator"></i> Valor Final (R$) *</label>
-                <input type="number" step="0.01" id="cobValor" class="form-control" placeholder="0.00" required oninput="calcularDeValorFinalCob()" style="border-color: var(--neon-green); background: rgba(0, 255, 136, 0.08); font-weight: 700; color: #FFF;">
+                <input type="number" step="0.01" id="cobValor" class="form-control" placeholder="0.00" required oninput="calcularDeValorFinalCob()" style="border-color: var(--neon-green); background: rgba(0, 255, 136, 0.08); font-weight: 700; color: #000000;">
               </div>
             </div>
           </div>
@@ -971,7 +971,7 @@
   <div class="modal-overlay" id="modalCliente">
     <div class="modal-box" style="max-width: 680px;">
       <div class="modal-header" style="border-bottom: 2px solid rgba(0, 240, 255, 0.2); padding-bottom: 0.85rem;">
-        <h3 id="modalClienteTitle" style="color: #FFF; font-weight: 800; display: flex; align-items: center; gap: 0.6rem;">
+        <h3 id="modalClienteTitle" style="color: #000000; font-weight: 800; display: flex; align-items: center; gap: 0.6rem;">
           <i class="fa-solid fa-user-plus" style="color: var(--neon-blue);"></i> Cadastrar Cliente
         </h3>
         <button class="modal-close" onclick="fecharModalCliente()">&times;</button>
@@ -987,18 +987,18 @@
             </h4>
 
             <div class="form-group" style="margin-bottom: 0.85rem;">
-              <label for="cliNome" style="font-weight: 700; color: #FFF;"><i class="fa-solid fa-user"></i> Nome Completo do Cliente *</label>
-              <input type="text" id="cliNome" class="form-control" placeholder="Ex: Carlos Eduardo Silva" required style="background: #090F1D; border-color: rgba(0, 240, 255, 0.3); color: #FFF;">
+              <label for="cliNome" style="font-weight: 700; color: #000000;"><i class="fa-solid fa-user"></i> Nome Completo do Cliente *</label>
+              <input type="text" id="cliNome" class="form-control" placeholder="Ex: Carlos Eduardo Silva" required style="background: #090F1D; border-color: rgba(0, 240, 255, 0.3); color: #000000;">
             </div>
 
             <div class="form-grid-2">
               <div class="form-group" style="margin-bottom: 0;">
                 <label for="cliTelefone" style="font-weight: 700; color: var(--emerald-light);"><i class="fa-brands fa-whatsapp"></i> WhatsApp (DDD + Número) *</label>
-                <input type="text" id="cliTelefone" class="form-control" placeholder="Ex: 5581999887766" required style="background: #090F1D; border-color: var(--emerald-primary); color: #FFF;">
+                <input type="text" id="cliTelefone" class="form-control" placeholder="Ex: 5581999887766" required style="background: #090F1D; border-color: var(--emerald-primary); color: #000000;">
               </div>
               <div class="form-group" style="margin-bottom: 0;">
                 <label for="cliEmail" style="color: var(--text-brown-muted);"><i class="fa-regular fa-envelope"></i> E-mail (Opcional)</label>
-                <input type="email" id="cliEmail" class="form-control" placeholder="cliente@email.com" style="background: #090F1D; color: #FFF;">
+                <input type="email" id="cliEmail" class="form-control" placeholder="cliente@email.com" style="background: #090F1D; color: #000000;">
               </div>
             </div>
           </div>
@@ -1012,12 +1012,12 @@
 
             <div class="form-group" style="margin-bottom: 0.85rem;">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
-                <label for="cliPlanoId" style="font-weight: 700; color: #FFF; margin: 0;"><i class="fa-solid fa-tag" style="color: var(--neon-blue);"></i> Escolha o Plano de Canais</label>
+                <label for="cliPlanoId" style="font-weight: 700; color: #000000; margin: 0;"><i class="fa-solid fa-tag" style="color: var(--neon-blue);"></i> Escolha o Plano de Canais</label>
                 <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoPlano()">
                   <i class="fa-solid fa-plus"></i> + Novo Plano
                 </button>
               </div>
-              <select id="cliPlanoId" class="form-control" onchange="autoPreencherPlanoCliente()" style="background: #0D1527; border: 1px solid var(--neon-blue); color: #FFF; font-weight: 700;">
+              <select id="cliPlanoId" class="form-control" onchange="autoPreencherPlanoCliente()" style="background: #0D1527; border: 1px solid var(--neon-blue); color: #000000; font-weight: 700;">
                 <option value="">-- Selecione o Plano --</option>
               </select>
             </div>
@@ -1025,24 +1025,24 @@
             <div class="form-grid-2">
               <div class="form-group" style="margin-bottom: 0;">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
-                  <label for="cliServidorId" style="font-weight: 600; color: #E2E8F0; margin: 0;"><i class="fa-solid fa-server" style="color: var(--neon-blue);"></i> Servidor / Painel</label>
+                  <label for="cliServidorId" style="font-weight: 600; color: #000000; margin: 0;"><i class="fa-solid fa-server" style="color: var(--neon-blue);"></i> Servidor / Painel</label>
                   <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoServidor()">
                     <i class="fa-solid fa-plus"></i> + Servidor
                   </button>
                 </div>
-                <select id="cliServidorId" class="form-control" style="background: #090F1D; color: #FFF;">
+                <select id="cliServidorId" class="form-control" style="background: #090F1D; color: #000000;">
                   <option value="">-- Nenhum Servidor --</option>
                 </select>
               </div>
 
               <div class="form-group" style="margin-bottom: 0;">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
-                  <label for="cliAppId" style="font-weight: 600; color: #E2E8F0; margin: 0;"><i class="fa-solid fa-mobile-screen-button" style="color: var(--emerald-light);"></i> Aplicativo / App</label>
+                  <label for="cliAppId" style="font-weight: 600; color: #000000; margin: 0;"><i class="fa-solid fa-mobile-screen-button" style="color: var(--emerald-light);"></i> Aplicativo / App</label>
                   <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoApp()">
                     <i class="fa-solid fa-plus"></i> + App
                   </button>
                 </div>
-                <select id="cliAppId" class="form-control" style="background: #090F1D; color: #FFF;">
+                <select id="cliAppId" class="form-control" style="background: #090F1D; color: #000000;">
                   <option value="">-- Nenhum App --</option>
                 </select>
               </div>
@@ -1050,7 +1050,7 @@
           <!-- SEÇÃO 3: OBSERVAÇÕES -->
           <div class="form-group" style="margin-bottom: 0;">
             <label for="cliNotas" style="color: var(--text-brown-muted); font-size: 0.88rem;"><i class="fa-regular fa-clipboard"></i> Observações / Notas do Cliente</label>
-            <textarea id="cliNotas" class="form-control" rows="2" placeholder="Ex: Preferência para renovar no início do mês..." style="background: #090F1D; color: #FFF;"></textarea>
+            <textarea id="cliNotas" class="form-control" rows="2" placeholder="Ex: Preferência para renovar no início do mês..." style="background: #090F1D; color: #000000;"></textarea>
           </div>
 
         </div>
@@ -1075,10 +1075,10 @@
         <input type="hidden" id="baixaCobrancaId">
         <div class="modal-body">
           <div class="form-group" style="margin-bottom: 1rem;">
-            <label for="baixaClienteSelect" style="font-weight: 700; color: #FFF; margin-bottom: 0.35rem; display: block;">
+            <label for="baixaClienteSelect" style="font-weight: 700; color: #000000; margin-bottom: 0.35rem; display: block;">
               <i class="fa-solid fa-user-check" style="color: var(--emerald-primary);"></i> Cliente / Cobrança a Dar Baixa *
             </label>
-            <select id="baixaClienteSelect" class="form-control" style="background: #090F1D; color: #FFF; font-weight: 700; border: 1.5px solid var(--emerald-primary);" required onchange="if (typeof onBaixaClienteSelectChange === 'function') onBaixaClienteSelectChange(this.value)">
+            <select id="baixaClienteSelect" class="form-control" style="background: #090F1D; color: #000000; font-weight: 700; border: 1.5px solid var(--emerald-primary);" required onchange="if (typeof onBaixaClienteSelectChange === 'function') onBaixaClienteSelectChange(this.value)">
               <option value="">-- Selecione o Cliente --</option>
             </select>
           </div>
@@ -1101,7 +1101,7 @@
           </div>
           <div class="form-group" style="background: var(--bg-card); padding: 0.85rem; border-radius: 10px; border: 1px dashed var(--neon-blue); display: flex; align-items: center; gap: 0.65rem;">
             <input type="checkbox" id="baixaEnviarWhatsApp" checked style="width: 18px; height: 18px; accent-color: var(--emerald-primary); cursor: pointer;">
-            <label for="baixaEnviarWhatsApp" style="margin: 0; cursor: pointer; color: #FFF; font-size: 0.85rem;">
+            <label for="baixaEnviarWhatsApp" style="margin: 0; cursor: pointer; color: #000000; font-size: 0.85rem;">
               <i class="fa-brands fa-whatsapp" style="color: var(--emerald-primary);"></i> Enviar mensagem de <strong>confirmação e renovação de plano</strong> no WhatsApp do cliente
             </label>
           </div>
@@ -1141,7 +1141,7 @@
             </select>
           </div>
 
-          <div style="background: rgba(255,215,0,0.08); border: 1px solid #FFD700; border-radius: 10px; padding: 0.85rem; font-size: 0.85rem; color: #FFF;">
+          <div style="background: rgba(255,215,0,0.08); border: 1px solid #FFD700; border-radius: 10px; padding: 0.85rem; font-size: 0.85rem; color: #000000;">
             <strong style="color: #FFD700;"><i class="fa-solid fa-circle-info"></i> Nota sobre os envios:</strong>
             <p style="margin-top: 0.25rem; color: var(--text-brown-muted);">
               Se o seu WhatsApp estiver conectado no QR Code, as mensagens serão enviadas <strong>automaticamente</strong>. Caso contrário, os links diretos para conversa serão gerados.
@@ -1176,7 +1176,7 @@
 
           <div class="form-group">
             <label>Pré-visualização da Mensagem Processada:</label>
-            <div id="envModeloPreviewBox" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 0.85rem; font-size: 0.85rem; color: #FFF; white-space: pre-wrap; max-height: 220px; overflow-y: auto;">
+            <div id="envModeloPreviewBox" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 0.85rem; font-size: 0.85rem; color: #000000; white-space: pre-wrap; max-height: 220px; overflow-y: auto;">
               Selecione um cliente acima para ver a pré-visualização.
             </div>
           </div>
@@ -1261,7 +1261,7 @@
 
           <!-- RESUMO DO VALOR COM DESCONTO -->
           <div id="planoResumoValorBox" style="background: rgba(0, 255, 135, 0.08); border: 1px dashed var(--neon-green); padding: 0.75rem 1rem; border-radius: 10px; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
-            <span style="font-size: 0.85rem; color: #FFF; font-weight: 600;"><i class="fa-solid fa-calculator" style="color: var(--neon-green);"></i> Valor Final cobrado ao Cliente:</span>
+            <span style="font-size: 0.85rem; color: #000000; font-weight: 600;"><i class="fa-solid fa-calculator" style="color: var(--neon-green);"></i> Valor Final cobrado ao Cliente:</span>
             <span id="planoValorFinalCalculado" style="font-size: 1.1rem; font-weight: 800; color: var(--neon-green);">R$ 35,00</span>
           </div>
 
@@ -1438,7 +1438,7 @@
             <label style="color: var(--neon-green); font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 0.4rem;">
               <i class="fa-brands fa-whatsapp" style="font-size: 1rem;"></i> Pré-visualização da Mensagem Formatada:
             </label>
-            <div id="disparoLivePreviewBox" style="background: rgba(16, 185, 129, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid var(--emerald-primary); color: #E2E8F0; font-family: monospace; font-size: 0.85rem; white-space: pre-wrap; word-break: break-word; min-height: 100px; max-height: 200px; overflow-y: auto;">
+            <div id="disparoLivePreviewBox" style="background: rgba(16, 185, 129, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid var(--emerald-primary); color: #000000; font-family: monospace; font-size: 0.85rem; white-space: pre-wrap; word-break: break-word; min-height: 100px; max-height: 200px; overflow-y: auto;">
               Selecione um cliente e um modelo acima para ver a pré-visualização.
             </div>
           </div>
@@ -1458,7 +1458,7 @@
   <div class="modal-overlay" id="modalPwaInstalar">
     <div class="modal-box" style="max-width: 520px; text-align: center;">
       <div class="modal-header" style="justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.1);">
-        <h3 style="color: #FFF; font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; justify-content: center;">
+        <h3 style="color: #000000; font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; justify-content: center;">
           <img src="icon-192.png" alt="App Icon" style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--emerald-primary);">
           Instalar App no Seu Celular
         </h3>
@@ -1471,7 +1471,7 @@
           <div style="font-weight: 800; color: var(--neon-blue); font-size: 1.05rem; margin-bottom: 0.75rem; text-align: center;">
             <i class="fa-brands fa-android"></i> Para Android (Google Chrome):
           </div>
-          <ol style="color: #E2E8F0; font-size: 0.9rem; line-height: 1.7; padding-left: 1.2rem; margin: 0;">
+          <ol style="color: #000000; font-size: 0.9rem; line-height: 1.7; padding-left: 1.2rem; margin: 0;">
             <li>No navegador Chrome, toque no menu de <strong>3 pontinhos <i class="fa-solid fa-ellipsis-vertical" style="color: var(--neon-blue);"></i></strong> (canto superior direito).</li>
             <li>Toque em <strong>"Adicionar à Tela de Início"</strong> (ou <strong>"Instalar Aplicativo"</strong>).</li>
             <li>Confirme tocando em <strong>Adicionar / Instalar</strong>.</li>
@@ -1483,7 +1483,7 @@
           <div style="font-weight: 800; color: var(--emerald-light); font-size: 1.05rem; margin-bottom: 0.75rem; text-align: center;">
             <i class="fa-brands fa-apple"></i> Para iPhone / iPad (Safari):
           </div>
-          <ol style="color: #E2E8F0; font-size: 0.9rem; line-height: 1.7; padding-left: 1.2rem; margin: 0;">
+          <ol style="color: #000000; font-size: 0.9rem; line-height: 1.7; padding-left: 1.2rem; margin: 0;">
             <li>No navegador Safari, toque no botão <strong>Compartilhar <i class="fa-solid fa-share-from-square" style="color: var(--neon-blue);"></i></strong> (na barra inferior).</li>
             <li>Role as opções e toque em <strong>"Adicionar à Tela de Início" <i class="fa-solid fa-plus-square" style="color: var(--neon-green);"></i></strong>.</li>
             <li>Confirme tocando em <strong>Adicionar</strong>.</li>
@@ -1502,6 +1502,6 @@
   </div>
 
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=75.0"></script>
+  <script src="js/app.js?v=77.0"></script>
 </body>
 </html>
