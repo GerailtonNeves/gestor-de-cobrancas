@@ -141,6 +141,160 @@ window.fecharModalCliente = function() { fecharModal('modalCliente'); };
 window.fecharModalCobranca = function() { fecharModal('modalCobranca'); };
 window.fecharModalBaixa = function() { fecharModal('modalBaixa'); };
 
+let reciboAtual = null;
+
+function gerarReciboHtml(data) {
+  const dtPagtoBr = data.dataPagamento ? (data.dataPagamento.includes('T') ? data.dataPagamento.split('T')[0].split('-').reverse().join('/') : data.dataPagamento.split('-').reverse().join('/')) : '-';
+  const dtVencBr = data.dataVencimento ? (data.dataVencimento.includes('T') ? data.dataVencimento.split('T')[0].split('-').reverse().join('/') : data.dataVencimento.split('-').reverse().join('/')) : '-';
+  const dtProxBr = (data.proximoVencimento && data.proximoVencimento !== '-') ? (data.proximoVencimento.includes('T') ? data.proximoVencimento.split('T')[0].split('-').reverse().join('/') : data.proximoVencimento.split('-').reverse().join('/')) : '-';
+
+  const empresa = data.empresa || {};
+  const nomeEmpresa = empresa.nomeTitular || 'Gestor de Cobranças';
+
+  return `
+    <div class="recibo-card" id="reciboPrintArea" style="background: #FFFFFF; border-radius: 12px; border: 1px solid #CBD5E1; padding: 1.5rem; color: #000000; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); position: relative;">
+      
+      <div class="recibo-header" style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #059669; padding-bottom: 1rem; margin-bottom: 1.25rem;">
+        <div>
+          <h2 style="font-size: 1.35rem; font-weight: 900; color: #059669; margin: 0 0 0.25rem 0;">📄 RECIBO DE PAGAMENTO</h2>
+          <div style="font-size: 0.85rem; color: #475569; font-weight: 700;">Comprovante de Quitação & Renovação</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 0.85rem; font-weight: 800; color: #0F172A;">Nº RECIBO</div>
+          <div style="font-size: 1.1rem; font-weight: 900; color: #059669; font-family: monospace;">${data.idRecibo || 'REC-0000'}</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; background: #F1F5F9; padding: 1rem; border-radius: 10px; border: 1px solid #E2E8F0; margin-bottom: 1.25rem;">
+        <div>
+          <span style="font-size: 0.75rem; color: #64748B; font-weight: 800; text-transform: uppercase;">CLIENTE</span>
+          <div style="font-size: 1.05rem; font-weight: 800; color: #0F172A; margin-top: 0.15rem;">${data.clienteNome || '-'}</div>
+          <div style="font-size: 0.85rem; color: #059669; font-weight: 700; margin-top: 0.15rem;"><i class="fa-brands fa-whatsapp"></i> ${formatPhone(data.clienteTelefone)}</div>
+        </div>
+        <div>
+          <span style="font-size: 0.75rem; color: #64748B; font-weight: 800; text-transform: uppercase;">EMISSOR / PROVEDOR</span>
+          <div style="font-size: 1rem; font-weight: 800; color: #0F172A; margin-top: 0.15rem;">${nomeEmpresa}</div>
+          ${empresa.banco ? `<div style="font-size: 0.8rem; color: #475569;">${empresa.banco} | ${empresa.tipoChave || 'PIX'}: ${empresa.chavePix || ''}</div>` : ''}
+        </div>
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+          <thead>
+            <tr style="background: #E2E8F0; color: #0F172A; font-weight: 800;">
+              <th style="padding: 0.6rem 0.75rem; text-align: left; border-radius: 6px 0 0 6px;">Descrição do Serviço</th>
+              <th style="padding: 0.6rem 0.75rem; text-align: center;">Telas</th>
+              <th style="padding: 0.6rem 0.75rem; text-align: right; border-radius: 0 6px 6px 0;">Valor Pago</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid #E2E8F0;">
+              <td style="padding: 0.75rem; font-weight: 700; color: #1E293B;">${data.descricao || 'Renovação Mensal de Plano'}</td>
+              <td style="padding: 0.75rem; text-align: center; font-weight: 700; color: #0284C7;">${data.qtdTelas || 1} Tela(s)</td>
+              <td style="padding: 0.75rem; text-align: right; font-weight: 900; color: #059669; font-size: 1.1rem;">${formatCurrency(data.valor)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; background: #ECFDF5; border: 1px solid #A7F3D0; padding: 0.85rem; border-radius: 10px; margin-bottom: 1.25rem;">
+        <div>
+          <span style="font-size: 0.72rem; color: #047857; font-weight: 800; text-transform: uppercase;">DATA DO PAGAMENTO</span>
+          <div style="font-size: 0.95rem; font-weight: 800; color: #065F46; margin-top: 0.1rem;">${dtPagtoBr}</div>
+        </div>
+        <div>
+          <span style="font-size: 0.72rem; color: #047857; font-weight: 800; text-transform: uppercase;">VENCIMENTO ORIGINAL</span>
+          <div style="font-size: 0.95rem; font-weight: 800; color: #065F46; margin-top: 0.1rem;">${dtVencBr}</div>
+        </div>
+        <div>
+          <span style="font-size: 0.72rem; color: #047857; font-weight: 800; text-transform: uppercase;">PRÓXIMA RENOVAÇÃO</span>
+          <div style="font-size: 0.95rem; font-weight: 900; color: #0284C7; margin-top: 0.1rem;">${dtProxBr}</div>
+        </div>
+      </div>
+
+      <div class="recibo-stamp" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #CBD5E1; padding-top: 1rem;">
+        <div style="font-size: 0.8rem; color: #64748B;">
+          <div><strong>Status:</strong> <span style="color: #059669; font-weight: 800;">CONFIRMADO E QUITADO</span></div>
+          ${data.observacaoBaixa ? `<div style="margin-top: 0.2rem;"><em>Obs: ${data.observacaoBaixa}</em></div>` : ''}
+        </div>
+        <div style="border: 2px solid #059669; color: #059669; padding: 0.35rem 0.85rem; border-radius: 8px; font-weight: 900; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; transform: rotate(-3deg); box-shadow: 0 2px 4px rgba(5,150,105,0.15);">
+          ✓ PAGO & RENOVADO
+        </div>
+      </div>
+
+    </div>
+  `;
+}
+
+window.abrirModalRecibo = async function(cobrancaId) {
+  try {
+    const container = document.getElementById('modalReciboConteudo');
+    if (container) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 2rem; color: #64748B;">
+          <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: #059669;"></i>
+          <p style="margin-top: 0.75rem; font-weight: 600;">Carregando recibo digital...</p>
+        </div>
+      `;
+    }
+    abrirModal('modalRecibo');
+
+    const res = await fetch(`/api/cobrancas/${cobrancaId}/recibo`);
+    if (!res.ok) throw new Error('Não foi possível buscar o recibo.');
+
+    const data = await res.json();
+    reciboAtual = data;
+
+    if (container) {
+      container.innerHTML = gerarReciboHtml(data);
+    }
+  } catch (err) {
+    console.error('Erro ao carregar recibo:', err);
+    Swal.fire({ icon: 'error', title: 'Erro no Recibo', text: err.message || 'Erro ao carregar dados do recibo.', background: '#FFFFFF', color: '#000000' });
+    fecharModal('modalRecibo');
+  }
+};
+
+window.fecharModalRecibo = function() {
+  fecharModal('modalRecibo');
+};
+
+window.imprimirRecibo = function() {
+  if (!reciboAtual) return;
+  const content = document.getElementById('reciboPrintArea');
+  if (!content) return;
+
+  const win = window.open('', '_blank');
+  win.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Recibo - ${reciboAtual.clienteNome}</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+      <style>
+        body { font-family: system-ui, -apple-system, sans-serif; background: #fff; padding: 20px; }
+        .recibo-card { width: 100%; max-width: 700px; margin: 0 auto; border: 1px solid #ccc; padding: 20px; border-radius: 8px; }
+      </style>
+    </head>
+    <body>
+      ${content.outerHTML}
+      <script>
+        setTimeout(() => { window.print(); window.close(); }, 500);
+      </script>
+    </body>
+    </html>
+  `);
+  win.document.close();
+};
+
+window.enviarReciboWhatsApp = function() {
+  if (reciboAtual && reciboAtual.linkWhatsApp) {
+    window.open(reciboAtual.linkWhatsApp, '_blank');
+  } else {
+    Swal.fire({ icon: 'warning', title: 'Atenção', text: 'Nenhum recibo carregado para envio.', background: '#FFFFFF', color: '#000000' });
+  }
+};
+
 window.abrirModalBaixa = function(id) {
   if (typeof window.abrirModalBaixaFn === 'function') {
     window.abrirModalBaixaFn(id);
@@ -1309,9 +1463,12 @@ function renderTabelaContasRecebidas() {
         <td><span style="color: var(--emerald-light); font-weight: 600;">${formatDateTime(cob.dataPagamento)}</span></td>
         <td><span style="color: var(--neon-blue); font-weight: 700;"><i class="fa-solid fa-calendar-day"></i> ${formatDate(cob.proximoVencimento)}</span></td>
         <td>${cob.descricao}</td>
-        <td style="text-align: right; white-space: nowrap;">
+        <td style="text-align: right; white-space: nowrap; display: flex; gap: 0.4rem; justify-content: flex-end;">
+          <button class="btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.8rem; background: #ECFDF5; color: #047857; border-color: #6EE7B7; font-weight: 800;" onclick="abrirModalRecibo('${cob.id}')" title="Ver Recibo Digital">
+            <i class="fa-solid fa-file-invoice-dollar"></i> Recibo
+          </button>
           <button class="btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.8rem;" onclick="reverterBaixa('${cob.id}')" title="Voltar para A Receber">
-            <i class="fa-solid fa-rotate-left" style="color: var(--neon-blue);"></i> Voltar para A Receber
+            <i class="fa-solid fa-rotate-left" style="color: var(--neon-blue);"></i> Voltar
           </button>
         </td>
       </tr>
@@ -1346,9 +1503,12 @@ function renderTabelaContasRecebidas() {
           </div>
         </div>
 
-        <div style="display: flex; gap: 0.5rem; justify-content: flex-end; border-top: 1px dashed var(--border-color); padding-top: 0.75rem;">
-          <button class="btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.8rem; width: 100%; justify-content: center;" onclick="reverterBaixa('${cob.id}')">
-            <i class="fa-solid fa-rotate-left" style="color: var(--neon-blue);"></i> Voltar para A Receber
+        <div style="display: flex; gap: 0.4rem; justify-content: flex-end; border-top: 1px dashed var(--border-color); padding-top: 0.75rem;">
+          <button class="btn-secondary" style="flex: 1; padding: 0.4rem; font-size: 0.8rem; background: #ECFDF5; color: #047857; border-color: #6EE7B7; font-weight: 800; justify-content: center;" onclick="abrirModalRecibo('${cob.id}')" title="Ver Recibo Digital">
+            <i class="fa-solid fa-file-invoice-dollar"></i> Ver Recibo Digital
+          </button>
+          <button class="btn-secondary" style="flex: 1; padding: 0.4rem; font-size: 0.8rem; justify-content: center;" onclick="reverterBaixa('${cob.id}')">
+            <i class="fa-solid fa-rotate-left" style="color: var(--neon-blue);"></i> Voltar
           </button>
         </div>
       </div>
@@ -2133,42 +2293,26 @@ function setupForms() {
         fecharModalBaixa();
 
         const proxDataBr = bodyData.proximoVencimento ? bodyData.proximoVencimento.split('-').reverse().join('/') : '';
-        if (data.enviouDireto) {
-          Swal.fire({
-            icon: 'success',
-            title: '🎉 Plano Renovado & Baixa Efetuada!',
-            text: `Baixa confirmada! O plano do cliente agora está ATIVO (Em Dia) e a nova data de vencimento foi alterada para ${proxDataBr}. A mensagem de renovação foi enviada via robô para o WhatsApp!`,
-            confirmButtonColor: '#059669',
-            background: '#FFFFFF',
-            color: '#1E293B'
-          });
-        } else if (bodyData.enviarNotificacaoWhatsApp && data.linkWhatsAppRenovacao) {
-          Swal.fire({
-            icon: 'success',
-            title: '🎉 Baixa Efetuada & Plano Renovado!',
-            text: `O plano do cliente agora está ATIVO (Em Dia) e o vencimento foi atualizado para ${proxDataBr}.`,
-            showCancelButton: true,
-            confirmButtonText: '📱 Abrir no WhatsApp',
-            cancelButtonText: 'OK / Fechar',
-            confirmButtonColor: '#059669',
-            cancelButtonColor: '#64748B',
-            background: '#FFFFFF',
-            color: '#1E293B'
-          }).then((r) => {
-            if (r.isConfirmed && data.linkWhatsAppRenovacao) {
-              try { window.open(data.linkWhatsAppRenovacao, '_blank'); } catch(e) {}
-            }
-          });
-        } else {
-          Swal.fire({
-            icon: 'success',
-            title: '🎉 Baixa Efetuada com Sucesso!',
-            text: `O plano do cliente agora está ATIVO (Em Dia) com novo vencimento em ${proxDataBr}. A cobrança foi transferida para Contas Recebidas.`,
-            confirmButtonColor: '#059669',
-            background: '#FFFFFF',
-            color: '#1E293B'
-          });
-        }
+        const cobrancaBaixadaId = (data.cobranca && data.cobranca.id) ? data.cobranca.id : id;
+
+        Swal.fire({
+          icon: 'success',
+          title: '🎉 Baixa Efetuada & Plano Renovado!',
+          text: `O plano foi renovado com sucesso (novo vencimento: ${proxDataBr}). Deseja emitir o recibo digital?`,
+          showCancelButton: true,
+          confirmButtonText: '📄 Ver Recibo Digital',
+          cancelButtonText: 'OK / Fechar',
+          confirmButtonColor: '#059669',
+          cancelButtonColor: '#64748B',
+          background: '#FFFFFF',
+          color: '#1E293B'
+        }).then((r) => {
+          if (r.isConfirmed && cobrancaBaixadaId) {
+            abrirModalRecibo(cobrancaBaixadaId);
+          } else if (bodyData.enviarNotificacaoWhatsApp && data.linkWhatsAppRenovacao) {
+            try { window.open(data.linkWhatsAppRenovacao, '_blank'); } catch(e) {}
+          }
+        });
 
         await fetchClientes();
         await fetchCobrancas();
