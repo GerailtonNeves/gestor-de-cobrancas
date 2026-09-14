@@ -21,9 +21,9 @@
   --emerald-light: #047857;
   --emerald-dark: #064E3B;
   
-  --text-main: #1E293B;
-  --text-muted: #475569;
-  --text-brown-muted: #64748B;
+  --text-main: #000000;
+  --text-muted: #0A0A0A;
+  --text-brown-muted: #1A1A1A;
   
   --danger-color: #DC2626;
   --warning-color: #D97706;
@@ -845,4 +845,18 @@ body {
     grid-template-columns: 1fr !important;
     gap: 0.5rem;
   }
+}
+
+
+/* Global Shiny Black Typography Override */
+body, h1, h2, h3, h4, h5, h6, p, label, span, td, th, div, input, select, textarea, button, a {
+  color: #000000;
+}
+.brand-title, .page-header h1, .panel-title, .modal-header h3, .metric-value {
+  color: #000000 !important;
+  font-weight: 800 !important;
+}
+.form-control, input, select, textarea {
+  color: #000000 !important;
+  font-weight: 700 !important;
 }
