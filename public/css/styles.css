@@ -1,33 +1,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  --bg-primary: #060B14;
-  --bg-secondary: #0D1527;
-  --bg-card: #131F37;
-  --bg-card-hover: #1C2D4F;
-  --bg-input: #09101D;
+  --bg-primary: #FAF7EE;
+  --bg-secondary: #F2ECE0;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #FDFBF7;
+  --bg-input: #FFFFFF;
   
-  --border-color: rgba(0, 240, 255, 0.25);
-  --border-glow: rgba(0, 255, 135, 0.4);
+  --border-color: #E2D8C7;
+  --border-glow: rgba(5, 150, 105, 0.4);
   
-  --neon-blue: #00F0FF;
-  --neon-blue-dark: #0072FF;
-  --neon-green: #00FF87;
-  --neon-green-glow: rgba(0, 255, 135, 0.35);
+  --neon-blue: #0284C7;
+  --neon-blue-dark: #0369A1;
+  --neon-green: #059669;
+  --neon-green-glow: rgba(5, 150, 105, 0.25);
   
-  --brand-accent: #00F0FF;
-  --emerald-primary: #00FF87;
-  --emerald-glow: #0072FF;
-  --emerald-light: #00FF87;
-  --emerald-dark: #034D35;
+  --brand-accent: #0284C7;
+  --emerald-primary: #059669;
+  --emerald-glow: #0284C7;
+  --emerald-light: #047857;
+  --emerald-dark: #064E3B;
   
-  --text-main: #F8FAFC;
-  --text-muted: #94A3B8;
-  --text-brown-muted: #38BDF8;
+  --text-main: #1E293B;
+  --text-muted: #475569;
+  --text-brown-muted: #64748B;
   
-  --danger-color: #FF3366;
-  --warning-color: #F59E0B;
-  --info-color: #00F0FF;
+  --danger-color: #DC2626;
+  --warning-color: #D97706;
+  --info-color: #0284C7;
 }
 
 * {
@@ -43,9 +43,8 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   background-image: 
-    radial-gradient(circle at 15% 15%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 85% 85%, rgba(0, 255, 135, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(13, 21, 39, 0.8) 0%, transparent 100%);
+    radial-gradient(circle at 15% 15%, rgba(2, 132, 199, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(5, 150, 105, 0.04) 0%, transparent 50%);
   background-attachment: fixed;
 }
 
