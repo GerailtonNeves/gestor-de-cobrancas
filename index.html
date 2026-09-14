@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="GestorCob">
   
   <!-- CSS Principal -->
-  <link rel="stylesheet" href="css/styles.css?v=75.0">
+  <link rel="stylesheet" href="css/styles.css?v=71.0">
   
   <!-- Icones Remixicon & FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -27,14 +27,8 @@
   <!-- Chart.js para Gráficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Inline Modal Controller Garantia Zero Delay e Limpeza de Cache -->
+  <!-- Inline Modal Controller Garantia Zero Delay -->
   <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for (let r of registrations) { r.unregister(); }
-      }).catch(function(e) {});
-    }
-
     window.abrirModal = function(modalId) {
       const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
       if (!modal) return;
@@ -115,46 +109,11 @@
       window.abrirModal('modalCobranca');
     };
 
-    window.abrirModalBaixa = function(id) {
-      try {
-        if (typeof window.abrirModalBaixaFn === 'function') {
-          window.abrirModalBaixaFn(id);
-          return;
-        }
-      } catch(e) {}
-      if (id) {
-        const el = document.getElementById('baixaCobrancaId');
-        if (el) el.value = id;
-      }
-      const agora = new Date();
-      const yyyyNow = agora.getFullYear();
-      const mmNow = String(agora.getMonth() + 1).padStart(2, '0');
-      const ddNow = String(agora.getDate()).padStart(2, '0');
-      const hhNow = String(agora.getHours()).padStart(2, '0');
-      const miNow = String(agora.getMinutes()).padStart(2, '0');
-      const agoraLocal = `${yyyyNow}-${mmNow}-${ddNow}T${hhNow}:${miNow}`;
-
-      let baseDate = new Date();
-      baseDate.setDate(baseDate.getDate() + 30);
-      const yyyy = baseDate.getFullYear();
-      const mm = String(baseDate.getMonth() + 1).padStart(2, '0');
-      const dd = String(baseDate.getDate()).padStart(2, '0');
-      const proxIso = `${yyyy}-${mm}-${dd}`;
-
-      if (document.getElementById('baixaData')) document.getElementById('baixaData').value = agoraLocal;
-      if (document.getElementById('baixaProximoVencimento')) document.getElementById('baixaProximoVencimento').value = proxIso;
-      if (document.getElementById('baixaObservacao')) document.getElementById('baixaObservacao').value = 'Pagamento recebido e confirmado via PIX';
-      if (document.getElementById('baixaEnviarWhatsApp')) document.getElementById('baixaEnviarWhatsApp').checked = true;
-
-      window.abrirModal('modalBaixa');
-    };
-
     window.fecharModalPlano = function() { window.fecharModal('modalPlano'); };
     window.fecharModalApp = function() { window.fecharModal('modalApp'); };
     window.fecharModalServidor = function() { window.fecharModal('modalServidor'); };
     window.fecharModalCliente = function() { window.fecharModal('modalCliente'); };
     window.fecharModalCobranca = function() { window.fecharModal('modalCobranca'); };
-    window.fecharModalBaixa = function() { window.fecharModal('modalBaixa'); };
   </script>
 </head>
 <body>
@@ -1067,16 +1026,8 @@
       <form id="formBaixa">
         <input type="hidden" id="baixaCobrancaId">
         <div class="modal-body">
-          <div class="form-group" style="margin-bottom: 1rem;">
-            <label for="baixaClienteSelect" style="font-weight: 700; color: #FFF; margin-bottom: 0.35rem; display: block;">
-              <i class="fa-solid fa-user-check" style="color: var(--emerald-primary);"></i> Cliente / Cobrança a Dar Baixa *
-            </label>
-            <select id="baixaClienteSelect" class="form-control" style="background: #090F1D; color: #FFF; font-weight: 700; border: 1.5px solid var(--emerald-primary);" required onchange="if (typeof onBaixaClienteSelectChange === 'function') onBaixaClienteSelectChange(this.value)">
-              <option value="">-- Selecione o Cliente --</option>
-            </select>
-          </div>
-          <p style="margin-bottom: 1rem; color: var(--text-brown-muted); font-size: 0.85rem;">
-            Esta ação marcará o plano do cliente como <strong style="color: var(--emerald-light);">PAGO & ATIVO (Em Dia)</strong> e agendará a renovação para o mês seguinte.
+          <p style="margin-bottom: 1rem; color: var(--text-brown-muted);">
+            Esta ação marcará a cobrança como <strong style="color: var(--emerald-light);">PAGA</strong> e a transferirá para o setor de <strong>Contas Recebidas</strong>.
           </p>
           <div class="form-grid-2" style="margin-bottom: 1rem;">
             <div class="form-group">
@@ -1495,6 +1446,6 @@
   </div>
 
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=75.0"></script>
+  <script src="js/app.js?v=71.0"></script>
 </body>
 </html>

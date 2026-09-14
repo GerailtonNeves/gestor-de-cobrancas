@@ -970,21 +970,8 @@ function gerarMensagemRenovacaoWhatsApp(cobranca, proximoVencimento, dataPagamen
 
 app.post('/api/cobrancas/:id/dar-baixa', async (req, res) => {
   const db = getDB();
-  const targetId = req.params.id !== 'undefined' && req.params.id !== 'null' ? req.params.id : (req.body.cobrancaId || req.body.clienteId);
-  
-  let cobranca = db.cobrancas.find(c => c.id === targetId);
-  if (!cobranca && targetId) {
-    cobranca = db.cobrancas.find(c => c.clienteId === targetId && c.status === 'PENDENTE');
-    if (!cobranca) {
-      cobranca = db.cobrancas.find(c => c.clienteId === targetId);
-    }
-  }
-  
-  if (!cobranca && db.cobrancas.length > 0) {
-    cobranca = db.cobrancas.find(c => c.status === 'PENDENTE') || db.cobrancas[0];
-  }
-
-  if (!cobranca) return res.status(404).json({ error: "Nenhuma cobrança encontrada para dar baixa" });
+  const cobranca = db.cobrancas.find(c => c.id === req.params.id);
+  if (!cobranca) return res.status(404).json({ error: "Cobrança não encontrada" });
 
   const { observacao, dataPagamento, proximoVencimento, enviarNotificacaoWhatsApp } = req.body;
 
@@ -1006,37 +993,6 @@ app.post('/api/cobrancas/:id/dar-baixa', async (req, res) => {
   cobranca.dataPagamento = dataPagamento || getLocalIsoString().split('T')[0];
   cobranca.proximoVencimento = proxVenc || null;
   cobranca.observacaoBaixa = observacao || "Baixa efetuada manualmente pelo usuário";
-
-  // Garantir a renovação do plano para o próximo mês: atualizar ou criar a cobrança do próximo mês
-  if (proxVenc && cobranca.clienteId) {
-    let pendenteExistente = db.cobrancas.find(c => c.clienteId === cobranca.clienteId && c.status === 'PENDENTE' && c.id !== cobranca.id);
-    if (pendenteExistente) {
-      pendenteExistente.dataVencimento = proxVenc;
-      pendenteExistente.dataHoraEnvio = `${proxVenc}T09:00`;
-      pendenteExistente.statusEnvio = "AGENDADO";
-    } else {
-      const novaCobrancaProxMes = {
-        id: `cob_${Date.now()}`,
-        clienteId: cobranca.clienteId,
-        clienteNome: cobranca.clienteNome,
-        clienteTelefone: cobranca.clienteTelefone,
-        qtdTelas: cobranca.qtdTelas || 1,
-        valorBruto: cobranca.valorBruto || cobranca.valor,
-        desconto: cobranca.desconto || 0,
-        valor: cobranca.valor,
-        dataVencimento: proxVenc,
-        dataHoraEnvio: `${proxVenc}T09:00`,
-        descricao: cobranca.descricao || "Renovação Mensal do Plano de Canais",
-        modeloMensagemId: cobranca.modeloMensagemId || null,
-        status: "PENDENTE",
-        statusEnvio: "AGENDADO",
-        dataEnvioRealizado: null,
-        dataPagamento: null,
-        observacaoBaixa: null
-      };
-      db.cobrancas.push(novaCobrancaProxMes);
-    }
-  }
 
   const msgRenovacao = gerarMensagemRenovacaoWhatsApp(cobranca, proxVenc, cobranca.dataPagamento);
   const telefoneLimpo = sanitizePhone(cobranca.clienteTelefone);
@@ -1069,7 +1025,7 @@ app.post('/api/cobrancas/:id/dar-baixa', async (req, res) => {
   saveDB(db);
   res.json({
     success: true,
-    message: "Baixa efetuada e plano renovado com sucesso para o próximo mês!",
+    message: "Baixa efetuada e plano renovado com sucesso!",
     enviouDireto,
     msgRenovacao,
     linkWhatsAppRenovacao,
