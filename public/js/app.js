@@ -977,19 +977,53 @@ async function deletarCobranca(id) {
 // -------------------------------------------------------------
 // 5. DAR BAIXA NAS COBRANÇAS (CONTAS RECEBIDAS)
 // -------------------------------------------------------------
-function abrirModalBaixa(id) {
-  const cob = globalCobrancas.find(c => c.id === id);
-  if (document.getElementById('baixaCobrancaId')) {
-    document.getElementById('baixaCobrancaId').value = id || '';
+function populateBaixaClienteSelect(selectedId) {
+  const sel = document.getElementById('baixaClienteSelect');
+  if (!sel) return;
+
+  sel.innerHTML = '<option value="">-- Selecione o Cliente para Dar Baixa --</option>';
+
+  let targetCobId = null;
+
+  globalClientes.forEach(cli => {
+    const cobPendente = globalCobrancas.find(c => c.clienteId === cli.id && c.status === 'PENDENTE');
+    const cobQualquer = globalCobrancas.find(c => c.clienteId === cli.id);
+    const cobIdToUse = cobPendente ? cobPendente.id : (cobQualquer ? cobQualquer.id : cli.id);
+    const dataVencStr = cobPendente ? formatDate(cobPendente.dataVencimento) : (cobQualquer ? formatDate(cobQualquer.dataVencimento) : 'Sem data');
+    const valStr = cobPendente ? formatCurrency(cobPendente.valor) : (cobQualquer ? formatCurrency(cobQualquer.valor) : 'R$ 0,00');
+
+    const isSelected = (selectedId === cli.id || selectedId === cobIdToUse || (cobPendente && selectedId === cobPendente.id));
+    if (isSelected) targetCobId = cobIdToUse;
+
+    const opt = document.createElement('option');
+    opt.value = cobIdToUse;
+    opt.textContent = `${cli.nome} | Venc: ${dataVencStr} | ${valStr}`;
+    if (isSelected) opt.selected = true;
+    sel.appendChild(opt);
+  });
+
+  if (!sel.value && sel.options.length > 1) {
+    sel.selectedIndex = 1;
+    targetCobId = sel.value;
   }
-  const agora = new Date();
-  const yyyyNow = agora.getFullYear();
-  const mmNow = String(agora.getMonth() + 1).padStart(2, '0');
-  const ddNow = String(agora.getDate()).padStart(2, '0');
-  const hhNow = String(agora.getHours()).padStart(2, '0');
-  const miNow = String(agora.getMinutes()).padStart(2, '0');
-  const agoraLocal = `${yyyyNow}-${mmNow}-${ddNow}T${hhNow}:${miNow}`;
-  
+
+  if (targetCobId) {
+    onBaixaClienteSelectChange(targetCobId);
+  }
+}
+
+function onBaixaClienteSelectChange(val) {
+  if (!val) return;
+  if (document.getElementById('baixaCobrancaId')) {
+    document.getElementById('baixaCobrancaId').value = val;
+  }
+
+  let cob = globalCobrancas.find(c => c.id === val);
+  if (!cob) {
+    cob = globalCobrancas.find(c => c.clienteId === val && c.status === 'PENDENTE');
+    if (!cob) cob = globalCobrancas.find(c => c.clienteId === val);
+  }
+
   let baseDate = new Date();
   if (cob && cob.dataVencimento) {
     const parts = cob.dataVencimento.split('T')[0].split('-').map(Number);
@@ -999,17 +1033,31 @@ function abrirModalBaixa(id) {
   }
   const hoje = new Date();
   hoje.setHours(0, 0, 0, 0);
-  if (baseDate < hoje) {
-    baseDate = new Date();
-  }
+  if (baseDate < hoje) baseDate = new Date();
   baseDate.setDate(baseDate.getDate() + 30);
   const yyyy = baseDate.getFullYear();
   const mm = String(baseDate.getMonth() + 1).padStart(2, '0');
   const dd = String(baseDate.getDate()).padStart(2, '0');
   const proxIso = `${yyyy}-${mm}-${dd}`;
 
+  if (document.getElementById('baixaProximoVencimento')) {
+    document.getElementById('baixaProximoVencimento').value = proxIso;
+  }
+}
+window.onBaixaClienteSelectChange = onBaixaClienteSelectChange;
+
+function abrirModalBaixa(id) {
+  populateBaixaClienteSelect(id);
+
+  const agora = new Date();
+  const yyyyNow = agora.getFullYear();
+  const mmNow = String(agora.getMonth() + 1).padStart(2, '0');
+  const ddNow = String(agora.getDate()).padStart(2, '0');
+  const hhNow = String(agora.getHours()).padStart(2, '0');
+  const miNow = String(agora.getMinutes()).padStart(2, '0');
+  const agoraLocal = `${yyyyNow}-${mmNow}-${ddNow}T${hhNow}:${miNow}`;
+
   if (document.getElementById('baixaData')) document.getElementById('baixaData').value = agoraLocal;
-  if (document.getElementById('baixaProximoVencimento')) document.getElementById('baixaProximoVencimento').value = proxIso;
   if (document.getElementById('baixaObservacao')) document.getElementById('baixaObservacao').value = 'Pagamento recebido e confirmado via PIX';
   if (document.getElementById('baixaEnviarWhatsApp')) document.getElementById('baixaEnviarWhatsApp').checked = true;
 
