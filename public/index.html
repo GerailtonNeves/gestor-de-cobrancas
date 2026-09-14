@@ -40,12 +40,15 @@
       if (!modal) return;
       document.querySelectorAll('.modal-overlay').forEach(m => {
         m.classList.remove('active');
-        m.style.display = 'none';
-        m.style.opacity = '0';
-        m.style.visibility = 'hidden';
-        m.style.pointerEvents = 'none';
+        m.style.setProperty('display', 'none', 'important');
+        m.style.setProperty('opacity', '0', 'important');
+        m.style.setProperty('visibility', 'hidden', 'important');
+        m.style.setProperty('pointer-events', 'none', 'important');
         const b = m.querySelector('.modal-box');
-        if (b) { b.style.opacity = '0'; b.style.visibility = 'hidden'; }
+        if (b) {
+          b.style.setProperty('opacity', '0', 'important');
+          b.style.setProperty('visibility', 'hidden', 'important');
+        }
       });
       modal.style.setProperty('display', 'flex', 'important');
       modal.style.setProperty('opacity', '1', 'important');
@@ -65,12 +68,16 @@
       const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
       if (!modal) return;
       modal.classList.remove('active');
-      modal.style.display = 'none';
-      modal.style.opacity = '0';
-      modal.style.visibility = 'hidden';
-      modal.style.pointerEvents = 'none';
+      modal.style.setProperty('display', 'none', 'important');
+      modal.style.setProperty('opacity', '0', 'important');
+      modal.style.setProperty('visibility', 'hidden', 'important');
+      modal.style.setProperty('pointer-events', 'none', 'important');
       const box = modal.querySelector('.modal-box');
-      if (box) box.style.transform = 'translateY(20px)';
+      if (box) {
+        box.style.setProperty('opacity', '0', 'important');
+        box.style.setProperty('visibility', 'hidden', 'important');
+        box.style.setProperty('transform', 'translateY(20px)', 'important');
+      }
     };
 
     window.abrirModalNovoPlano = function() {
