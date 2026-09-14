@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="GestorCob">
   
   <!-- CSS Principal -->
-  <link rel="stylesheet" href="css/styles.css?v=84.0">
+  <link rel="stylesheet" href="css/styles.css?v=85.0">
   
   <!-- Icones Remixicon & FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -41,9 +41,23 @@
       document.querySelectorAll('.modal-overlay').forEach(m => {
         m.classList.remove('active');
         m.style.display = 'none';
+        m.style.opacity = '0';
+        m.style.visibility = 'hidden';
+        m.style.pointerEvents = 'none';
       });
       modal.classList.add('active');
       modal.style.display = 'flex';
+      modal.style.opacity = '1';
+      modal.style.visibility = 'visible';
+      modal.style.pointerEvents = 'auto';
+
+      const modalBox = modal.querySelector('.modal-box');
+      if (modalBox) {
+        modalBox.style.display = 'block';
+        modalBox.style.opacity = '1';
+        modalBox.style.visibility = 'visible';
+        modalBox.style.transform = 'translateY(0)';
+      }
     };
 
     window.fecharModal = function(modalId) {
@@ -51,6 +65,15 @@
       if (!modal) return;
       modal.classList.remove('active');
       modal.style.display = 'none';
+      modal.style.opacity = '0';
+      modal.style.visibility = 'hidden';
+      modal.style.pointerEvents = 'none';
+
+      const modalBox = modal.querySelector('.modal-box');
+      if (modalBox) {
+        modalBox.style.opacity = '0';
+        modalBox.style.visibility = 'hidden';
+      }
     };
 
     window.abrirModalNovoPlano = function() {
@@ -1475,6 +1498,6 @@
   </div>
 
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=84.0"></script>
+  <script src="js/app.js?v=85.0"></script>
 </body>
 </html>
