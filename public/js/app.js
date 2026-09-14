@@ -46,20 +46,23 @@ function formatDateTimeForInput(dateVal) {
 // Helper universal para visibilidade de Modals no Celular e Computador
 function abrirModal(modalId) {
   const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
-  if (!modal) return;
+  if (!modal) {
+    console.error('Modal não encontrado:', modalId);
+    return;
+  }
   document.querySelectorAll('.modal-overlay').forEach(m => {
     m.classList.remove('active');
-    m.removeAttribute('style');
+    m.style.display = 'none';
   });
-  modal.removeAttribute('style');
   modal.classList.add('active');
+  modal.style.display = 'flex';
 }
 
 function fecharModal(modalId) {
   const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
   if (!modal) return;
   modal.classList.remove('active');
-  modal.removeAttribute('style');
+  modal.style.display = 'none';
 }
 
 window.abrirModal = abrirModal;
@@ -2673,8 +2676,16 @@ function abrirModalNovoPlano() {
 }
 
 function editarPlano(id) {
-  const p = globalPlanos.find(item => String(item.id) === String(id));
-  if (!p) return;
+  const cleanId = String(id || '').trim();
+  let p = globalPlanos.find(item => String(item.id).trim() === cleanId);
+  if (!p && cleanId) {
+    p = globalPlanos.find(item => String(item.id).trim().toLowerCase() === cleanId.toLowerCase());
+  }
+  if (!p) {
+    console.warn('Plano não encontrado para editar ID:', id);
+    abrirModalNovoPlano();
+    return;
+  }
 
   const pId = document.getElementById('planoId'); if (pId) pId.value = p.id;
   const pTitle = document.getElementById('modalPlanoTitle');
@@ -2858,8 +2869,16 @@ function abrirModalNovoApp() {
 }
 
 function editarApp(id) {
-  const app = globalApps.find(a => String(a.id) === String(id));
-  if (!app) return;
+  const cleanId = String(id || '').trim();
+  let app = globalApps.find(a => String(a.id).trim() === cleanId);
+  if (!app && cleanId) {
+    app = globalApps.find(a => String(a.id).trim().toLowerCase() === cleanId.toLowerCase());
+  }
+  if (!app) {
+    console.warn('App não encontrado para editar ID:', id);
+    abrirModalNovoApp();
+    return;
+  }
 
   const aId = document.getElementById('appId'); if (aId) aId.value = app.id;
   const aTitle = document.getElementById('modalAppTitle');
@@ -2961,8 +2980,16 @@ function abrirModalNovoServidor() {
 }
 
 function editarServidor(id) {
-  const srv = globalServidores.find(s => String(s.id) === String(id));
-  if (!srv) return;
+  const cleanId = String(id || '').trim();
+  let srv = globalServidores.find(s => String(s.id).trim() === cleanId);
+  if (!srv && cleanId) {
+    srv = globalServidores.find(s => String(s.id).trim().toLowerCase() === cleanId.toLowerCase());
+  }
+  if (!srv) {
+    console.warn('Servidor não encontrado para editar ID:', id);
+    abrirModalNovoServidor();
+    return;
+  }
 
   const sId = document.getElementById('servidorId'); if (sId) sId.value = srv.id;
   const sTitle = document.getElementById('modalServidorTitle');
