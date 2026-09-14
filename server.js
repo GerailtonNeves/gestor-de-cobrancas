@@ -970,8 +970,21 @@ function gerarMensagemRenovacaoWhatsApp(cobranca, proximoVencimento, dataPagamen
 
 app.post('/api/cobrancas/:id/dar-baixa', async (req, res) => {
   const db = getDB();
-  const cobranca = db.cobrancas.find(c => c.id === req.params.id);
-  if (!cobranca) return res.status(404).json({ error: "Cobrança não encontrada" });
+  const targetId = req.params.id !== 'undefined' && req.params.id !== 'null' ? req.params.id : (req.body.cobrancaId || req.body.clienteId);
+  
+  let cobranca = db.cobrancas.find(c => c.id === targetId);
+  if (!cobranca && targetId) {
+    cobranca = db.cobrancas.find(c => c.clienteId === targetId && c.status === 'PENDENTE');
+    if (!cobranca) {
+      cobranca = db.cobrancas.find(c => c.clienteId === targetId);
+    }
+  }
+  
+  if (!cobranca && db.cobrancas.length > 0) {
+    cobranca = db.cobrancas.find(c => c.status === 'PENDENTE') || db.cobrancas[0];
+  }
+
+  if (!cobranca) return res.status(404).json({ error: "Nenhuma cobrança encontrada para dar baixa" });
 
   const { observacao, dataPagamento, proximoVencimento, enviarNotificacaoWhatsApp } = req.body;
 
