@@ -146,6 +146,16 @@ window.fecharModalApp = function() { fecharModal('modalApp'); };
 window.fecharModalServidor = function() { fecharModal('modalServidor'); };
 window.fecharModalCliente = function() { fecharModal('modalCliente'); };
 window.fecharModalCobranca = function() { fecharModal('modalCobranca'); };
+window.fecharModalBaixa = function() { fecharModal('modalBaixa'); };
+
+window.abrirModalBaixa = function(id) {
+  if (typeof abrirModalBaixa === 'function') {
+    abrirModalBaixa(id);
+  } else {
+    if (id && document.getElementById('baixaCobrancaId')) document.getElementById('baixaCobrancaId').value = id;
+    abrirModal('modalBaixa');
+  }
+};
 
 document.addEventListener('DOMContentLoaded', () => {
   initTabs();
@@ -443,11 +453,16 @@ function renderProximosEnviosDash() {
           <i class="fa-regular fa-clock" style="color: var(--emerald-primary);"></i> ${formatDateTime(cob.dataHoraEnvio)}
         </div>
       </div>
-      <div style="text-align: right;">
+      <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem;">
         <div style="font-weight: 700; color: var(--emerald-light); font-size: 0.9rem;">${formatCurrency(cob.valor)}</div>
-        <button class="btn-whatsapp-sm" onclick="dispararWhatsApp('${cob.id}')" style="margin-top: 0.25rem;">
-          <i class="fa-brands fa-whatsapp"></i> Enviar
-        </button>
+        <div style="display: flex; gap: 0.3rem;">
+          <button class="btn-success-sm" onclick="abrirModalBaixa('${cob.id}')" title="Dar Baixa no Recebimento">
+            <i class="fa-solid fa-check"></i> Baixa
+          </button>
+          <button class="btn-whatsapp-sm" onclick="dispararWhatsApp('${cob.id}')" title="Enviar Notificação">
+            <i class="fa-brands fa-whatsapp"></i> Enviar
+          </button>
+        </div>
       </div>
     </div>
   `).join('');
@@ -964,7 +979,9 @@ async function deletarCobranca(id) {
 // -------------------------------------------------------------
 function abrirModalBaixa(id) {
   const cob = globalCobrancas.find(c => c.id === id);
-  document.getElementById('baixaCobrancaId').value = id;
+  if (document.getElementById('baixaCobrancaId')) {
+    document.getElementById('baixaCobrancaId').value = id || '';
+  }
   const agora = new Date();
   const yyyyNow = agora.getFullYear();
   const mmNow = String(agora.getMonth() + 1).padStart(2, '0');
@@ -973,7 +990,6 @@ function abrirModalBaixa(id) {
   const miNow = String(agora.getMinutes()).padStart(2, '0');
   const agoraLocal = `${yyyyNow}-${mmNow}-${ddNow}T${hhNow}:${miNow}`;
   
-  // Data proximo vencimento padrao: 30 dias corridos a partir da data de vencimento atual
   let baseDate = new Date();
   if (cob && cob.dataVencimento) {
     const parts = cob.dataVencimento.split('T')[0].split('-').map(Number);
@@ -981,19 +997,25 @@ function abrirModalBaixa(id) {
       baseDate = new Date(parts[0], parts[1] - 1, parts[2]);
     }
   }
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  if (baseDate < hoje) {
+    baseDate = new Date();
+  }
   baseDate.setDate(baseDate.getDate() + 30);
   const yyyy = baseDate.getFullYear();
   const mm = String(baseDate.getMonth() + 1).padStart(2, '0');
   const dd = String(baseDate.getDate()).padStart(2, '0');
   const proxIso = `${yyyy}-${mm}-${dd}`;
 
-  document.getElementById('baixaData').value = agoraLocal;
-  document.getElementById('baixaProximoVencimento').value = proxIso;
-  document.getElementById('baixaObservacao').value = 'Pagamento recebido e confirmado via PIX';
-  document.getElementById('baixaEnviarWhatsApp').checked = true;
+  if (document.getElementById('baixaData')) document.getElementById('baixaData').value = agoraLocal;
+  if (document.getElementById('baixaProximoVencimento')) document.getElementById('baixaProximoVencimento').value = proxIso;
+  if (document.getElementById('baixaObservacao')) document.getElementById('baixaObservacao').value = 'Pagamento recebido e confirmado via PIX';
+  if (document.getElementById('baixaEnviarWhatsApp')) document.getElementById('baixaEnviarWhatsApp').checked = true;
 
   abrirModal('modalBaixa');
 }
+window.abrirModalBaixaFn = abrirModalBaixa;
 
 function fecharModalBaixa() {
   fecharModal('modalBaixa');
@@ -1273,6 +1295,11 @@ function renderTabelaClientes() {
           <td>${badgeModelo}</td>
           <td><span style="font-size: 0.85rem; color: var(--text-brown-muted);">${cli.notas || '-'}</span></td>
           <td style="text-align: right; white-space: nowrap;">
+            ${cobPendente ? `
+              <button class="btn-success-sm" style="padding: 0.35rem 0.6rem; font-size: 0.8rem; background: var(--emerald-primary); color: #000; font-weight: 800;" onclick="abrirModalBaixa('${cobPendente.id}')" title="Dar Baixa no Recebimento">
+                <i class="fa-solid fa-check"></i> Dar Baixa
+              </button>
+            ` : ''}
             <button class="btn-whatsapp-sm" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;" onclick="abrirModalDispararModelo(null, '${cli.id}')" title="Escolher Modelo de Mensagem e Enviar">
               <i class="fa-solid fa-paper-plane"></i> Enviar Mensagem
             </button>
@@ -1320,16 +1347,17 @@ function renderTabelaClientes() {
         ? `<span class="badge badge-pago" style="background: rgba(0, 240, 255, 0.15); color: var(--neon-blue); border-color: var(--neon-blue); font-size: 0.78rem;"><i class="fa-solid fa-comment-dots"></i> ${modeloObj.titulo}</span>` 
         : `<span style="color: var(--text-brown-muted); font-size: 0.8rem;">Padrão</span>`;
 
-      // Cálculo financeiro exibido no Card
-      const valBase = planoObj ? (planoObj.valor || 0) : 0;
-      const valBruto = cobPendente ? (cobPendente.valorBruto || cobPendente.valor) : (cli.valorBruto || (valBase * qtdTelasInt));
-      const valDesconto = cobPendente ? (cobPendente.desconto || 0) : (cli.desconto || 0);
-      const valFinal = cobPendente ? cobPendente.valor : Math.max(0, valBruto - valDesconto);
+      // Cálculos Financeiros com Desconto por Tela
+      const valPlano = planoObj ? (planoObj.valor || 0) : 0;
+      const valBruto = valPlano * qtdTelasInt;
+      const valDesconto = parseFloat(cli.desconto) || 0;
+      const valFinal = Math.max(0, valBruto - valDesconto);
 
       return `
-        <div class="glass-panel" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 3px solid ${statusObj.color}; box-shadow: 0 8px 32px rgba(0,0,0,0.37);">
+        <div class="card card-hover" style="display: flex; flex-direction: column; justify-content: space-between;">
           <div>
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+            <!-- Cabeçalho do Card (Nome + Status do Plano) -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.85rem;">
               <h3 style="font-size: 1.15rem; font-weight: 800; color: #FFF; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
                 <i class="fa-solid fa-circle-user" style="color: var(--neon-blue);"></i> ${cli.nome}
               </h3>
@@ -1399,6 +1427,11 @@ function renderTabelaClientes() {
 
           <!-- Grade de Botões de Ação Completa -->
           <div style="display: flex; flex-direction: column; gap: 0.5rem; border-top: 1px dashed var(--border-color); padding-top: 0.75rem;">
+            ${cobPendente ? `
+              <button class="btn-success-sm" style="width: 100%; justify-content: center; font-size: 0.85rem; padding: 0.5rem; background: var(--emerald-primary); color: #000; font-weight: 800; margin-bottom: 0.2rem;" onclick="abrirModalBaixa('${cobPendente.id}')" title="Dar Baixa no Recebimento">
+                <i class="fa-solid fa-check"></i> Dar Baixa no Pagamento
+              </button>
+            ` : ''}
             <div style="display: flex; gap: 0.4rem;">
               <button class="btn-whatsapp-sm" style="flex: 1; justify-content: center; font-size: 0.78rem; padding: 0.4rem;" onclick="abrirModalDispararModelo(null, '${cli.id}')" title="Escolher Modelo de Mensagem e Enviar">
                 <i class="fa-solid fa-paper-plane"></i> Enviar Mensagem
@@ -1852,11 +1885,12 @@ function setupForms() {
       if (res.ok && data.success) {
         fecharModalBaixa();
 
+        const proxDataBr = bodyData.proximoVencimento ? bodyData.proximoVencimento.split('-').reverse().join('/') : '';
         if (data.enviouDireto) {
           Swal.fire({
             icon: 'success',
             title: '🎉 Plano Renovado & Baixa Efetuada!',
-            text: 'A mensagem de confirmação de pagamento e renovação do plano foi enviada AUTOMATICAMENTE para o WhatsApp do cliente!',
+            text: `Baixa confirmada! O plano do cliente agora está ATIVO (Em Dia) e a nova data de vencimento foi alterada para ${proxDataBr}. A mensagem de renovação foi enviada para o WhatsApp!`,
             confirmButtonColor: '#00FF87',
             background: '#0D1527',
             color: '#FFF'
@@ -1865,8 +1899,8 @@ function setupForms() {
           window.open(data.linkWhatsAppRenovacao, '_blank');
           Swal.fire({
             icon: 'success',
-            title: 'Baixa Efetuada com Sucesso!',
-            text: 'A aba do WhatsApp foi aberta com a mensagem de renovação do plano!',
+            title: '🎉 Baixa Efetuada & Plano Renovado!',
+            text: `O plano do cliente agora está ATIVO (Em Dia) e o vencimento foi atualizado para ${proxDataBr}. Abrindo WhatsApp...`,
             confirmButtonColor: '#00FF87',
             background: '#0D1527',
             color: '#FFF'
@@ -1874,19 +1908,24 @@ function setupForms() {
         } else {
           Swal.fire({
             icon: 'success',
-            title: 'Baixa Efetuada com Sucesso!',
-            text: 'A cobrança foi transferida para a aba de Contas Recebidas.',
+            title: '🎉 Baixa Efetuada com Sucesso!',
+            text: `O plano do cliente agora está ATIVO (Em Dia) com novo vencimento em ${proxDataBr}. A cobrança foi transferida para Contas Recebidas.`,
             confirmButtonColor: '#00FF87',
             background: '#0D1527',
             color: '#FFF'
           });
         }
 
+        await fetchClientes();
         await fetchCobrancas();
         loadDashboardData();
+        renderTabelaClientes();
+        renderTabelaCobrancas();
+        renderTabelaContasRecebidas();
       }
     } catch (err) {
       console.error('Erro ao dar baixa:', err);
+      Swal.fire({ icon: 'error', title: 'Erro ao Dar Baixa', text: 'Não foi possível processar a baixa no servidor.', background: '#0D1527', color: '#FFF' });
     }
   });
 
