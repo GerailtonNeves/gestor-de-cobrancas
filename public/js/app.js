@@ -2265,9 +2265,9 @@ function setupForms() {
         loadDashboardData();
         populateClienteSelect();
 
-        // Se foi o cadastro de um NOVO cliente, direciona automaticamente para a aba de Cobranças para ver o card criado
+        // Se foi o cadastro de um NOVO cliente, direciona para a aba de Clientes para ver o cliente cadastrado imediatamente
         if (!id) {
-          switchTab('cobrancas');
+          switchTab('clientes');
         }
       } else {
         Swal.fire({ icon: 'error', title: 'Erro ao Salvar Cliente', text: data.error || 'Nome e WhatsApp são obrigatórios.', background: '#FFFFFF', color: '#000000' });
