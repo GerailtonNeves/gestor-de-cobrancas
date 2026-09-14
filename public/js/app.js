@@ -124,17 +124,22 @@ window.abrirModalBaixa = function(id) {
   }
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+function startApp() {
   initTabs();
   initMobileMenu();
   loadAllData();
   setupForms();
   
-  // Polling para checagem de envios automáticos, status do WhatsApp e dashboard
   setInterval(checkAlertasPendentes, 5000);
   setInterval(checkWhatsAppStatus, 3000);
   checkWhatsAppStatus();
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', startApp);
+} else {
+  startApp();
+}
 
 // -------------------------------------------------------------
 // 1. GERENCIADOR DE ABAS & NAVEGAÇÃO
@@ -1049,6 +1054,17 @@ async function darBaixaRapida(id) {
     if (cob) cli = globalClientes.find(c => c.id === cob.clienteId);
   }
 
+  if (!cob && !cli && !cleanId) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Nenhuma Cobrança Selecionada',
+      text: 'Selecione uma cobrança ou cliente pendente para dar baixa.',
+      background: '#FFFFFF',
+      color: '#000000'
+    });
+    return;
+  }
+
   const targetId = cob ? cob.id : (cli ? cli.id : (cleanId || ''));
   const nomeCliente = cob ? cob.clienteNome : (cli ? cli.nome : 'Cliente');
   const valorCob = cob ? cob.valor : (cli ? (cli.valorBruto || 35) : 35);
@@ -1105,16 +1121,23 @@ async function darBaixaRapida(id) {
         color: '#1E293B'
       });
 
-      const res = await fetch(`/api/cobrancas/${targetId}/dar-baixa`, {
+      const url = targetId ? `/api/cobrancas/${targetId}/dar-baixa` : '/api/cobrancas/dar-baixa';
+      const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          cobrancaId: targetId,
           proximoVencimento: proxIso,
           observacao: 'Baixa efetuada com sucesso pelo painel',
           enviarNotificacaoWhatsApp: true
         })
       });
-      const data = await res.json();
+      let data = {};
+      try {
+        data = await res.json();
+      } catch(parseErr) {
+        data = { success: false, error: 'Erro ao ler resposta do servidor.' };
+      }
 
       if (res.ok && data.success) {
         try {
@@ -2037,6 +2060,7 @@ function setupForms() {
     e.preventDefault();
     const id = document.getElementById('baixaCobrancaId').value;
     const bodyData = {
+      cobrancaId: id,
       dataPagamento: document.getElementById('baixaData').value,
       proximoVencimento: document.getElementById('baixaProximoVencimento').value,
       observacao: document.getElementById('baixaObservacao').value,
@@ -2044,12 +2068,19 @@ function setupForms() {
     };
 
     try {
-      const res = await fetch(`/api/cobrancas/${id}/dar-baixa`, {
+      const url = id ? `/api/cobrancas/${id}/dar-baixa` : '/api/cobrancas/dar-baixa';
+      const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bodyData)
       });
-      const data = await res.json();
+
+      let data = {};
+      try {
+        data = await res.json();
+      } catch(parseErr) {
+        data = { success: false, error: 'Resposta inválida do servidor.' };
+      }
 
       if (res.ok && data.success) {
         fecharModalBaixa();
