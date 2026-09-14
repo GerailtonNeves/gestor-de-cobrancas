@@ -1067,18 +1067,24 @@ function abrirModalBaixaForm(id) {
 }
 
 async function darBaixaRapida(id) {
-  let cob = globalCobrancas.find(c => c.id === id);
+  let cleanId = (id && typeof id === 'string') ? id.trim() : (typeof id === 'number' ? String(id) : null);
+  let cob = cleanId ? globalCobrancas.find(c => c.id === cleanId) : null;
   let cli = null;
   if (cob) {
     cli = globalClientes.find(c => c.id === cob.clienteId);
-  } else {
-    cli = globalClientes.find(c => c.id === id);
+  } else if (cleanId) {
+    cli = globalClientes.find(c => c.id === cleanId);
     if (cli) {
       cob = globalCobrancas.find(c => c.clienteId === cli.id && c.status === 'PENDENTE');
     }
   }
 
-  const targetId = cob ? cob.id : (cli ? cli.id : id);
+  if (!cob && globalCobrancas.length > 0) {
+    cob = globalCobrancas.find(c => c.status === 'PENDENTE') || globalCobrancas[0];
+    if (cob) cli = globalClientes.find(c => c.id === cob.clienteId);
+  }
+
+  const targetId = cob ? cob.id : (cli ? cli.id : (cleanId || ''));
   const nomeCliente = cob ? cob.clienteNome : (cli ? cli.nome : 'Cliente');
   const valorCob = cob ? cob.valor : (cli ? (cli.valorBruto || 35) : 35);
   
