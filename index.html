@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="GestorCob">
   
   <!-- CSS Principal -->
-  <link rel="stylesheet" href="css/styles.css?v=85.0">
+  <link rel="stylesheet" href="css/styles.css?v=90.0">
   
   <!-- Icones Remixicon & FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -34,8 +34,13 @@
         for (let r of registrations) { r.unregister(); }
       }).catch(function(e) {});
     }
+    if (window.caches) {
+      caches.keys().then(function(names) {
+        for (let name of names) caches.delete(name);
+      }).catch(function(e) {});
+    }
 
-        window.abrirModal = function(modalId) {
+    window.abrirModal = function(modalId) {
       const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
       if (!modal) return;
       document.querySelectorAll('.modal-overlay').forEach(m => {
@@ -75,89 +80,6 @@
         modalBox.style.visibility = 'hidden';
       }
     };
-
-    window.abrirModalNovoPlano = function() {
-      try {
-        const pId = document.getElementById('planoId'); if (pId) pId.value = '';
-        const fPlano = document.getElementById('formPlano'); if (fPlano) fPlano.reset();
-        if (document.getElementById('planoDesconto')) document.getElementById('planoDesconto').value = '0.00';
-        if (typeof calcularValorFinalPlanoModal === 'function') calcularValorFinalPlanoModal();
-      } catch(e) {}
-      window.abrirModal('modalPlano');
-    };
-
-    window.abrirModalNovoApp = function() {
-      try {
-        const aId = document.getElementById('appId'); if (aId) aId.value = '';
-        const fApp = document.getElementById('formApp'); if (fApp) fApp.reset();
-      } catch(e) {}
-      window.abrirModal('modalApp');
-    };
-
-    window.abrirModalNovoServidor = function() {
-      try {
-        const sId = document.getElementById('servidorId'); if (sId) sId.value = '';
-        const fSrv = document.getElementById('formServidor'); if (fSrv) fSrv.reset();
-      } catch(e) {}
-      window.abrirModal('modalServidor');
-    };
-
-    window.abrirModalNovoCliente = function() {
-      try {
-        const cId = document.getElementById('clienteId'); if (cId) cId.value = '';
-        const fCli = document.getElementById('formCliente'); if (fCli) fCli.reset();
-      } catch(e) {}
-      window.abrirModal('modalCliente');
-    };
-
-    window.abrirModalNovaCobranca = function() {
-      try {
-        const cobId = document.getElementById('cobrancaId'); if (cobId) cobId.value = '';
-        const fCob = document.getElementById('formCobranca'); if (fCob) fCob.reset();
-      } catch(e) {}
-      window.abrirModal('modalCobranca');
-    };
-
-    window.abrirModalBaixa = function(id) {
-      try {
-        if (typeof window.abrirModalBaixaFn === 'function') {
-          window.abrirModalBaixaFn(id);
-          return;
-        }
-      } catch(e) {}
-      if (id) {
-        const el = document.getElementById('baixaCobrancaId');
-        if (el) el.value = id;
-      }
-      const agora = new Date();
-      const yyyyNow = agora.getFullYear();
-      const mmNow = String(agora.getMonth() + 1).padStart(2, '0');
-      const ddNow = String(agora.getDate()).padStart(2, '0');
-      const hhNow = String(agora.getHours()).padStart(2, '0');
-      const miNow = String(agora.getMinutes()).padStart(2, '0');
-      const agoraLocal = `${yyyyNow}-${mmNow}-${ddNow}T${hhNow}:${miNow}`;
-
-      let baseDate = new Date();
-      baseDate.setDate(baseDate.getDate() + 30);
-      const yyyy = baseDate.getFullYear();
-      const mm = String(baseDate.getMonth() + 1).padStart(2, '0');
-      const dd = String(baseDate.getDate()).padStart(2, '0');
-      const proxIso = `${yyyy}-${mm}-${dd}`;
-
-      if (document.getElementById('baixaData')) document.getElementById('baixaData').value = agoraLocal;
-      if (document.getElementById('baixaProximoVencimento')) document.getElementById('baixaProximoVencimento').value = proxIso;
-      if (document.getElementById('baixaObservacao')) document.getElementById('baixaObservacao').value = 'Pagamento recebido e confirmado via PIX';
-      if (document.getElementById('baixaEnviarWhatsApp')) document.getElementById('baixaEnviarWhatsApp').checked = true;
-
-      window.abrirModal('modalBaixa');
-    };
-
-    window.fecharModalPlano = function() { window.fecharModal('modalPlano'); };
-    window.fecharModalApp = function() { window.fecharModal('modalApp'); };
-    window.fecharModalServidor = function() { window.fecharModal('modalServidor'); };
-    window.fecharModalCliente = function() { window.fecharModal('modalCliente'); };
-    window.fecharModalCobranca = function() { window.fecharModal('modalCobranca'); };
-    window.fecharModalBaixa = function() { window.fecharModal('modalBaixa'); };
   </script>
 </head>
 <body>
@@ -1498,6 +1420,6 @@
   </div>
 
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=85.0"></script>
+  <script src="js/app.js?v=90.0"></script>
 </body>
 </html>
