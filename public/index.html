@@ -109,11 +109,46 @@
       window.abrirModal('modalCobranca');
     };
 
+    window.abrirModalBaixa = function(id) {
+      try {
+        if (typeof window.abrirModalBaixaFn === 'function') {
+          window.abrirModalBaixaFn(id);
+          return;
+        }
+      } catch(e) {}
+      if (id) {
+        const el = document.getElementById('baixaCobrancaId');
+        if (el) el.value = id;
+      }
+      const agora = new Date();
+      const yyyyNow = agora.getFullYear();
+      const mmNow = String(agora.getMonth() + 1).padStart(2, '0');
+      const ddNow = String(agora.getDate()).padStart(2, '0');
+      const hhNow = String(agora.getHours()).padStart(2, '0');
+      const miNow = String(agora.getMinutes()).padStart(2, '0');
+      const agoraLocal = `${yyyyNow}-${mmNow}-${ddNow}T${hhNow}:${miNow}`;
+
+      let baseDate = new Date();
+      baseDate.setDate(baseDate.getDate() + 30);
+      const yyyy = baseDate.getFullYear();
+      const mm = String(baseDate.getMonth() + 1).padStart(2, '0');
+      const dd = String(baseDate.getDate()).padStart(2, '0');
+      const proxIso = `${yyyy}-${mm}-${dd}`;
+
+      if (document.getElementById('baixaData')) document.getElementById('baixaData').value = agoraLocal;
+      if (document.getElementById('baixaProximoVencimento')) document.getElementById('baixaProximoVencimento').value = proxIso;
+      if (document.getElementById('baixaObservacao')) document.getElementById('baixaObservacao').value = 'Pagamento recebido e confirmado via PIX';
+      if (document.getElementById('baixaEnviarWhatsApp')) document.getElementById('baixaEnviarWhatsApp').checked = true;
+
+      window.abrirModal('modalBaixa');
+    };
+
     window.fecharModalPlano = function() { window.fecharModal('modalPlano'); };
     window.fecharModalApp = function() { window.fecharModal('modalApp'); };
     window.fecharModalServidor = function() { window.fecharModal('modalServidor'); };
     window.fecharModalCliente = function() { window.fecharModal('modalCliente'); };
     window.fecharModalCobranca = function() { window.fecharModal('modalCobranca'); };
+    window.fecharModalBaixa = function() { window.fecharModal('modalBaixa'); };
   </script>
 </head>
 <body>
@@ -1446,6 +1481,6 @@
   </div>
 
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=71.0"></script>
+  <script src="js/app.js?v=72.0"></script>
 </body>
 </html>
