@@ -1045,13 +1045,12 @@ app.post('/api/cobrancas/:id/dar-baixa', async (req, res) => {
   let enviouDireto = false;
 
   if (enviarNotificacaoWhatsApp && waStatus === 'CONNECTED' && waSock) {
-    try {
-      await sendWhatsAppMessage(telefoneLimpo, msgRenovacao);
-      enviouDireto = true;
+    enviouDireto = true;
+    sendWhatsAppMessage(telefoneLimpo, msgRenovacao).then(() => {
       console.log(`🎉 [RENOVAÇÃO DE PLANO] Mensagem de confirmação enviada via WhatsApp para ${cobranca.clienteNome} (${telefoneLimpo})`);
-    } catch (err) {
-      console.error("Erro ao enviar mensagem de renovação no Baileys:", err);
-    }
+    }).catch(err => {
+      console.error("Erro ao enviar mensagem de renovação no Baileys:", err ? err.message : err);
+    });
   }
 
   db.historicoEnvios.push({
