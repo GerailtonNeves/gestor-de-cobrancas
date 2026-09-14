@@ -47,56 +47,21 @@ function formatDateTimeForInput(dateVal) {
 function abrirModal(modalId) {
   const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
   if (!modal) return;
-
-  // Fechar qualquer outro modal ativo
   document.querySelectorAll('.modal-overlay').forEach(m => {
     m.classList.remove('active');
-    m.style.setProperty('display', 'none', 'important');
-    m.style.setProperty('opacity', '0', 'important');
-    m.style.setProperty('visibility', 'hidden', 'important');
-    m.style.setProperty('pointer-events', 'none', 'important');
-    const b = m.querySelector('.modal-box');
-    if (b) {
-      b.style.setProperty('opacity', '0', 'important');
-      b.style.setProperty('visibility', 'hidden', 'important');
-    }
+    m.removeAttribute('style');
   });
-
-  // Forçar exibição visível do modal solicitado
-  modal.style.setProperty('display', 'flex', 'important');
-  modal.style.setProperty('opacity', '1', 'important');
-  modal.style.setProperty('visibility', 'visible', 'important');
-  modal.style.setProperty('pointer-events', 'auto', 'important');
+  modal.removeAttribute('style');
   modal.classList.add('active');
-
-  const box = modal.querySelector('.modal-box');
-  if (box) {
-    box.style.setProperty('display', 'block', 'important');
-    box.style.setProperty('opacity', '1', 'important');
-    box.style.setProperty('visibility', 'visible', 'important');
-    box.style.setProperty('transform', 'translateY(0)', 'important');
-  }
 }
 
 function fecharModal(modalId) {
   const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
   if (!modal) return;
-
   modal.classList.remove('active');
-  modal.style.setProperty('display', 'none', 'important');
-  modal.style.setProperty('opacity', '0', 'important');
-  modal.style.setProperty('visibility', 'hidden', 'important');
-  modal.style.setProperty('pointer-events', 'none', 'important');
-
-  const box = modal.querySelector('.modal-box');
-  if (box) {
-    box.style.setProperty('opacity', '0', 'important');
-    box.style.setProperty('visibility', 'hidden', 'important');
-    box.style.setProperty('transform', 'translateY(20px)', 'important');
-  }
+  modal.removeAttribute('style');
 }
 
-// Garantia imediata no objeto Window para clique nos botões (computador e celular)
 window.abrirModal = abrirModal;
 window.fecharModal = fecharModal;
 window.switchTab = switchTab;
