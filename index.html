@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="GestorCob">
   
   <!-- CSS Principal -->
-  <link rel="stylesheet" href="css/styles.css?v=90.0">
+  <link rel="stylesheet" href="css/styles.css?v=92.0">
   
   <!-- Icones Remixicon & FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -899,43 +899,43 @@
         <div class="modal-body" style="display: flex; flex-direction: column; gap: 1.1rem; padding-top: 1rem;">
           
           <!-- SEÇÃO 1: DADOS PESSOAIS & CONTATO -->
-          <div style="background: rgba(13, 21, 39, 0.6); padding: 1.1rem; border-radius: 14px; border: 1px solid rgba(0, 240, 255, 0.25); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);">
-            <h4 style="font-size: 0.95rem; color: var(--neon-blue); margin-bottom: 0.85rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem;">
+          <div style="background: #F8FAFC; padding: 1.1rem; border-radius: 14px; border: 1.5px solid #CBD5E1; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);">
+            <h4 style="font-size: 0.95rem; color: var(--brand-accent); margin-bottom: 0.85rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem;">
               <i class="fa-solid fa-address-card" style="font-size: 1.1rem;"></i> 1. Dados de Identificação & Contato
             </h4>
 
             <div class="form-group" style="margin-bottom: 0.85rem;">
-              <label for="cliNome" style="font-weight: 700; color: #000000;"><i class="fa-solid fa-user"></i> Nome Completo do Cliente *</label>
-              <input type="text" id="cliNome" class="form-control" placeholder="Ex: Carlos Eduardo Silva" required style="background: #090F1D; border-color: rgba(0, 240, 255, 0.3); color: #000000;">
+              <label for="cliNome" style="font-weight: 800; color: #000000;"><i class="fa-solid fa-user"></i> Nome Completo do Cliente *</label>
+              <input type="text" id="cliNome" class="form-control" placeholder="Ex: Carlos Eduardo Silva" required style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700;">
             </div>
 
             <div class="form-grid-2">
               <div class="form-group" style="margin-bottom: 0;">
-                <label for="cliTelefone" style="font-weight: 700; color: var(--emerald-light);"><i class="fa-brands fa-whatsapp"></i> WhatsApp (DDD + Número) *</label>
-                <input type="text" id="cliTelefone" class="form-control" placeholder="Ex: 5581999887766" required style="background: #090F1D; border-color: var(--emerald-primary); color: #000000;">
+                <label for="cliTelefone" style="font-weight: 800; color: var(--emerald-light);"><i class="fa-brands fa-whatsapp"></i> WhatsApp (DDD + Número) *</label>
+                <input type="text" id="cliTelefone" class="form-control" placeholder="Ex: 5581999887766" required style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700;">
               </div>
               <div class="form-group" style="margin-bottom: 0;">
-                <label for="cliEmail" style="color: var(--text-brown-muted);"><i class="fa-regular fa-envelope"></i> E-mail (Opcional)</label>
-                <input type="email" id="cliEmail" class="form-control" placeholder="cliente@email.com" style="background: #090F1D; color: #000000;">
+                <label for="cliEmail" style="color: #000000; font-weight: 800;"><i class="fa-regular fa-envelope"></i> E-mail (Opcional)</label>
+                <input type="email" id="cliEmail" class="form-control" placeholder="cliente@email.com" style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700;">
               </div>
             </div>
           </div>
 
           <!-- SEÇÃO 2: ATRIBUIÇÃO DE PLANO & SERVIÇOS -->
-          <div style="background: rgba(0, 240, 255, 0.04); padding: 1.1rem; border-radius: 14px; border: 1px solid var(--neon-blue); box-shadow: 0 4px 15px rgba(0, 240, 255, 0.08);">
-            <h4 style="font-size: 0.95rem; color: var(--neon-blue); margin-bottom: 0.85rem; font-weight: 800; display: flex; align-items: center; justify-content: space-between;">
+          <div style="background: #F8FAFC; padding: 1.1rem; border-radius: 14px; border: 1.5px solid #CBD5E1; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);">
+            <h4 style="font-size: 0.95rem; color: var(--brand-accent); margin-bottom: 0.85rem; font-weight: 800; display: flex; align-items: center; justify-content: space-between;">
               <span><i class="fa-solid fa-tv"></i> 2. Plano de Canais, Servidor & App</span>
               <span class="badge badge-agendado" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;"><i class="fa-solid fa-bolt"></i> Preenchimento Automático</span>
             </h4>
 
             <div class="form-group" style="margin-bottom: 0.85rem;">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
-                <label for="cliPlanoId" style="font-weight: 700; color: #000000; margin: 0;"><i class="fa-solid fa-tag" style="color: var(--neon-blue);"></i> Escolha o Plano de Canais</label>
+                <label for="cliPlanoId" style="font-weight: 800; color: #000000; margin: 0;"><i class="fa-solid fa-tag" style="color: var(--neon-blue);"></i> Escolha o Plano de Canais</label>
                 <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoPlano()">
                   <i class="fa-solid fa-plus"></i> + Novo Plano
                 </button>
               </div>
-              <select id="cliPlanoId" class="form-control" onchange="autoPreencherPlanoCliente()" style="background: #0D1527; border: 1px solid var(--neon-blue); color: #000000; font-weight: 700;">
+              <select id="cliPlanoId" class="form-control" onchange="autoPreencherPlanoCliente()" style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700;">
                 <option value="">-- Selecione o Plano --</option>
               </select>
             </div>
@@ -943,32 +943,34 @@
             <div class="form-grid-2">
               <div class="form-group" style="margin-bottom: 0;">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
-                  <label for="cliServidorId" style="font-weight: 600; color: #000000; margin: 0;"><i class="fa-solid fa-server" style="color: var(--neon-blue);"></i> Servidor / Painel</label>
+                  <label for="cliServidorId" style="font-weight: 800; color: #000000; margin: 0;"><i class="fa-solid fa-server" style="color: var(--neon-blue);"></i> Servidor / Painel</label>
                   <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoServidor()">
                     <i class="fa-solid fa-plus"></i> + Servidor
                   </button>
                 </div>
-                <select id="cliServidorId" class="form-control" style="background: #090F1D; color: #000000;">
+                <select id="cliServidorId" class="form-control" style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700;">
                   <option value="">-- Nenhum Servidor --</option>
                 </select>
               </div>
 
               <div class="form-group" style="margin-bottom: 0;">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
-                  <label for="cliAppId" style="font-weight: 600; color: #000000; margin: 0;"><i class="fa-solid fa-mobile-screen-button" style="color: var(--emerald-light);"></i> Aplicativo / App</label>
+                  <label for="cliAppId" style="font-weight: 800; color: #000000; margin: 0;"><i class="fa-solid fa-mobile-screen-button" style="color: var(--emerald-light);"></i> Aplicativo / App</label>
                   <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoApp()">
                     <i class="fa-solid fa-plus"></i> + App
                   </button>
                 </div>
-                <select id="cliAppId" class="form-control" style="background: #090F1D; color: #000000;">
+                <select id="cliAppId" class="form-control" style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700;">
                   <option value="">-- Nenhum App --</option>
                 </select>
               </div>
             </div>
+          </div>
+
           <!-- SEÇÃO 3: OBSERVAÇÕES -->
           <div class="form-group" style="margin-bottom: 0;">
-            <label for="cliNotas" style="color: var(--text-brown-muted); font-size: 0.88rem;"><i class="fa-regular fa-clipboard"></i> Observações / Notas do Cliente</label>
-            <textarea id="cliNotas" class="form-control" rows="2" placeholder="Ex: Preferência para renovar no início do mês..." style="background: #090F1D; color: #000000;"></textarea>
+            <label for="cliNotas" style="color: #000000; font-size: 0.88rem; font-weight: 800;"><i class="fa-regular fa-clipboard"></i> Observações / Notas do Cliente</label>
+            <textarea id="cliNotas" class="form-control" rows="2" placeholder="Ex: Preferência para renovar no início do mês..." style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700;"></textarea>
           </div>
 
         </div>
@@ -1449,6 +1451,6 @@
   </div>
 
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=91.0"></script>
+  <script src="js/app.js?v=92.0"></script>
 </body>
 </html>
