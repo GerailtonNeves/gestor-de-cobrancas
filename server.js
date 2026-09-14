@@ -994,6 +994,37 @@ app.post('/api/cobrancas/:id/dar-baixa', async (req, res) => {
   cobranca.proximoVencimento = proxVenc || null;
   cobranca.observacaoBaixa = observacao || "Baixa efetuada manualmente pelo usuário";
 
+  // Garantir a renovação do plano para o próximo mês: atualizar ou criar a cobrança do próximo mês
+  if (proxVenc && cobranca.clienteId) {
+    let pendenteExistente = db.cobrancas.find(c => c.clienteId === cobranca.clienteId && c.status === 'PENDENTE' && c.id !== cobranca.id);
+    if (pendenteExistente) {
+      pendenteExistente.dataVencimento = proxVenc;
+      pendenteExistente.dataHoraEnvio = `${proxVenc}T09:00`;
+      pendenteExistente.statusEnvio = "AGENDADO";
+    } else {
+      const novaCobrancaProxMes = {
+        id: `cob_${Date.now()}`,
+        clienteId: cobranca.clienteId,
+        clienteNome: cobranca.clienteNome,
+        clienteTelefone: cobranca.clienteTelefone,
+        qtdTelas: cobranca.qtdTelas || 1,
+        valorBruto: cobranca.valorBruto || cobranca.valor,
+        desconto: cobranca.desconto || 0,
+        valor: cobranca.valor,
+        dataVencimento: proxVenc,
+        dataHoraEnvio: `${proxVenc}T09:00`,
+        descricao: cobranca.descricao || "Renovação Mensal do Plano de Canais",
+        modeloMensagemId: cobranca.modeloMensagemId || null,
+        status: "PENDENTE",
+        statusEnvio: "AGENDADO",
+        dataEnvioRealizado: null,
+        dataPagamento: null,
+        observacaoBaixa: null
+      };
+      db.cobrancas.push(novaCobrancaProxMes);
+    }
+  }
+
   const msgRenovacao = gerarMensagemRenovacaoWhatsApp(cobranca, proxVenc, cobranca.dataPagamento);
   const telefoneLimpo = sanitizePhone(cobranca.clienteTelefone);
   const linkWhatsAppRenovacao = `https://wa.me/${telefoneLimpo}?text=${encodeURIComponent(msgRenovacao)}`;
@@ -1025,7 +1056,7 @@ app.post('/api/cobrancas/:id/dar-baixa', async (req, res) => {
   saveDB(db);
   res.json({
     success: true,
-    message: "Baixa efetuada e plano renovado com sucesso!",
+    message: "Baixa efetuada e plano renovado com sucesso para o próximo mês!",
     enviouDireto,
     msgRenovacao,
     linkWhatsAppRenovacao,
