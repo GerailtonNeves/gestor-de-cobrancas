@@ -450,7 +450,7 @@ function renderProximosEnviosDash() {
   container.innerHTML = pendentesAgendados.map(cob => `
     <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px dashed var(--border-color);">
       <div>
-        <div style="font-weight: 700; color: #FFF; font-size: 0.9rem;">${cob.clienteNome}</div>
+        <div style="font-weight: 700; color: #000000; font-size: 0.9rem;">${cob.clienteNome}</div>
         <div style="font-size: 0.75rem; color: var(--text-brown-muted);">
           <i class="fa-regular fa-clock" style="color: var(--emerald-primary);"></i> ${formatDateTime(cob.dataHoraEnvio)}
         </div>
@@ -642,7 +642,7 @@ function renderTabelaCobrancas() {
       return `
         <tr>
           <td>
-            <strong style="color: #FFF;">${cob.clienteNome}</strong>
+            <strong style="color: #000000;">${cob.clienteNome}</strong>
             <div style="font-size: 0.75rem; color: var(--text-brown-muted);"><i class="fa-brands fa-whatsapp"></i> ${formatPhone(cob.clienteTelefone)}</div>
             ${planoText}
           </td>
@@ -650,7 +650,7 @@ function renderTabelaCobrancas() {
             <strong style="color: var(--emerald-light); font-size: 0.95rem;">${formatCurrency(cob.valor)}</strong>
             ${cob.desconto > 0 ? `<div style="font-size: 0.72rem; color: var(--neon-pink, #ff2a85); margin-top: 0.15rem;"><i class="fa-solid fa-tag"></i> Desc: -${formatCurrency(cob.desconto)}</div>` : ''}
           </td>
-          <td><strong style="color: #FFF;">${formatDate(cob.dataVencimento)}</strong></td>
+          <td><strong style="color: #000000;">${formatDate(cob.dataVencimento)}</strong></td>
           <td>${badgeEnvio}</td>
           <td><span style="font-size: 0.85rem; color: var(--text-brown-muted);">${cob.descricao}</span></td>
           <td>${badgeStatus}</td>
@@ -717,7 +717,7 @@ function renderTabelaCobrancas() {
               <span style="font-size: 0.8rem; color: var(--text-brown-muted); font-weight: 600;"><i class="fa-regular fa-calendar-days"></i> Venc: ${formatDate(cob.dataVencimento)}</span>
             </div>
 
-            <h3 style="font-size: 1.15rem; font-weight: 800; color: #FFF; margin-bottom: 0.35rem;">${cob.clienteNome}</h3>
+            <h3 style="font-size: 1.15rem; font-weight: 800; color: #000000; margin-bottom: 0.35rem;">${cob.clienteNome}</h3>
             <div style="font-size: 0.85rem; color: var(--emerald-light); font-weight: 600; margin-bottom: 0.75rem;">
               <i class="fa-brands fa-whatsapp"></i> ${formatPhone(cob.clienteTelefone)}
             </div>
@@ -959,14 +959,14 @@ async function deletarCobranca(id) {
     confirmButtonText: 'Sim, excluir!',
     cancelButtonText: 'Cancelar',
     background: '#0D1527',
-    color: '#FFF'
+    color: '#000000'
   });
 
   if (confirm.isConfirmed) {
     try {
       const res = await fetch(`/api/cobrancas/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        Swal.fire({ icon: 'success', title: 'Cobrança excluída!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#FFF' });
+        Swal.fire({ icon: 'success', title: 'Cobrança excluída!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
         await fetchCobrancas();
         loadDashboardData();
       }
@@ -1245,7 +1245,7 @@ function renderTabelaContasRecebidas() {
     tbody.innerHTML = cobrancasPagas.map(cob => `
       <tr>
         <td>
-          <strong style="color: #FFF;">${cob.clienteNome}</strong>
+          <strong style="color: #000000;">${cob.clienteNome}</strong>
           <div style="font-size: 0.75rem; color: var(--text-brown-muted);"><i class="fa-brands fa-whatsapp"></i> ${formatPhone(cob.clienteTelefone)}</div>
         </td>
         <td><strong style="color: var(--emerald-light); font-size: 1rem;">${formatCurrency(cob.valor)}</strong></td>
@@ -1272,7 +1272,7 @@ function renderTabelaContasRecebidas() {
             <span style="font-size: 0.8rem; color: var(--emerald-light); font-weight: 600;"><i class="fa-solid fa-calendar-check"></i> ${formatDateTime(cob.dataPagamento)}</span>
           </div>
 
-          <h3 style="font-size: 1.15rem; font-weight: 800; color: #FFF; margin-bottom: 0.35rem;">${cob.clienteNome}</h3>
+          <h3 style="font-size: 1.15rem; font-weight: 800; color: #000000; margin-bottom: 0.35rem;">${cob.clienteNome}</h3>
           <div style="font-size: 0.85rem; color: var(--emerald-light); font-weight: 600; margin-bottom: 0.75rem;">
             <i class="fa-brands fa-whatsapp"></i> ${formatPhone(cob.clienteTelefone)}
           </div>
@@ -1311,14 +1311,14 @@ async function reverterBaixa(id) {
     confirmButtonText: 'Sim, Reverter Baixa!',
     cancelButtonText: 'Cancelar',
     background: '#0D1527',
-    color: '#FFF'
+    color: '#000000'
   });
 
   if (confirm.isConfirmed) {
     try {
       const res = await fetch(`/api/cobrancas/${id}/reverter-baixa`, { method: 'POST' });
       if (res.ok) {
-        Swal.fire({ icon: 'success', title: 'Cobrança Revertida!', text: 'Retornou para a lista de A Receber.', timer: 1800, showConfirmButton: false, background: '#0D1527', color: '#FFF' });
+        Swal.fire({ icon: 'success', title: 'Cobrança Revertida!', text: 'Retornou para a lista de A Receber.', timer: 1800, showConfirmButton: false, background: '#0D1527', color: '#000000' });
         await fetchCobrancas();
         loadDashboardData();
       }
@@ -1346,7 +1346,7 @@ async function dispararWhatsApp(id) {
         text: 'A janela de envio do WhatsApp foi aberta com a mensagem formatada contendo seus dados PIX.',
         confirmButtonColor: '#10B981',
         background: '#0D1527',
-        color: '#FFF'
+        color: '#000000'
       });
 
       await fetchCobrancas();
@@ -1378,7 +1378,7 @@ function renderTabelaEnvios() {
 
     return `
       <tr>
-        <td><strong style="color: #FFF;">${cob.clienteNome}</strong></td>
+        <td><strong style="color: #000000;">${cob.clienteNome}</strong></td>
         <td>${formatPhone(cob.clienteTelefone)}</td>
         <td><strong style="color: var(--emerald-light);">${formatCurrency(cob.valor)}</strong></td>
         <td><i class="fa-regular fa-calendar-check" style="color: var(--emerald-primary);"></i> ${formatDateTime(cob.dataHoraEnvio)}</td>
@@ -1466,7 +1466,7 @@ function renderTabelaClientes() {
 
       return `
         <tr>
-          <td><strong style="color: #FFF;">${cli.nome}</strong></td>
+          <td><strong style="color: #000000;">${cli.nome}</strong></td>
           <td><span style="color: var(--emerald-light); font-weight: 600;"><i class="fa-brands fa-whatsapp"></i> ${formatPhone(cli.telefone)}</span></td>
           <td>${statusObj.badgeHtml}</td>
           <td>${badgePlano}</td>
@@ -1538,7 +1538,7 @@ function renderTabelaClientes() {
           <div>
             <!-- Cabeçalho do Card (Nome + Status do Plano) -->
             <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.85rem;">
-              <h3 style="font-size: 1.15rem; font-weight: 800; color: #FFF; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+              <h3 style="font-size: 1.15rem; font-weight: 800; color: #000000; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
                 <i class="fa-solid fa-circle-user" style="color: var(--neon-blue);"></i> ${cli.nome}
               </h3>
               ${statusObj.badgeHtml}
@@ -1593,7 +1593,7 @@ function renderTabelaClientes() {
               <div style="background: rgba(0, 240, 255, 0.08); padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px dashed var(--neon-blue); margin-bottom: 1rem;">
                 <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; margin-bottom: 0.25rem;">
                   <span style="color: var(--neon-blue); font-weight: 700;"><i class="fa-solid fa-clock"></i> Disparo WhatsApp:</span>
-                  <span style="color: #FFF; font-weight: 600;">${formatDateTime(cobPendente.dataHoraEnvio)}</span>
+                  <span style="color: #000000; font-weight: 600;">${formatDateTime(cobPendente.dataHoraEnvio)}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;">
                   <span style="color: var(--text-brown-muted);"><i class="fa-regular fa-calendar"></i> Vencimento:</span>
@@ -1832,14 +1832,14 @@ async function deletarCliente(id) {
     confirmButtonText: 'Sim, excluir!',
     cancelButtonText: 'Cancelar',
     background: '#0D1527',
-    color: '#FFF'
+    color: '#000000'
   });
 
   if (confirm.isConfirmed) {
     try {
       const res = await fetch(`/api/clientes/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        Swal.fire({ icon: 'success', title: 'Cliente excluído!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#FFF' });
+        Swal.fire({ icon: 'success', title: 'Cliente excluído!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
         await fetchClientes();
       }
     } catch (err) {
@@ -1948,15 +1948,15 @@ function setupForms() {
 
       if (res.ok) {
         fecharModalCobranca();
-        Swal.fire({ icon: 'success', title: id ? 'Cobrança Atualizada!' : 'Cobrança Cadastrada!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#FFF' });
+        Swal.fire({ icon: 'success', title: id ? 'Cobrança Atualizada!' : 'Cobrança Cadastrada!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
         await fetchCobrancas();
         loadDashboardData();
       } else {
-        Swal.fire({ icon: 'error', title: 'Erro ao Salvar Cobrança', text: data.error || 'Preencha todos os campos obrigatórios.', background: '#0D1527', color: '#FFF' });
+        Swal.fire({ icon: 'error', title: 'Erro ao Salvar Cobrança', text: data.error || 'Preencha todos os campos obrigatórios.', background: '#0D1527', color: '#000000' });
       }
     } catch (err) {
       console.error('Erro ao salvar cobrança:', err);
-      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível se comunicar com o servidor.', background: '#0D1527', color: '#FFF' });
+      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível se comunicar com o servidor.', background: '#0D1527', color: '#000000' });
     }
   });
 
@@ -2024,7 +2024,7 @@ function setupForms() {
         }
 
         fecharModalCliente();
-        Swal.fire({ icon: 'success', title: id ? 'Cliente Atualizado!' : 'Cliente e Cobrança Agendada com Sucesso!', timer: 1800, showConfirmButton: false, background: '#0D1527', color: '#FFF' });
+        Swal.fire({ icon: 'success', title: id ? 'Cliente Atualizado!' : 'Cliente e Cobrança Agendada com Sucesso!', timer: 1800, showConfirmButton: false, background: '#0D1527', color: '#000000' });
         await fetchClientes();
         await fetchCobrancas();
         loadDashboardData();
@@ -2035,11 +2035,11 @@ function setupForms() {
           switchTab('cobrancas');
         }
       } else {
-        Swal.fire({ icon: 'error', title: 'Erro ao Salvar Cliente', text: data.error || 'Nome e WhatsApp são obrigatórios.', background: '#0D1527', color: '#FFF' });
+        Swal.fire({ icon: 'error', title: 'Erro ao Salvar Cliente', text: data.error || 'Nome e WhatsApp são obrigatórios.', background: '#0D1527', color: '#000000' });
       }
     } catch (err) {
       console.error('Erro ao salvar cliente:', err);
-      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível salvar o cliente no servidor.', background: '#0D1527', color: '#FFF' });
+      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível salvar o cliente no servidor.', background: '#0D1527', color: '#000000' });
     }
   });
 
@@ -2073,7 +2073,7 @@ function setupForms() {
             text: `Baixa confirmada! O plano do cliente agora está ATIVO (Em Dia) e a nova data de vencimento foi alterada para ${proxDataBr}. A mensagem de renovação foi enviada para o WhatsApp!`,
             confirmButtonColor: '#00FF87',
             background: '#0D1527',
-            color: '#FFF'
+            color: '#000000'
           });
         } else if (bodyData.enviarNotificacaoWhatsApp && data.linkWhatsAppRenovacao) {
           window.open(data.linkWhatsAppRenovacao, '_blank');
@@ -2083,7 +2083,7 @@ function setupForms() {
             text: `O plano do cliente agora está ATIVO (Em Dia) e o vencimento foi atualizado para ${proxDataBr}. Abrindo WhatsApp...`,
             confirmButtonColor: '#00FF87',
             background: '#0D1527',
-            color: '#FFF'
+            color: '#000000'
           });
         } else {
           Swal.fire({
@@ -2092,7 +2092,7 @@ function setupForms() {
             text: `O plano do cliente agora está ATIVO (Em Dia) com novo vencimento em ${proxDataBr}. A cobrança foi transferida para Contas Recebidas.`,
             confirmButtonColor: '#00FF87',
             background: '#0D1527',
-            color: '#FFF'
+            color: '#000000'
           });
         }
 
@@ -2105,7 +2105,7 @@ function setupForms() {
       }
     } catch (err) {
       console.error('Erro ao dar baixa:', err);
-      Swal.fire({ icon: 'error', title: 'Erro ao Dar Baixa', text: 'Não foi possível processar a baixa no servidor.', background: '#0D1527', color: '#FFF' });
+      Swal.fire({ icon: 'error', title: 'Erro ao Dar Baixa', text: 'Não foi possível processar a baixa no servidor.', background: '#0D1527', color: '#000000' });
     }
   });
 
@@ -2128,7 +2128,7 @@ function setupForms() {
       });
 
       if (res.ok) {
-        Swal.fire({ icon: 'success', title: 'Dados PIX Salvos com Sucesso!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#FFF' });
+        Swal.fire({ icon: 'success', title: 'Dados PIX Salvos com Sucesso!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
         await fetchMeusDados();
       }
     } catch (err) {
@@ -2148,7 +2148,7 @@ function setupForms() {
     const nomeVal = document.getElementById('planoNome') ? document.getElementById('planoNome').value.trim() : '';
 
     if (!nomeVal || valParsed <= 0) {
-      Swal.fire({ icon: 'warning', title: 'Campos Obrigatórios', text: 'Informe o Nome do Plano e um Valor válido.', background: '#0D1527', color: '#FFF' });
+      Swal.fire({ icon: 'warning', title: 'Campos Obrigatórios', text: 'Informe o Nome do Plano e um Valor válido.', background: '#0D1527', color: '#000000' });
       return;
     }
 
@@ -2176,14 +2176,14 @@ function setupForms() {
 
       if (res.ok) {
         fecharModalPlano();
-        Swal.fire({ icon: 'success', title: id ? 'Plano Atualizado!' : 'Plano Cadastrado com Sucesso!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#FFF' });
+        Swal.fire({ icon: 'success', title: id ? 'Plano Atualizado!' : 'Plano Cadastrado com Sucesso!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
         await fetchPlanos();
       } else {
-        Swal.fire({ icon: 'error', title: 'Erro ao Salvar Plano', text: data.error || 'Verifique se preencheu os campos corretamente.', background: '#0D1527', color: '#FFF' });
+        Swal.fire({ icon: 'error', title: 'Erro ao Salvar Plano', text: data.error || 'Verifique se preencheu os campos corretamente.', background: '#0D1527', color: '#000000' });
       }
     } catch (err) {
       console.error('Erro ao salvar plano:', err);
-      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível salvar o plano no servidor.', background: '#0D1527', color: '#FFF' });
+      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível salvar o plano no servidor.', background: '#0D1527', color: '#000000' });
     }
   });
 
@@ -2194,7 +2194,7 @@ function setupForms() {
     const nomeVal = document.getElementById('appNome') ? document.getElementById('appNome').value.trim() : '';
 
     if (!nomeVal) {
-      Swal.fire({ icon: 'warning', title: 'Nome Obrigatório', text: 'Informe o Nome do Aplicativo.', background: '#0D1527', color: '#FFF' });
+      Swal.fire({ icon: 'warning', title: 'Nome Obrigatório', text: 'Informe o Nome do Aplicativo.', background: '#0D1527', color: '#000000' });
       return;
     }
 
@@ -2217,14 +2217,14 @@ function setupForms() {
 
       if (res.ok) {
         fecharModalApp();
-        Swal.fire({ icon: 'success', title: id ? 'App Atualizado!' : 'App Cadastrado com Sucesso!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#FFF' });
+        Swal.fire({ icon: 'success', title: id ? 'App Atualizado!' : 'App Cadastrado com Sucesso!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
         await fetchApps();
       } else {
-        Swal.fire({ icon: 'error', title: 'Erro ao Salvar App', text: data.error || 'Preencha o nome do aplicativo.', background: '#0D1527', color: '#FFF' });
+        Swal.fire({ icon: 'error', title: 'Erro ao Salvar App', text: data.error || 'Preencha o nome do aplicativo.', background: '#0D1527', color: '#000000' });
       }
     } catch (err) {
       console.error('Erro ao salvar app:', err);
-      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível salvar o app no servidor.', background: '#0D1527', color: '#FFF' });
+      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível salvar o app no servidor.', background: '#0D1527', color: '#000000' });
     }
   });
 
@@ -2235,7 +2235,7 @@ function setupForms() {
     const nomeVal = document.getElementById('servidorNome') ? document.getElementById('servidorNome').value.trim() : '';
 
     if (!nomeVal) {
-      Swal.fire({ icon: 'warning', title: 'Nome Obrigatório', text: 'Informe o Nome do Servidor.', background: '#0D1527', color: '#FFF' });
+      Swal.fire({ icon: 'warning', title: 'Nome Obrigatório', text: 'Informe o Nome do Servidor.', background: '#0D1527', color: '#000000' });
       return;
     }
 
@@ -2258,14 +2258,14 @@ function setupForms() {
 
       if (res.ok) {
         fecharModalServidor();
-        Swal.fire({ icon: 'success', title: id ? 'Servidor Atualizado!' : 'Servidor Cadastrado com Sucesso!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#FFF' });
+        Swal.fire({ icon: 'success', title: id ? 'Servidor Atualizado!' : 'Servidor Cadastrado com Sucesso!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
         await fetchServidores();
       } else {
-        Swal.fire({ icon: 'error', title: 'Erro ao Salvar Servidor', text: data.error || 'Preencha o nome do servidor.', background: '#0D1527', color: '#FFF' });
+        Swal.fire({ icon: 'error', title: 'Erro ao Salvar Servidor', text: data.error || 'Preencha o nome do servidor.', background: '#0D1527', color: '#000000' });
       }
     } catch (err) {
       console.error('Erro ao salvar servidor:', err);
-      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível salvar o servidor no servidor.', background: '#0D1527', color: '#FFF' });
+      Swal.fire({ icon: 'error', title: 'Erro na Conexão', text: 'Não foi possível salvar o servidor no servidor.', background: '#0D1527', color: '#000000' });
     }
   });
 
@@ -2311,7 +2311,7 @@ async function checkAlertasPendentes() {
         confirmButtonColor: '#25D366',
         cancelButtonColor: '#3E2418',
         background: '#0D1527',
-        color: '#FFF'
+        color: '#000000'
       }).then((result) => {
         if (result.isConfirmed && alerta.linkWhatsApp) {
           window.open(alerta.linkWhatsApp, '_blank');
@@ -2426,7 +2426,7 @@ async function reconectarWhatsApp() {
       timer: 1500,
       showConfirmButton: false,
       background: '#0D1527',
-      color: '#FFF'
+      color: '#000000'
     });
 
     // Polling rápido a cada 1 segundo para exibir o QR Code imediatamente quando for gerado pelo robô
@@ -2451,9 +2451,9 @@ async function testarEnvioWhatsApp() {
     html: `
       <div style="text-align: left;">
         <label style="font-size: 0.85rem; color: #D1B89D;">WhatsApp do Destinatário (DDD + Número)</label>
-        <input id="swal-input-tel" class="swal2-input" placeholder="Ex: 11972560991" style="background: #1C110A; color: #FFF; border-color: rgba(184, 115, 51, 0.3);">
+        <input id="swal-input-tel" class="swal2-input" placeholder="Ex: 11972560991" style="background: #1C110A; color: #000000; border-color: rgba(184, 115, 51, 0.3);">
         <label style="font-size: 0.85rem; color: #D1B89D; margin-top: 0.5rem; display: block;">Mensagem de Teste</label>
-        <textarea id="swal-input-msg" class="swal2-textarea" placeholder="Mensagem para testar o envio..." style="background: #1C110A; color: #FFF; border-color: rgba(184, 115, 51, 0.3);">🚀 Teste de envio de cobrança automática via GESTOR DE COBRANÇAS!</textarea>
+        <textarea id="swal-input-msg" class="swal2-textarea" placeholder="Mensagem para testar o envio..." style="background: #1C110A; color: #000000; border-color: rgba(184, 115, 51, 0.3);">🚀 Teste de envio de cobrança automática via GESTOR DE COBRANÇAS!</textarea>
       </div>
     `,
     focusConfirm: false,
@@ -2463,7 +2463,7 @@ async function testarEnvioWhatsApp() {
     confirmButtonColor: '#25D366',
     cancelButtonColor: '#3E2418',
     background: '#0D1527',
-    color: '#FFF',
+    color: '#000000',
     preConfirm: () => {
       const tel = document.getElementById('swal-input-tel').value;
       const msg = document.getElementById('swal-input-msg').value;
@@ -2481,7 +2481,7 @@ async function testarEnvioWhatsApp() {
       allowOutsideClick: false,
       didOpen: () => Swal.showLoading(),
       background: '#0D1527',
-      color: '#FFF'
+      color: '#000000'
     });
 
     try {
@@ -2499,7 +2499,7 @@ async function testarEnvioWhatsApp() {
           text: data.message,
           confirmButtonColor: '#10B981',
           background: '#0D1527',
-          color: '#FFF'
+          color: '#000000'
         });
       } else {
         Swal.fire({
@@ -2508,7 +2508,7 @@ async function testarEnvioWhatsApp() {
           text: data.error || 'Não foi possível entregar a mensagem. Verifique se o QR Code está conectado.',
           confirmButtonColor: '#EF4444',
           background: '#0D1527',
-          color: '#FFF'
+          color: '#000000'
         });
       }
     } catch (err) {
@@ -2518,7 +2518,7 @@ async function testarEnvioWhatsApp() {
         text: 'Não foi possível se comunicar com o servidor.',
         confirmButtonColor: '#EF4444',
         background: '#23150D',
-        color: '#FFF'
+        color: '#000000'
       });
     }
   }
@@ -2598,7 +2598,7 @@ function renderCardsPlanos() {
             <span style="font-size: 0.8rem; color: var(--text-brown-muted); font-weight: 600;"><i class="fa-regular fa-clock"></i> ${plano.validade}</span>
           </div>
 
-          <h3 style="font-size: 1.2rem; font-weight: 800; color: #FFF; margin-bottom: 0.35rem;">${plano.nome}</h3>
+          <h3 style="font-size: 1.2rem; font-weight: 800; color: #000000; margin-bottom: 0.35rem;">${plano.nome}</h3>
 
           <div style="font-size: 0.85rem; color: var(--neon-blue); font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.4rem;">
             <i class="fa-solid fa-desktop"></i> ${plano.telas || '1 Tela'}
@@ -2685,14 +2685,14 @@ async function deletarPlano(id) {
     confirmButtonText: 'Sim, excluir!',
     cancelButtonText: 'Cancelar',
     background: '#0D1527',
-    color: '#FFF'
+    color: '#000000'
   });
 
   if (confirm.isConfirmed) {
     try {
       const res = await fetch(`/api/planos/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        Swal.fire({ icon: 'success', title: 'Plano excluído!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#FFF' });
+        Swal.fire({ icon: 'success', title: 'Plano excluído!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
         await fetchPlanos();
       }
     } catch (err) {
@@ -2747,7 +2747,7 @@ function copiarPromoPlano(planoId) {
       timer: 2000,
       showConfirmButton: false,
       background: '#0D1527',
-      color: '#FFF'
+      color: '#000000'
     });
   });
 }
@@ -2784,7 +2784,7 @@ function renderCardsApps() {
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
           <span class="badge badge-agendado"><i class="fa-solid fa-mobile-screen-button"></i> ${app.categoria}</span>
         </div>
-        <h3 style="font-size: 1.15rem; font-weight: 800; color: #FFF; margin-bottom: 0.5rem;">${app.nome}</h3>
+        <h3 style="font-size: 1.15rem; font-weight: 800; color: #000000; margin-bottom: 0.5rem;">${app.nome}</h3>
         <p style="font-size: 0.85rem; color: var(--text-brown-muted); margin-bottom: 1rem; line-height: 1.5;">${app.descricao || 'Sem descrição cadastrada.'}</p>
       </div>
 
@@ -2838,14 +2838,14 @@ async function deletarApp(id) {
     confirmButtonText: 'Sim, excluir!',
     cancelButtonText: 'Cancelar',
     background: '#0D1527',
-    color: '#FFF'
+    color: '#000000'
   });
 
   if (confirm.isConfirmed) {
     try {
       const res = await fetch(`/api/apps/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        Swal.fire({ icon: 'success', title: 'Aplicativo excluído!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#FFF' });
+        Swal.fire({ icon: 'success', title: 'Aplicativo excluído!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
         await fetchApps();
       }
     } catch (err) {
@@ -2886,7 +2886,7 @@ function renderCardsServidores() {
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
           <span class="badge badge-pago"><i class="fa-solid fa-server"></i> ${srv.categoria}</span>
         </div>
-        <h3 style="font-size: 1.15rem; font-weight: 800; color: #FFF; margin-bottom: 0.5rem;">${srv.nome}</h3>
+        <h3 style="font-size: 1.15rem; font-weight: 800; color: #000000; margin-bottom: 0.5rem;">${srv.nome}</h3>
         <p style="font-size: 0.85rem; color: var(--text-brown-muted); margin-bottom: 1rem; line-height: 1.5;">${srv.descricao || 'Sem observações cadastradas.'}</p>
       </div>
 
@@ -2940,14 +2940,14 @@ async function deletarServidor(id) {
     confirmButtonText: 'Sim, excluir!',
     cancelButtonText: 'Cancelar',
     background: '#0D1527',
-    color: '#FFF'
+    color: '#000000'
   });
 
   if (confirm.isConfirmed) {
     try {
       const res = await fetch(`/api/servidores/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        Swal.fire({ icon: 'success', title: 'Servidor excluído!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#FFF' });
+        Swal.fire({ icon: 'success', title: 'Servidor excluído!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
         await fetchServidores();
       }
     } catch (err) {
@@ -3020,10 +3020,10 @@ function renderCardsModelosMensagens() {
       <div class="glass-panel" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 3px solid ${cardColor};">
         <div>
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
-            <h3 style="font-size: 1.1rem; font-weight: 800; color: #FFF; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+            <h3 style="font-size: 1.1rem; font-weight: 800; color: #000000; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
               <i class="fa-solid fa-comment-dots" style="color: ${cardColor};"></i> ${modelo.titulo}
             </h3>
-            <span class="badge" style="background: rgba(255,255,255,0.08); border: 1px solid ${cardColor}; color: #FFF; font-size: 0.75rem; padding: 0.2rem 0.5rem;">
+            <span class="badge" style="background: rgba(255,255,255,0.08); border: 1px solid ${cardColor}; color: #000000; font-size: 0.75rem; padding: 0.2rem 0.5rem;">
               ${modelo.categoria || 'Geral'}
             </span>
           </div>
@@ -3120,14 +3120,14 @@ async function deletarModelo(id) {
     confirmButtonText: 'Sim, excluir!',
     cancelButtonText: 'Cancelar',
     background: '#0D1527',
-    color: '#FFF'
+    color: '#000000'
   });
 
   if (confirm.isConfirmed) {
     try {
       const res = await fetch(`/api/modelos-mensagens/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        Swal.fire({ icon: 'success', title: 'Modelo excluído!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#FFF' });
+        Swal.fire({ icon: 'success', title: 'Modelo excluído!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
         await fetchModelosMensagens();
       }
     } catch (err) {
@@ -3162,7 +3162,7 @@ async function salvarModeloMensagem(e) {
 
     if (res.ok) {
       fecharModalModeloMensagem();
-      Swal.fire({ icon: 'success', title: id ? 'Modelo Atualizado!' : 'Modelo Cadastrado!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#FFF' });
+      Swal.fire({ icon: 'success', title: id ? 'Modelo Atualizado!' : 'Modelo Cadastrado!', timer: 1500, showConfirmButton: false, background: '#0D1527', color: '#000000' });
       await fetchModelosMensagens();
     }
   } catch (err) {
@@ -3267,7 +3267,7 @@ async function dispararModeloSelecionado(e) {
   const textoCustomizado = document.getElementById('disparoMensagemTexto').value;
 
   if (!clienteId) {
-    Swal.fire({ icon: 'warning', title: 'Atenção', text: 'Selecione um cliente para receber a mensagem.', confirmButtonColor: '#00F0FF', background: '#0D1527', color: '#FFF' });
+    Swal.fire({ icon: 'warning', title: 'Atenção', text: 'Selecione um cliente para receber a mensagem.', confirmButtonColor: '#00F0FF', background: '#0D1527', color: '#000000' });
     return;
   }
 
@@ -3289,7 +3289,7 @@ async function dispararModeloSelecionado(e) {
           text: 'O modelo de mensagem escolhido foi entregue diretamente no WhatsApp do cliente!',
           confirmButtonColor: '#00FF87',
           background: '#0D1527',
-          color: '#FFF'
+          color: '#000000'
         });
       } else if (data.linkWhatsApp) {
         window.open(data.linkWhatsApp, '_blank');
@@ -3299,7 +3299,7 @@ async function dispararModeloSelecionado(e) {
           text: 'A janela do WhatsApp Web foi aberta com o texto preenchido contendo as variáveis substituídas!',
           confirmButtonColor: '#00F0FF',
           background: '#0D1527',
-          color: '#FFF'
+          color: '#000000'
         });
       }
     }
