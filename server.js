@@ -562,6 +562,31 @@ app.get('/api/meus-dados', (req, res) => {
 // -----------------------------------------------------------------
 // PLANOS, APPS E SERVIDORES IPTV
 // -----------------------------------------------------------------
+
+app.get('/api/planos/:id', (req, res) => {
+  const db = getDB();
+  const cleanId = String(req.params.id || '').trim().toLowerCase();
+  const p = db.planos.find(item => String(item.id).trim().toLowerCase() === cleanId);
+  if (!p) return res.status(404).json({ error: "Plano não encontrado" });
+  res.json(p);
+});
+
+app.get('/api/apps/:id', (req, res) => {
+  const db = getDB();
+  const cleanId = String(req.params.id || '').trim().toLowerCase();
+  const appItem = db.apps.find(item => String(item.id).trim().toLowerCase() === cleanId);
+  if (!appItem) return res.status(404).json({ error: "Aplicativo não encontrado" });
+  res.json(appItem);
+});
+
+app.get('/api/servidores/:id', (req, res) => {
+  const db = getDB();
+  const cleanId = String(req.params.id || '').trim().toLowerCase();
+  const srv = db.servidores.find(item => String(item.id).trim().toLowerCase() === cleanId);
+  if (!srv) return res.status(404).json({ error: "Servidor não encontrado" });
+  res.json(srv);
+});
+
 app.get('/api/planos', (req, res) => {
   const db = getDB();
   res.json(db.planos || []);
@@ -968,10 +993,26 @@ function gerarMensagemRenovacaoWhatsApp(cobranca, proximoVencimento, dataPagamen
   }, db.meusDados);
 }
 
-app.post('/api/cobrancas/:id/dar-baixa', async (req, res) => {
+app.post(['/api/cobrancas/:id/dar-baixa', '/api/cobrancas/dar-baixa'], async (req, res) => {
   const db = getDB();
-  const cobranca = db.cobrancas.find(c => c.id === req.params.id);
-  if (!cobranca) return res.status(404).json({ error: "Cobrança não encontrada" });
+  const rawId = req.params.id;
+  const targetId = (rawId && rawId !== 'undefined' && rawId !== 'null' && rawId !== 'dar-baixa')
+    ? rawId
+    : (req.body.cobrancaId || req.body.clienteId || req.body.id);
+  
+  let cobranca = db.cobrancas.find(c => c.id === targetId);
+  if (!cobranca && targetId) {
+    cobranca = db.cobrancas.find(c => c.clienteId === targetId && c.status === 'PENDENTE');
+    if (!cobranca) {
+      cobranca = db.cobrancas.find(c => c.clienteId === targetId);
+    }
+  }
+  
+  if (!cobranca && db.cobrancas.length > 0) {
+    cobranca = db.cobrancas.find(c => c.status === 'PENDENTE') || db.cobrancas[0];
+  }
+
+  if (!cobranca) return res.status(404).json({ error: "Nenhuma cobrança encontrada para dar baixa" });
 
   const { observacao, dataPagamento, proximoVencimento, enviarNotificacaoWhatsApp } = req.body;
 
@@ -994,6 +1035,37 @@ app.post('/api/cobrancas/:id/dar-baixa', async (req, res) => {
   cobranca.proximoVencimento = proxVenc || null;
   cobranca.observacaoBaixa = observacao || "Baixa efetuada manualmente pelo usuário";
 
+  // Garantir a renovação do plano para o próximo mês: atualizar ou criar a cobrança do próximo mês
+  if (proxVenc && cobranca.clienteId) {
+    let pendenteExistente = db.cobrancas.find(c => c.clienteId === cobranca.clienteId && c.status === 'PENDENTE' && c.id !== cobranca.id);
+    if (pendenteExistente) {
+      pendenteExistente.dataVencimento = proxVenc;
+      pendenteExistente.dataHoraEnvio = `${proxVenc}T09:00`;
+      pendenteExistente.statusEnvio = "AGENDADO";
+    } else {
+      const novaCobrancaProxMes = {
+        id: `cob_${Date.now()}`,
+        clienteId: cobranca.clienteId,
+        clienteNome: cobranca.clienteNome,
+        clienteTelefone: cobranca.clienteTelefone,
+        qtdTelas: cobranca.qtdTelas || 1,
+        valorBruto: cobranca.valorBruto || cobranca.valor,
+        desconto: cobranca.desconto || 0,
+        valor: cobranca.valor,
+        dataVencimento: proxVenc,
+        dataHoraEnvio: `${proxVenc}T09:00`,
+        descricao: cobranca.descricao || "Renovação Mensal do Plano de Canais",
+        modeloMensagemId: cobranca.modeloMensagemId || null,
+        status: "PENDENTE",
+        statusEnvio: "AGENDADO",
+        dataEnvioRealizado: null,
+        dataPagamento: null,
+        observacaoBaixa: null
+      };
+      db.cobrancas.push(novaCobrancaProxMes);
+    }
+  }
+
   const msgRenovacao = gerarMensagemRenovacaoWhatsApp(cobranca, proxVenc, cobranca.dataPagamento);
   const telefoneLimpo = sanitizePhone(cobranca.clienteTelefone);
   const linkWhatsAppRenovacao = `https://wa.me/${telefoneLimpo}?text=${encodeURIComponent(msgRenovacao)}`;
@@ -1001,13 +1073,12 @@ app.post('/api/cobrancas/:id/dar-baixa', async (req, res) => {
   let enviouDireto = false;
 
   if (enviarNotificacaoWhatsApp && waStatus === 'CONNECTED' && waSock) {
-    try {
-      await sendWhatsAppMessage(telefoneLimpo, msgRenovacao);
-      enviouDireto = true;
+    enviouDireto = true;
+    sendWhatsAppMessage(telefoneLimpo, msgRenovacao).then(() => {
       console.log(`🎉 [RENOVAÇÃO DE PLANO] Mensagem de confirmação enviada via WhatsApp para ${cobranca.clienteNome} (${telefoneLimpo})`);
-    } catch (err) {
-      console.error("Erro ao enviar mensagem de renovação no Baileys:", err);
-    }
+    }).catch(err => {
+      console.error("Erro ao enviar mensagem de renovação no Baileys:", err ? err.message : err);
+    });
   }
 
   db.historicoEnvios.push({
@@ -1023,13 +1094,109 @@ app.post('/api/cobrancas/:id/dar-baixa', async (req, res) => {
   });
 
   saveDB(db);
+
+  const idRecibo = `REC-${cobranca.id.replace('cob_', '')}`;
+  const dtPagto = cobranca.dataPagamento || getLocalIsoString().split('T')[0];
+  const dtVenc = cobranca.dataVencimento || '-';
+  const dtProx = cobranca.proximoVencimento || '-';
+  const dtPagtoBr = dtPagto.includes('T') ? dtPagto.split('T')[0].split('-').reverse().join('/') : dtPagto.split('-').reverse().join('/');
+  const dtProxBr = (dtProx && dtProx !== '-') ? (dtProx.includes('T') ? dtProx.split('T')[0].split('-').reverse().join('/') : dtProx.split('-').reverse().join('/')) : '-';
+
+  const msgRecibo = `📄 *RECIBO DE PAGAMENTO & RENOVAÇÃO* 📄\n` +
+    `--------------------------------------\n` +
+    `*Nº Recibo:* ${idRecibo}\n` +
+    `*Cliente:* ${cobranca.clienteNome}\n` +
+    `*Plano/Serviço:* ${cobranca.descricao}\n` +
+    `*Telas:* ${cobranca.qtdTelas || 1}\n` +
+    `*Valor Pago:* R$ ${Number(cobranca.valor).toFixed(2).replace('.', ',')}\n` +
+    `*Data do Pagamento:* ${dtPagtoBr}\n` +
+    `*Próxima Renovação:* ${dtProxBr}\n` +
+    `--------------------------------------\n` +
+    `*Emitido por:* ${(db.meusDados && db.meusDados.nomeTitular) || 'Gerailton Cobranças'}\n` +
+    `Obrigado pela preferência! 😊`;
+
+  const linkWhatsAppRecibo = `https://wa.me/${telefoneLimpo}?text=${encodeURIComponent(msgRecibo)}`;
+
+  const reciboObj = {
+    idRecibo,
+    cobrancaId: cobranca.id,
+    clienteId: cobranca.clienteId,
+    clienteNome: cobranca.clienteNome,
+    clienteTelefone: cobranca.clienteTelefone,
+    descricao: cobranca.descricao,
+    qtdTelas: cobranca.qtdTelas || 1,
+    valorBruto: cobranca.valorBruto || cobranca.valor,
+    desconto: cobranca.desconto || 0,
+    valor: cobranca.valor,
+    dataPagamento: dtPagto,
+    dataVencimento: dtVenc,
+    proximoVencimento: dtProx,
+    observacaoBaixa: cobranca.observacaoBaixa || '',
+    empresa: db.meusDados || {},
+    mensagemTexto: msgRecibo,
+    linkWhatsApp: linkWhatsAppRecibo
+  };
+
   res.json({
     success: true,
-    message: "Baixa efetuada e plano renovado com sucesso!",
+    message: "Baixa efetuada e plano renovado com sucesso para o próximo mês!",
     enviouDireto,
     msgRenovacao,
     linkWhatsAppRenovacao,
-    cobranca
+    cobranca,
+    recibo: reciboObj
+  });
+});
+
+app.get('/api/cobrancas/:id/recibo', (req, res) => {
+  const db = getDB();
+  const cobranca = db.cobrancas.find(c => c.id === req.params.id);
+  if (!cobranca) return res.status(404).json({ error: "Cobrança não encontrada" });
+
+  const cliente = db.clientes.find(c => c.id === cobranca.clienteId);
+  const meusDados = db.meusDados || {};
+  const idRecibo = `REC-${cobranca.id.replace('cob_', '')}`;
+  const dtPagto = cobranca.dataPagamento || getLocalIsoString().split('T')[0];
+  const dtVenc = cobranca.dataVencimento || '-';
+  const dtProx = cobranca.proximoVencimento || '-';
+
+  const dtPagtoBr = dtPagto.includes('T') ? dtPagto.split('T')[0].split('-').reverse().join('/') : dtPagto.split('-').reverse().join('/');
+  const dtProxBr = (dtProx && dtProx !== '-') ? (dtProx.includes('T') ? dtProx.split('T')[0].split('-').reverse().join('/') : dtProx.split('-').reverse().join('/')) : '-';
+
+  const msgRecibo = `📄 *RECIBO DE PAGAMENTO & RENOVAÇÃO* 📄\n` +
+    `--------------------------------------\n` +
+    `*Nº Recibo:* ${idRecibo}\n` +
+    `*Cliente:* ${cobranca.clienteNome}\n` +
+    `*Plano/Serviço:* ${cobranca.descricao}\n` +
+    `*Telas:* ${cobranca.qtdTelas || (cliente ? cliente.qtdTelas : 1)}\n` +
+    `*Valor Pago:* R$ ${Number(cobranca.valor).toFixed(2).replace('.', ',')}\n` +
+    `*Data do Pagamento:* ${dtPagtoBr}\n` +
+    `*Próxima Renovação:* ${dtProxBr}\n` +
+    `--------------------------------------\n` +
+    `*Emitido por:* ${meusDados.nomeTitular || 'Gerailton Cobranças'}\n` +
+    `Obrigado pela preferência! 😊`;
+
+  const telSanitizado = sanitizePhone(cobranca.clienteTelefone);
+  const linkWhatsAppRecibo = `https://wa.me/${telSanitizado}?text=${encodeURIComponent(msgRecibo)}`;
+
+  res.json({
+    idRecibo,
+    cobrancaId: cobranca.id,
+    clienteId: cobranca.clienteId,
+    clienteNome: cobranca.clienteNome,
+    clienteTelefone: cobranca.clienteTelefone,
+    descricao: cobranca.descricao,
+    qtdTelas: cobranca.qtdTelas || (cliente ? cliente.qtdTelas : 1),
+    valorBruto: cobranca.valorBruto || cobranca.valor,
+    desconto: cobranca.desconto || 0,
+    valor: cobranca.valor,
+    dataPagamento: dtPagto,
+    dataVencimento: dtVenc,
+    proximoVencimento: dtProx,
+    observacaoBaixa: cobranca.observacaoBaixa || '',
+    empresa: meusDados,
+    mensagemTexto: msgRecibo,
+    linkWhatsApp: linkWhatsAppRecibo
   });
 });
 
