@@ -71,6 +71,7 @@ function abrirModal(modalId) {
     modalBox.style.transform = 'translateY(0)';
   }
 }
+window.abrirModal = abrirModal;
 
 function fecharModal(modalId) {
   const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
@@ -87,9 +88,8 @@ function fecharModal(modalId) {
     modalBox.style.visibility = 'hidden';
   }
 }
-
-window.abrirModal = abrirModal;
 window.fecharModal = fecharModal;
+
 window.switchTab = switchTab;
 
 window.abrirModalNovoPlano = function() {
@@ -149,6 +149,24 @@ window.abrirModalBaixa = function(id) {
     abrirModal('modalBaixa');
   }
 };
+
+
+window.switchTab = switchTab;
+window.deletarPlano = deletarPlano;
+window.fecharModalPlano = fecharModalPlano;
+window.copiarPromoPlano = copiarPromoPlano;
+window.criarCobrancaDePlano = criarCobrancaDePlano;
+window.deletarApp = deletarApp;
+window.fecharModalApp = fecharModalApp;
+window.deletarServidor = deletarServidor;
+window.fecharModalServidor = fecharModalServidor;
+window.abrirModalNovoCliente = abrirModalNovoCliente;
+window.editarCliente = editarCliente;
+window.abrirModalNovaCobranca = abrirModalNovaCobranca;
+window.abrirModalNovaCobrancaComCliente = abrirModalNovaCobrancaComCliente;
+window.darBaixaRapida = darBaixaRapida;
+window.abrirModalBaixa = darBaixaRapida;
+window.abrirModalBaixaFn = darBaixaRapida;
 
 function startApp() {
   initTabs();
@@ -1949,7 +1967,8 @@ function setupForms() {
   if (cobAppSelect) cobAppSelect.addEventListener('change', autoAtualizarDescricaoEValor);
 
   // 1. Form Cobrança
-  document.getElementById('formCobranca').addEventListener('submit', async (e) => {
+  const fCobEl = document.getElementById('formCobranca');
+  if (fCobEl) fCobEl.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('cobrancaId').value;
     const descEl = document.getElementById('cobDescricao');
@@ -1999,7 +2018,8 @@ function setupForms() {
   });
 
   // 2. Form Cliente
-  document.getElementById('formCliente').addEventListener('submit', async (e) => {
+  const fCliEl = document.getElementById('formCliente');
+  if (fCliEl) fCliEl.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('clienteId').value;
     const bodyData = {
@@ -2082,7 +2102,8 @@ function setupForms() {
   });
 
   // 3. Form Baixa
-  document.getElementById('formBaixa').addEventListener('submit', async (e) => {
+  const fBxaEl = document.getElementById('formBaixa');
+  if (fBxaEl) fBxaEl.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('baixaCobrancaId').value;
     const bodyData = {
@@ -2163,7 +2184,8 @@ function setupForms() {
   });
 
   // 4. Form Meus Dados PIX
-  document.getElementById('formMeusDados').addEventListener('submit', async (e) => {
+  const fPixEl = document.getElementById('formMeusDados');
+  if (fPixEl) fPixEl.addEventListener('submit', async (e) => {
     e.preventDefault();
     const bodyData = {
       nomeTitular: document.getElementById('pixNomeTitular').value,
@@ -2190,7 +2212,8 @@ function setupForms() {
   });
 
   // 5. Form Plano / App IPTV
-  document.getElementById('formPlano').addEventListener('submit', async (e) => {
+  const fPlanoEl = document.getElementById('formPlano');
+  if (fPlanoEl) fPlanoEl.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('planoId').value;
     const vRaw = document.getElementById('planoValor') ? document.getElementById('planoValor').value : '0';
@@ -2241,7 +2264,8 @@ function setupForms() {
   });
 
   // 6. Form Aplicativo / App
-  document.getElementById('formApp').addEventListener('submit', async (e) => {
+  const fAppEl = document.getElementById('formApp');
+  if (fAppEl) fAppEl.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('appId').value;
     const nomeVal = document.getElementById('appNome') ? document.getElementById('appNome').value.trim() : '';
@@ -2282,7 +2306,8 @@ function setupForms() {
   });
 
   // 7. Form Servidor
-  document.getElementById('formServidor').addEventListener('submit', async (e) => {
+  const fSrvEl = document.getElementById('formServidor');
+  if (fSrvEl) fSrvEl.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('servidorId').value;
     const nomeVal = document.getElementById('servidorNome') ? document.getElementById('servidorNome').value.trim() : '';
@@ -2675,7 +2700,7 @@ function renderCardsPlanos() {
           </div>
 
           <div style="display: flex; gap: 0.5rem; justify-content: flex-end; border-top: 1px dashed var(--border-color); padding-top: 0.75rem;">
-            <button class="btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;" onclick="editarPlano('${plano.id}')">
+            <button class="btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;" type="button" onclick="editarPlano('${plano.id}')">
               <i class="fa-solid fa-pen"></i> Editar
             </button>
             <button class="btn-danger-sm" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;" onclick="deletarPlano('${plano.id}')">
@@ -2697,13 +2722,29 @@ function abrirModalNovoPlano() {
   if (typeof calcularValorFinalPlanoModal === 'function') calcularValorFinalPlanoModal();
   abrirModal('modalPlano');
 }
+window.abrirModalNovoPlano = abrirModalNovoPlano;
 
-function editarPlano(id) {
+async function editarPlano(id) {
   const cleanId = String(id || '').trim();
   let p = globalPlanos.find(item => String(item.id).trim() === cleanId);
   if (!p && cleanId) {
     p = globalPlanos.find(item => String(item.id).trim().toLowerCase() === cleanId.toLowerCase());
   }
+  if (!p && cleanId) {
+    try {
+      const res = await fetch(`/api/planos/${encodeURIComponent(cleanId)}`);
+      if (res.ok) {
+        p = await res.json();
+        if (p && p.id) {
+          const idx = globalPlanos.findIndex(item => String(item.id).trim() === String(p.id).trim());
+          if (idx >= 0) globalPlanos[idx] = p; else globalPlanos.push(p);
+        }
+      }
+    } catch(err) {
+      console.error('Erro ao buscar plano por ID:', err);
+    }
+  }
+
   if (!p) {
     console.warn('Plano não encontrado para editar ID:', id);
     abrirModalNovoPlano();
@@ -2750,6 +2791,7 @@ function editarPlano(id) {
   if (typeof calcularValorFinalPlanoModal === 'function') calcularValorFinalPlanoModal();
   abrirModal('modalPlano');
 }
+window.editarPlano = editarPlano;
 
 function fecharModalPlano() {
   fecharModal('modalPlano');
@@ -2870,7 +2912,7 @@ function renderCardsApps() {
       </div>
 
       <div style="display: flex; gap: 0.5rem; justify-content: flex-end; border-top: 1px dashed var(--border-color); padding-top: 0.75rem;">
-        <button class="btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="editarApp('${app.id}')">
+        <button class="btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" type="button" onclick="editarApp('${app.id}')">
           <i class="fa-solid fa-pen"></i> Editar
         </button>
         <button class="btn-danger-sm" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="deletarApp('${app.id}')">
@@ -2888,13 +2930,29 @@ function abrirModalNovoApp() {
   const fApp = document.getElementById('formApp'); if (fApp) fApp.reset();
   abrirModal('modalApp');
 }
+window.abrirModalNovoApp = abrirModalNovoApp;
 
-function editarApp(id) {
+async function editarApp(id) {
   const cleanId = String(id || '').trim();
   let app = globalApps.find(a => String(a.id).trim() === cleanId);
   if (!app && cleanId) {
     app = globalApps.find(a => String(a.id).trim().toLowerCase() === cleanId.toLowerCase());
   }
+  if (!app && cleanId) {
+    try {
+      const res = await fetch(`/api/apps/${encodeURIComponent(cleanId)}`);
+      if (res.ok) {
+        app = await res.json();
+        if (app && app.id) {
+          const idx = globalApps.findIndex(a => String(a.id).trim() === String(app.id).trim());
+          if (idx >= 0) globalApps[idx] = app; else globalApps.push(app);
+        }
+      }
+    } catch(err) {
+      console.error('Erro ao buscar app por ID:', err);
+    }
+  }
+
   if (!app) {
     console.warn('App não encontrado para editar ID:', id);
     abrirModalNovoApp();
@@ -2910,6 +2968,7 @@ function editarApp(id) {
 
   abrirModal('modalApp');
 }
+window.editarApp = editarApp;
 
 function fecharModalApp() {
   fecharModal('modalApp');
@@ -2979,7 +3038,7 @@ function renderCardsServidores() {
       </div>
 
       <div style="display: flex; gap: 0.5rem; justify-content: flex-end; border-top: 1px dashed var(--border-color); padding-top: 0.75rem;">
-        <button class="btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="editarServidor('${srv.id}')">
+        <button class="btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" type="button" onclick="editarServidor('${srv.id}')">
           <i class="fa-solid fa-pen"></i> Editar
         </button>
         <button class="btn-danger-sm" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="deletarServidor('${srv.id}')">
@@ -2997,13 +3056,29 @@ function abrirModalNovoServidor() {
   const fSrv = document.getElementById('formServidor'); if (fSrv) fSrv.reset();
   abrirModal('modalServidor');
 }
+window.abrirModalNovoServidor = abrirModalNovoServidor;
 
-function editarServidor(id) {
+async function editarServidor(id) {
   const cleanId = String(id || '').trim();
   let srv = globalServidores.find(s => String(s.id).trim() === cleanId);
   if (!srv && cleanId) {
     srv = globalServidores.find(s => String(s.id).trim().toLowerCase() === cleanId.toLowerCase());
   }
+  if (!srv && cleanId) {
+    try {
+      const res = await fetch(`/api/servidores/${encodeURIComponent(cleanId)}`);
+      if (res.ok) {
+        srv = await res.json();
+        if (srv && srv.id) {
+          const idx = globalServidores.findIndex(s => String(s.id).trim() === String(srv.id).trim());
+          if (idx >= 0) globalServidores[idx] = srv; else globalServidores.push(srv);
+        }
+      }
+    } catch(err) {
+      console.error('Erro ao buscar servidor por ID:', err);
+    }
+  }
+
   if (!srv) {
     console.warn('Servidor não encontrado para editar ID:', id);
     abrirModalNovoServidor();
@@ -3019,6 +3094,7 @@ function editarServidor(id) {
 
   abrirModal('modalServidor');
 }
+window.editarServidor = editarServidor;
 
 function fecharModalServidor() {
   fecharModal('modalServidor');
@@ -3447,20 +3523,12 @@ window.filtrarPlanos = filtrarPlanos;
 window.filtrarApps = filtrarApps;
 window.filtrarServidores = filtrarServidores;
 window.calcularValorFinalPlanoModal = calcularValorFinalPlanoModal;
-window.abrirModal = abrirModal;
-window.fecharModal = fecharModal;
-window.abrirModalNovoPlano = abrirModalNovoPlano;
-window.editarPlano = editarPlano;
 window.deletarPlano = deletarPlano;
 window.fecharModalPlano = fecharModalPlano;
 window.copiarPromoPlano = copiarPromoPlano;
 window.criarCobrancaDePlano = criarCobrancaDePlano;
-window.abrirModalNovoApp = abrirModalNovoApp;
-window.editarApp = editarApp;
 window.deletarApp = deletarApp;
 window.fecharModalApp = fecharModalApp;
-window.abrirModalNovoServidor = abrirModalNovoServidor;
-window.editarServidor = editarServidor;
 window.deletarServidor = deletarServidor;
 window.fecharModalServidor = fecharModalServidor;
 
