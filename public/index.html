@@ -27,8 +27,14 @@
   <!-- Chart.js para Gráficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Inline Modal Controller Garantia Zero Delay -->
+  <!-- Inline Modal Controller Garantia Zero Delay e Limpeza de Cache -->
   <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for (let r of registrations) { r.unregister(); }
+      }).catch(function(e) {});
+    }
+
     window.abrirModal = function(modalId) {
       const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
       if (!modal) return;
@@ -1481,6 +1487,6 @@
   </div>
 
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=72.0"></script>
+  <script src="js/app.js?v=73.0"></script>
 </body>
 </html>
