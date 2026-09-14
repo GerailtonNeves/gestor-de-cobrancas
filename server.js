@@ -968,9 +968,12 @@ function gerarMensagemRenovacaoWhatsApp(cobranca, proximoVencimento, dataPagamen
   }, db.meusDados);
 }
 
-app.post('/api/cobrancas/:id/dar-baixa', async (req, res) => {
+app.post(['/api/cobrancas/:id/dar-baixa', '/api/cobrancas/dar-baixa'], async (req, res) => {
   const db = getDB();
-  const targetId = req.params.id !== 'undefined' && req.params.id !== 'null' ? req.params.id : (req.body.cobrancaId || req.body.clienteId);
+  const rawId = req.params.id;
+  const targetId = (rawId && rawId !== 'undefined' && rawId !== 'null' && rawId !== 'dar-baixa')
+    ? rawId
+    : (req.body.cobrancaId || req.body.clienteId || req.body.id);
   
   let cobranca = db.cobrancas.find(c => c.id === targetId);
   if (!cobranca && targetId) {
