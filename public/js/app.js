@@ -1152,25 +1152,43 @@ async function darBaixaRapida(id) {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        await fetchClientes();
-        await fetchCobrancas();
-        loadDashboardData();
-        renderTabelaClientes();
-        renderTabelaCobrancas();
-        renderTabelaContasRecebidas();
-
-        if (data.linkWhatsAppRenovacao) {
-          window.open(data.linkWhatsAppRenovacao, '_blank');
+        try {
+          await fetchClientes();
+          await fetchCobrancas();
+          loadDashboardData();
+          renderTabelaClientes();
+          renderTabelaCobrancas();
+          renderTabelaContasRecebidas();
+        } catch (uiErr) {
+          console.warn('Aviso ao atualizar listas locais:', uiErr);
         }
 
-        Swal.fire({
+        const msgSucesso = data.enviouDireto
+          ? `O plano de ${nomeCliente} agora está ATIVO (Em Dia) com novo vencimento em ${proxDataBr}! A mensagem de confirmação foi enviada para o WhatsApp.`
+          : `O plano de ${nomeCliente} agora está ATIVO (Em Dia) com novo vencimento em ${proxDataBr}!`;
+
+        let swalConfig = {
           icon: 'success',
           title: '🎉 Baixa Concluída com Sucesso!',
-          text: `O plano de ${nomeCliente} agora está ATIVO (Em Dia) com novo vencimento em ${proxDataBr}!`,
+          text: msgSucesso,
           confirmButtonColor: '#059669',
           background: '#FAF7EE',
           color: '#1E293B'
-        });
+        };
+
+        if (!data.enviouDireto && data.linkWhatsAppRenovacao) {
+          swalConfig.showCancelButton = true;
+          swalConfig.confirmButtonText = '📱 Abrir no WhatsApp';
+          swalConfig.cancelButtonText = 'OK / Fechar';
+          swalConfig.cancelButtonColor = '#64748B';
+        }
+
+        const resSwal = await Swal.fire(swalConfig);
+        if (!data.enviouDireto && resSwal.isConfirmed && data.linkWhatsAppRenovacao) {
+          try {
+            window.open(data.linkWhatsAppRenovacao, '_blank');
+          } catch(e) {}
+        }
       } else {
         Swal.fire({
           icon: 'error',
@@ -2076,29 +2094,36 @@ function setupForms() {
           Swal.fire({
             icon: 'success',
             title: '🎉 Plano Renovado & Baixa Efetuada!',
-            text: `Baixa confirmada! O plano do cliente agora está ATIVO (Em Dia) e a nova data de vencimento foi alterada para ${proxDataBr}. A mensagem de renovação foi enviada para o WhatsApp!`,
-            confirmButtonColor: '#00FF87',
-            background: '#0D1527',
-            color: '#000000'
+            text: `Baixa confirmada! O plano do cliente agora está ATIVO (Em Dia) e a nova data de vencimento foi alterada para ${proxDataBr}. A mensagem de renovação foi enviada via robô para o WhatsApp!`,
+            confirmButtonColor: '#059669',
+            background: '#FAF7EE',
+            color: '#1E293B'
           });
         } else if (bodyData.enviarNotificacaoWhatsApp && data.linkWhatsAppRenovacao) {
-          window.open(data.linkWhatsAppRenovacao, '_blank');
           Swal.fire({
             icon: 'success',
             title: '🎉 Baixa Efetuada & Plano Renovado!',
-            text: `O plano do cliente agora está ATIVO (Em Dia) e o vencimento foi atualizado para ${proxDataBr}. Abrindo WhatsApp...`,
-            confirmButtonColor: '#00FF87',
-            background: '#0D1527',
-            color: '#000000'
+            text: `O plano do cliente agora está ATIVO (Em Dia) e o vencimento foi atualizado para ${proxDataBr}.`,
+            showCancelButton: true,
+            confirmButtonText: '📱 Abrir no WhatsApp',
+            cancelButtonText: 'OK / Fechar',
+            confirmButtonColor: '#059669',
+            cancelButtonColor: '#64748B',
+            background: '#FAF7EE',
+            color: '#1E293B'
+          }).then((r) => {
+            if (r.isConfirmed && data.linkWhatsAppRenovacao) {
+              try { window.open(data.linkWhatsAppRenovacao, '_blank'); } catch(e) {}
+            }
           });
         } else {
           Swal.fire({
             icon: 'success',
             title: '🎉 Baixa Efetuada com Sucesso!',
             text: `O plano do cliente agora está ATIVO (Em Dia) com novo vencimento em ${proxDataBr}. A cobrança foi transferida para Contas Recebidas.`,
-            confirmButtonColor: '#00FF87',
-            background: '#0D1527',
-            color: '#000000'
+            confirmButtonColor: '#059669',
+            background: '#FAF7EE',
+            color: '#1E293B'
           });
         }
 
