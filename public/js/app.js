@@ -51,14 +51,14 @@ function abrirModal(modalId) {
   // Fechar qualquer outro modal ativo
   document.querySelectorAll('.modal-overlay').forEach(m => {
     m.classList.remove('active');
-    m.style.display = 'none';
-    m.style.opacity = '0';
-    m.style.visibility = 'hidden';
-    m.style.pointerEvents = 'none';
+    m.style.setProperty('display', 'none', 'important');
+    m.style.setProperty('opacity', '0', 'important');
+    m.style.setProperty('visibility', 'hidden', 'important');
+    m.style.setProperty('pointer-events', 'none', 'important');
     const b = m.querySelector('.modal-box');
     if (b) {
-      b.style.opacity = '0';
-      b.style.visibility = 'hidden';
+      b.style.setProperty('opacity', '0', 'important');
+      b.style.setProperty('visibility', 'hidden', 'important');
     }
   });
 
@@ -83,14 +83,16 @@ function fecharModal(modalId) {
   if (!modal) return;
 
   modal.classList.remove('active');
-  modal.style.display = 'none';
-  modal.style.opacity = '0';
-  modal.style.visibility = 'hidden';
-  modal.style.pointerEvents = 'none';
+  modal.style.setProperty('display', 'none', 'important');
+  modal.style.setProperty('opacity', '0', 'important');
+  modal.style.setProperty('visibility', 'hidden', 'important');
+  modal.style.setProperty('pointer-events', 'none', 'important');
 
   const box = modal.querySelector('.modal-box');
   if (box) {
-    box.style.transform = 'translateY(20px)';
+    box.style.setProperty('opacity', '0', 'important');
+    box.style.setProperty('visibility', 'hidden', 'important');
+    box.style.setProperty('transform', 'translateY(20px)', 'important');
   }
 }
 
@@ -1046,7 +1048,7 @@ function onBaixaClienteSelectChange(val) {
 }
 window.onBaixaClienteSelectChange = onBaixaClienteSelectChange;
 
-function abrirModalBaixa(id) {
+function abrirModalBaixaForm(id) {
   populateBaixaClienteSelect(id);
 
   const agora = new Date();
@@ -1063,7 +1065,137 @@ function abrirModalBaixa(id) {
 
   abrirModal('modalBaixa');
 }
-window.abrirModalBaixaFn = abrirModalBaixa;
+
+async function darBaixaRapida(id) {
+  let cob = globalCobrancas.find(c => c.id === id);
+  let cli = null;
+  if (cob) {
+    cli = globalClientes.find(c => c.id === cob.clienteId);
+  } else {
+    cli = globalClientes.find(c => c.id === id);
+    if (cli) {
+      cob = globalCobrancas.find(c => c.clienteId === cli.id && c.status === 'PENDENTE');
+    }
+  }
+
+  const targetId = cob ? cob.id : (cli ? cli.id : id);
+  const nomeCliente = cob ? cob.clienteNome : (cli ? cli.nome : 'Cliente');
+  const valorCob = cob ? cob.valor : (cli ? (cli.valorBruto || 35) : 35);
+  
+  let baseDate = new Date();
+  if (cob && cob.dataVencimento) {
+    const parts = cob.dataVencimento.split('T')[0].split('-').map(Number);
+    if (parts.length === 3) baseDate = new Date(parts[0], parts[1] - 1, parts[2]);
+  }
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  if (baseDate < hoje) baseDate = new Date();
+  baseDate.setDate(baseDate.getDate() + 30);
+  
+  const yyyy = baseDate.getFullYear();
+  const mm = String(baseDate.getMonth() + 1).padStart(2, '0');
+  const dd = String(baseDate.getDate()).padStart(2, '0');
+  const proxIso = `${yyyy}-${mm}-${dd}`;
+  const proxDataBr = `${dd}/${mm}/${yyyy}`;
+
+  const result = await Swal.fire({
+    title: '🎉 Confirmar Baixa & Renovação?',
+    html: `
+      <div style="text-align: left; background: #F2ECE0; padding: 1rem; border-radius: 12px; border: 1.5px solid #059669; margin-top: 0.5rem; color: #1E293B;">
+        <p style="margin-bottom: 0.4rem; font-size: 1rem;">👤 Cliente: <strong style="color: #059669;">${nomeCliente}</strong></p>
+        <p style="margin-bottom: 0.4rem; font-size: 1rem;">💰 Valor Recebido: <strong style="color: #059669;">${formatCurrency(valorCob)}</strong></p>
+        <p style="margin: 0; font-size: 1rem;">📅 Próximo Vencimento: <strong style="color: #0284C7;">${proxDataBr}</strong></p>
+      </div>
+      <p style="margin-top: 0.85rem; font-size: 0.85rem; color: #475569;">
+        O plano do cliente será alterado para <strong>ATIVO (Em Dia)</strong> e a renovação do próximo mês será agendada!
+      </p>
+    `,
+    icon: 'question',
+    showCancelButton: true,
+    showDenyButton: true,
+    confirmButtonText: '🟢 Confirmar Baixa Agora',
+    denyButtonText: '⚙️ Opções Avançadas',
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#059669',
+    denyButtonColor: '#0284C7',
+    cancelButtonColor: '#64748B',
+    background: '#FAF7EE',
+    color: '#1E293B'
+  });
+
+  if (result.isConfirmed) {
+    try {
+      Swal.fire({
+        title: 'Processando Baixa...',
+        text: 'Aguarde um instante',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+        background: '#FAF7EE',
+        color: '#1E293B'
+      });
+
+      const res = await fetch(`/api/cobrancas/${targetId}/dar-baixa`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          proximoVencimento: proxIso,
+          observacao: 'Baixa efetuada com sucesso pelo painel',
+          enviarNotificacaoWhatsApp: true
+        })
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        await fetchClientes();
+        await fetchCobrancas();
+        loadDashboardData();
+        renderTabelaClientes();
+        renderTabelaCobrancas();
+        renderTabelaContasRecebidas();
+
+        if (data.linkWhatsAppRenovacao) {
+          window.open(data.linkWhatsAppRenovacao, '_blank');
+        }
+
+        Swal.fire({
+          icon: 'success',
+          title: '🎉 Baixa Concluída com Sucesso!',
+          text: `O plano de ${nomeCliente} agora está ATIVO (Em Dia) com novo vencimento em ${proxDataBr}!`,
+          confirmButtonColor: '#059669',
+          background: '#FAF7EE',
+          color: '#1E293B'
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao Dar Baixa',
+          text: data.error || 'Não foi possível registrar a baixa.',
+          background: '#FAF7EE',
+          color: '#1E293B'
+        });
+      }
+    } catch (err) {
+      console.error('Erro na baixa rápida:', err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro de Conexão',
+        text: 'Servidor não respondeu.',
+        background: '#FAF7EE',
+        color: '#1E293B'
+      });
+    }
+  } else if (result.isDenied) {
+    abrirModalBaixaForm(targetId);
+  }
+}
+
+function abrirModalBaixa(id) {
+  darBaixaRapida(id);
+}
+
+window.darBaixaRapida = darBaixaRapida;
+window.abrirModalBaixa = darBaixaRapida;
+window.abrirModalBaixaFn = darBaixaRapida;
 
 function fecharModalBaixa() {
   fecharModal('modalBaixa');
