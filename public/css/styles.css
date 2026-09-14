@@ -581,16 +581,16 @@ body {
   border: 1.5px solid #00FF88 !important;
 }
 
-/* Modal Customization */
+/* Modal Customization Bulletproof */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(4, 8, 16, 0.88);
+  background: rgba(4, 8, 16, 0.82);
   backdrop-filter: blur(10px);
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   z-index: 999999;
@@ -609,23 +609,26 @@ body {
 }
 
 .modal-box {
-  background: var(--bg-secondary);
-  border: 1px solid var(--neon-blue);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 20px;
   width: 100%;
   max-width: 580px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(0, 240, 255, 0.25);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   transform: translateY(20px);
   transition: transform 0.25s ease;
   overflow: hidden;
   position: relative;
   z-index: 1000000;
+  opacity: 0;
+  visibility: hidden;
 }
 
 .modal-overlay.active .modal-box {
-  transform: translateY(0);
+  display: block !important;
   opacity: 1 !important;
   visibility: visible !important;
+  transform: translateY(0) !important;
 }
 
 .modal-header {
