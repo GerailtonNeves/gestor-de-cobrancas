@@ -306,21 +306,38 @@ window.abrirModalBaixa = function(id) {
 
 
 window.switchTab = switchTab;
+window.abrirModalNovoPlano = abrirModalNovoPlano;
+window.editarPlano = editarPlano;
 window.deletarPlano = deletarPlano;
 window.fecharModalPlano = fecharModalPlano;
 window.copiarPromoPlano = copiarPromoPlano;
 window.criarCobrancaDePlano = criarCobrancaDePlano;
+
+window.abrirModalNovoApp = abrirModalNovoApp;
+window.editarApp = editarApp;
 window.deletarApp = deletarApp;
 window.fecharModalApp = fecharModalApp;
+
+window.abrirModalNovoServidor = abrirModalNovoServidor;
+window.editarServidor = editarServidor;
 window.deletarServidor = deletarServidor;
 window.fecharModalServidor = fecharModalServidor;
+
 window.abrirModalNovoCliente = abrirModalNovoCliente;
 window.editarCliente = editarCliente;
+window.deletarCliente = deletarCliente;
+window.fecharModalCliente = fecharModalCliente;
+
 window.abrirModalNovaCobranca = abrirModalNovaCobranca;
 window.abrirModalNovaCobrancaComCliente = abrirModalNovaCobrancaComCliente;
+window.editarCobranca = editarCobranca;
+window.deletarCobranca = deletarCobranca;
+window.fecharModalCobranca = fecharModalCobranca;
+
 window.darBaixaRapida = darBaixaRapida;
 window.abrirModalBaixa = darBaixaRapida;
 window.abrirModalBaixaFn = darBaixaRapida;
+window.fecharModalBaixa = fecharModalBaixa;
 
 function startApp() {
   initTabs();
@@ -2996,12 +3013,6 @@ function copiarPromoPlano(planoId) {
     `📌 *Categoria:* ${plano.categoria}\n` +
     `⏳ *Validade:* ${plano.validade}\n` +
     `💰 *Valor:* ${valorMsg}\n\n` +
-    `✨ *Recursos inclusos:*\n${plano.descricao}\n\n` +
-    `🚀 *Garanta seu acesso agora mesmo!*\n` +
-    `EQUIPE: *Gerailton Neves*`;
-    `📌 *Categoria:* ${plano.categoria}\n` +
-    `⏳ *Validade:* ${plano.validade}\n` +
-    `💰 *Valor:* ${formatCurrency(plano.valor)}\n\n` +
     `✨ *Recursos inclusos:*\n${plano.descricao}\n\n` +
     `🚀 *Garanta seu acesso agora mesmo!*\n` +
     `EQUIPE: *Gerailton Neves*`;
