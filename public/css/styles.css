@@ -590,7 +590,7 @@ body {
   bottom: 0;
   background: rgba(4, 8, 16, 0.88);
   backdrop-filter: blur(10px);
-  display: flex !important;
+  display: flex;
   align-items: center;
   justify-content: center;
   z-index: 999999;
@@ -602,6 +602,7 @@ body {
 }
 
 .modal-overlay.active {
+  display: flex !important;
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
