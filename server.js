@@ -200,7 +200,13 @@ const defaultData = {
   ],
   modelosMensagens: defaultModelosMensagensArray,
   historicoEnvios: [],
-  alertasPendentes: []
+  alertasPendentes: [],
+  configuracoesAdmin: {
+    whatsappAdmin: "",
+    horarioEnvioAdmin: "08:00",
+    enviarAlertasAdmin: true,
+    ultimosAlertasEnviadosData: ""
+  }
 };
 
 function formatDateBR(dateStr) {
@@ -313,6 +319,55 @@ function gerarTextoCob(cobranca) {
   }, db.meusDados);
 }
 
+function gerarTextoAlertaAdmin(cobrancasHoje, db) {
+  const dtHojeBR = formatDateBR(getLocalIsoString().split('T')[0]);
+  if (!cobrancasHoje || cobrancasHoje.length === 0) {
+    return `🚨 *GESTOR DE COBRANÇAS - ALERTA DIÁRIO (${dtHojeBR})* 🚨\n\nNenhum plano de cliente vence no dia de hoje!\n\nTenha um ótimo dia de trabalho! 🚀`;
+  }
+
+  let text = `🚨 *ALERTA DE PLANOS VENCENDO HOJE (${dtHojeBR})* 🚨\n\n`;
+  text += `Atenção, Gerailton! Hoje vence a assinatura de *${cobrancasHoje.length} cliente(s)*:\n\n`;
+
+  cobrancasHoje.forEach((c, index) => {
+    let clienteObj = db.clientes ? db.clientes.find(cli => cli.id === c.clienteId) : null;
+    let planoNome = c.planoNome || c.descricao || 'Plano de Canais';
+    let servidorNome = '-';
+    let appNome = '-';
+
+    if (clienteObj) {
+      if (clienteObj.planoId && db.planos) {
+        const p = db.planos.find(item => item.id === clienteObj.planoId);
+        if (p) planoNome = p.nome;
+      }
+      if (clienteObj.servidorId && db.servidores) {
+        const s = db.servidores.find(item => item.id === clienteObj.servidorId);
+        if (s) servidorNome = s.nome;
+      }
+      if (clienteObj.appId && db.apps) {
+        const a = db.apps.find(item => item.id === clienteObj.appId);
+        if (a) appNome = a.nome;
+      }
+    }
+
+    const valBrutoNum = (c.valorBruto !== undefined && c.valorBruto !== null && c.valorBruto !== '') ? parseFloat(c.valorBruto) : parseFloat(c.valor || 0);
+    const descNum = c.desconto ? parseFloat(c.desconto) : 0;
+    const valFinalNum = parseFloat(c.valor || 0);
+    const valStr = valFinalNum.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const whatsStr = c.clienteWhatsApp || (clienteObj ? clienteObj.whatsapp : '-') || '-';
+    const qtdTelasInt = parseInt(c.qtdTelas || (clienteObj ? clienteObj.qtdTelas : 1)) || 1;
+
+    text += `${index + 1}️⃣ *CLIENTE: ${c.clienteNome.trim()}*\n`;
+    text += `   📱 *WhatsApp:* ${whatsStr}\n`;
+    text += `   📺 *Plano:* ${planoNome} (${qtdTelasInt === 1 ? '1 Tela' : qtdTelasInt + ' Telas'})\n`;
+    text += `   🖥️ *Servidor:* ${servidorNome}\n`;
+    text += `   📱 *App:* ${appNome}\n`;
+    text += `   💰 *Valor:* ${valStr}\n\n`;
+  });
+
+  text += `⚠️ *Ação Recomendada:* Verifique o recebimento do PIX ou dê baixa pelo painel assim que confirmado!`;
+  return text;
+}
+
 function getDB() {
   try {
     if (!fs.existsSync(DB_FILE)) {
@@ -325,6 +380,14 @@ function getDB() {
     // Migração: Se modelosMensagens não for array, substitui pelo array padrão
     if (!db.modelosMensagens || !Array.isArray(db.modelosMensagens)) {
       db.modelosMensagens = defaultModelosMensagensArray;
+    }
+    if (!db.configuracoesAdmin) {
+      db.configuracoesAdmin = {
+        whatsappAdmin: "",
+        horarioEnvioAdmin: "08:00",
+        enviarAlertasAdmin: true,
+        ultimosAlertasEnviadosData: ""
+      };
       saveDB(db);
     }
     return db;
@@ -1322,6 +1385,99 @@ app.get('/api/alertas-pendentes', (req, res) => {
   saveDB(db);
   res.json(alertas);
 });
+
+// -----------------------------------------------------------------
+// CONFIGURAÇÕES DO ADMINISTRADOR (ALERTAS WHATSAPP NO VENCIMENTO)
+// -----------------------------------------------------------------
+app.get('/api/configuracoes-admin', (req, res) => {
+  const db = getDB();
+  res.json(db.configuracoesAdmin || {
+    whatsappAdmin: "",
+    horarioEnvioAdmin: "08:00",
+    enviarAlertasAdmin: true,
+    ultimosAlertasEnviadosData: ""
+  });
+});
+
+app.post('/api/configuracoes-admin', (req, res) => {
+  const db = getDB();
+  const { whatsappAdmin, horarioEnvioAdmin, enviarAlertasAdmin } = req.body;
+
+  db.configuracoesAdmin = {
+    ...db.configuracoesAdmin,
+    whatsappAdmin: whatsappAdmin ? sanitizePhone(whatsappAdmin) : "",
+    horarioEnvioAdmin: horarioEnvioAdmin || "08:00",
+    enviarAlertasAdmin: enviarAlertasAdmin !== undefined ? Boolean(enviarAlertasAdmin) : true
+  };
+  saveDB(db);
+  res.json({ success: true, configuracoes: db.configuracoesAdmin });
+});
+
+app.post('/api/testar-alerta-admin', async (req, res) => {
+  const db = getDB();
+  const config = db.configuracoesAdmin || {};
+
+  if (!config.whatsappAdmin) {
+    return res.status(400).json({ error: "Número de WhatsApp do Administrador não foi configurado." });
+  }
+
+  if (waStatus !== 'CONNECTED' || !waSock) {
+    return res.status(400).json({ error: "O WhatsApp não está conectado no sistema. Conecte pelo QR Code antes de testar." });
+  }
+
+  const hoje = getLocalIsoString().split('T')[0];
+  const cobrancasHoje = (db.cobrancas || []).filter(c => c.status === 'PENDENTE' && c.dataVencimento === hoje);
+  const texto = gerarTextoAlertaAdmin(cobrancasHoje.length > 0 ? cobrancasHoje : (db.cobrancas || []).slice(0, 2), db);
+
+  try {
+    await sendWhatsAppMessage(config.whatsappAdmin, texto);
+    res.json({ success: true, message: `Mensagem de teste disparada com sucesso para ${config.whatsappAdmin}!` });
+  } catch (err) {
+    res.status(500).json({ error: `Falha ao disparar teste para WhatsApp: ${err.message}` });
+  }
+});
+
+// Rotina agendada que verifica a cada 60s se deve enviar aviso diário ao administrador
+function verificarAlertasVencimentoAdmin() {
+  try {
+    const db = getDB();
+    const config = db.configuracoesAdmin;
+    if (!config || !config.enviarAlertasAdmin || !config.whatsappAdmin) return;
+    if (waStatus !== 'CONNECTED' || !waSock) return;
+
+    const agoraIso = getLocalIsoString(); // Formato YYYY-MM-DDTHH:mm
+    const [hoje, horaMinuto] = agoraIso.split('T');
+
+    if (config.ultimosAlertasEnviadosData === hoje) return;
+
+    const horarioAlerta = config.horarioEnvioAdmin || "08:00";
+    if (horaMinuto === horarioAlerta) {
+      const cobrancasHoje = (db.cobrancas || []).filter(c => c.status === 'PENDENTE' && c.dataVencimento === hoje);
+      if (cobrancasHoje.length > 0) {
+        console.log(`⏰ Disparando alerta diário no WhatsApp do Administrador (${cobrancasHoje.length} vencimentos hoje)...`);
+        const texto = gerarTextoAlertaAdmin(cobrancasHoje, db);
+        sendWhatsAppMessage(config.whatsappAdmin, texto)
+          .then(() => {
+            console.log("✅ Alerta diário do Administrador enviado com sucesso!");
+            config.ultimosAlertasEnviadosData = hoje;
+            db.configuracoesAdmin = config;
+            saveDB(db);
+          })
+          .catch(err => {
+            console.error("❌ Erro ao enviar alerta diário para o Administrador:", err.message);
+          });
+      } else {
+        config.ultimosAlertasEnviadosData = hoje;
+        db.configuracoesAdmin = config;
+        saveDB(db);
+      }
+    }
+  } catch (err) {
+    console.error("Erro na verificação de alertas admin:", err);
+  }
+}
+
+setInterval(verificarAlertasVencimentoAdmin, 60000);
 
 // -----------------------------------------------------------------
 // MODELOS DE MENSAGENS E PROMOÇÕES EDITÁVEIS
