@@ -550,6 +550,7 @@ async function fetchCobrancas() {
     renderTabelaCobrancas();
     renderTabelaContasRecebidas();
     renderTabelaEnvios();
+    renderTabelaProximosVencer();
   } catch (err) {
     console.error('Erro ao buscar cobranças:', err);
   }
@@ -576,11 +577,13 @@ async function loadDashboardData() {
 
     document.getElementById('dashTotalPendente').textContent = formatCurrency(data.totalPendente);
     document.getElementById('dashTotalRecebido').textContent = formatCurrency(data.totalRecebido);
-    document.getElementById('dashTotalVencido').textContent = formatCurrency(data.totalVencido);
-    document.getElementById('dashTotalAgendados').textContent = data.totalAgendados;
+    if (document.getElementById('dashTotalAVencer2Dias')) {
+      document.getElementById('dashTotalAVencer2Dias').textContent = `${data.countAVencer2Dias || 0} Planos (${formatCurrency(data.totalAVencer2Dias || 0)})`;
+    }
 
     renderFinanceChart(data.totalPendente, data.totalRecebido, data.totalVencido);
     renderProximosEnviosDash();
+    renderTabelaProximosVencer();
   } catch (err) {
     console.error('Erro ao carregar dashboard:', err);
   }
@@ -654,6 +657,195 @@ function renderProximosEnviosDash() {
     </div>
   `).join('');
 }
+
+function renderTabelaProximosVencer() {
+  const container = document.getElementById('proximosVencerCardsGrid');
+  const dashContainer = document.getElementById('dashProximosVencerList');
+  const badgeNav = document.getElementById('navBadgeAVencer');
+  const badgeTotal = document.getElementById('badgeTotalProximosVencerCount');
+
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+
+  // Filtrar cobranças pendentes com vencimento entre hoje e 2 dias à frente
+  const proximas = globalCobrancas.filter(cob => {
+    if (cob.status !== 'PENDENTE' || !cob.dataVencimento) return false;
+    const dateStr = cob.dataVencimento.split('T')[0];
+    const parts = dateStr.split('-');
+    let venc;
+    if (parts.length === 3) {
+      venc = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    } else {
+      venc = new Date(dateStr);
+    }
+    venc.setHours(0, 0, 0, 0);
+    const diffDays = Math.round((venc.getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24));
+    return diffDays >= 0 && diffDays <= 2;
+  });
+
+  // Atualizar contadores
+  if (badgeNav) badgeNav.textContent = proximas.length;
+  if (badgeTotal) badgeTotal.textContent = `${proximas.length} ${proximas.length === 1 ? 'Plano' : 'Planos'}`;
+
+  // 1. RENDERIZAR PAINEL RESUMIDO NO DASHBOARD
+  if (dashContainer) {
+    if (proximas.length === 0) {
+      dashContainer.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; color: #64748B; padding: 1.5rem; background: #FFFFFF; border-radius: 12px;">
+          <i class="fa-solid fa-circle-check" style="font-size: 2rem; color: #10B981; margin-bottom: 0.5rem;"></i>
+          <p style="margin: 0; font-weight: 700; color: #0F172A;">Nenhum plano a vencer nos próximos 2 dias!</p>
+        </div>
+      `;
+    } else {
+      dashContainer.innerHTML = proximas.map(cob => {
+        const cli = globalClientes.find(c => c.id === cob.clienteId);
+        const planoObj = cli ? globalPlanos.find(p => p.id === cli.planoId) : null;
+
+        const dateStr = cob.dataVencimento.split('T')[0];
+        const parts = dateStr.split('-');
+        const venc = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        venc.setHours(0, 0, 0, 0);
+        const diffDays = Math.round((venc.getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24));
+
+        let rotuloUrgencia = 'Vence em 2 Dias';
+        let corUrgencia = '#D97706';
+        let bgUrgencia = '#FEF3C7';
+        if (diffDays === 0) {
+          rotuloUrgencia = '🚨 VENCE HOJE!';
+          corUrgencia = '#DC2626';
+          bgUrgencia = '#FEE2E2';
+        } else if (diffDays === 1) {
+          rotuloUrgencia = '⚠️ VENCE AMANHÃ (1 Dia)';
+          corUrgencia = '#D97706';
+          bgUrgencia = '#FEF3C7';
+        }
+
+        return `
+          <div style="background: #FFFFFF; border: 1.5px solid ${corUrgencia}; border-radius: 12px; padding: 0.9rem; display: flex; flex-direction: column; justify-content: space-between; gap: 0.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <strong style="color: #0F172A; font-size: 0.95rem;">${cob.clienteNome}</strong>
+              <span class="badge" style="background: ${bgUrgencia}; color: ${corUrgencia}; border: 1px solid ${corUrgencia}; font-weight: 800; font-size: 0.75rem;">${rotuloUrgencia}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; color: #475569;">
+              <span><i class="fa-solid fa-tv" style="color: #0284C7;"></i> ${planoObj ? planoObj.nome : 'Plano IPTV'}</span>
+              <strong style="color: #059669; font-size: 1.05rem;">${formatCurrency(cob.valor)}</strong>
+            </div>
+            <div style="display: flex; gap: 0.4rem; margin-top: 0.35rem;">
+              <button class="btn-success-sm" style="flex: 1; justify-content: center; font-size: 0.78rem; padding: 0.35rem;" onclick="abrirModalBaixa('${cob.id}')">
+                <i class="fa-solid fa-check-circle"></i> Dar Baixa
+              </button>
+              <button class="btn-whatsapp-sm" style="flex: 1; justify-content: center; font-size: 0.78rem; padding: 0.35rem;" onclick="dispararWhatsApp('${cob.id}')">
+                <i class="fa-brands fa-whatsapp"></i> Enviar
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+
+  // 2. RENDERIZAR ABA DEDICADA DE PLANOS PRÓXIMOS A VENCER
+  if (container) {
+    const filterInput = document.getElementById('filterProximosVencer');
+    const query = filterInput ? filterInput.value.toLowerCase().trim() : '';
+
+    const proximasFiltradas = proximas.filter(cob => {
+      if (!query) return true;
+      const nome = (cob.clienteNome || '').toLowerCase();
+      const tel = (cob.clienteTelefone || '').toLowerCase();
+      const desc = (cob.descricao || '').toLowerCase();
+      return nome.includes(query) || tel.includes(query) || desc.includes(query);
+    });
+
+    if (proximasFiltradas.length === 0) {
+      container.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; background: #FFFFFF; padding: 3rem 1.5rem; border-radius: 16px; border: 1.5px solid #CBD5E1; color: #64748B;">
+          <i class="fa-solid fa-circle-check" style="font-size: 3rem; color: #10B981; margin-bottom: 1rem;"></i>
+          <h3 style="font-size: 1.15rem; font-weight: 800; color: #0F172A;">Nenhum plano a vencer nos próximos 2 dias</h3>
+          <p style="font-size: 0.9rem; margin-top: 0.35rem;">Todos os planos dos seus clientes estão em dia ou com vencimentos mais distantes!</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = proximasFiltradas.map(cob => {
+      const cli = globalClientes.find(c => c.id === cob.clienteId);
+      const planoObj = cli ? globalPlanos.find(p => p.id === cli.planoId) : null;
+
+      const dateStr = cob.dataVencimento.split('T')[0];
+      const parts = dateStr.split('-');
+      const venc = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+      venc.setHours(0, 0, 0, 0);
+      const diffDays = Math.round((venc.getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24));
+
+      let rotuloUrgencia = 'Vence em 2 Dias';
+      let corUrgencia = '#D97706';
+      let bgUrgencia = '#FEF3C7';
+      if (diffDays === 0) {
+        rotuloUrgencia = '🚨 VENCE HOJE!';
+        corUrgencia = '#DC2626';
+        bgUrgencia = '#FEE2E2';
+      } else if (diffDays === 1) {
+        rotuloUrgencia = '⚠️ VENCE AMANHÃ (1 Dia)';
+        corUrgencia = '#D97706';
+        bgUrgencia = '#FEF3C7';
+      }
+
+      return `
+        <div class="card card-hover" style="background: #FFFFFF !important; border: 2px solid ${corUrgencia}; border-radius: 16px; padding: 1.25rem; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06); display: flex; flex-direction: column; justify-content: space-between; gap: 0.85rem;">
+          <div>
+            <!-- CABEÇALHO -->
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.75rem; border-bottom: 2px solid #E2E8F0; margin-bottom: 0.85rem;">
+              <h3 style="font-size: 1.2rem; font-weight: 900; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.55rem;">
+                <i class="fa-solid fa-user-circle" style="color: #0284C7;"></i> ${cob.clienteNome}
+              </h3>
+              <span class="badge" style="background: ${bgUrgencia}; color: ${corUrgencia}; border: 1.5px solid ${corUrgencia}; font-weight: 900; font-size: 0.82rem; padding: 0.3rem 0.65rem;">
+                ${rotuloUrgencia}
+              </span>
+            </div>
+
+            <!-- CONTATO WHATSAPP -->
+            <div style="background: #F8FAFC; padding: 0.75rem 0.9rem; border-radius: 12px; border: 1px solid #E2E8F0; margin-bottom: 0.85rem; display: flex; align-items: center; justify-content: space-between;">
+              <div style="font-size: 0.88rem; color: #0F172A; font-weight: 800; display: flex; align-items: center; gap: 0.45rem;">
+                <i class="fa-brands fa-whatsapp" style="font-size: 1.2rem; color: #10B981;"></i> ${formatPhone(cob.clienteTelefone)}
+              </div>
+              <button class="btn-whatsapp-sm" style="font-size: 0.78rem; padding: 0.3rem 0.65rem; font-weight: 800; background: #10B981; color: #FFFFFF;" onclick="window.open('https://wa.me/${cob.clienteTelefone}', '_blank')">
+                <i class="fa-brands fa-whatsapp"></i> Conversar
+              </button>
+            </div>
+
+            <!-- DETALHES DO PLANO & VALOR -->
+            <div style="background: #FFFBEB; padding: 0.85rem 1rem; border-radius: 12px; border: 1.5px solid #FCD34D; margin-bottom: 0.85rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <strong style="color: #92400E; font-size: 0.9rem;"><i class="fa-solid fa-tv" style="color: #D97706;"></i> ${planoObj ? planoObj.nome : 'Plano de Canais'}</strong>
+                <div style="font-size: 1.35rem; font-weight: 900; color: #D97706;">
+                  ${formatCurrency(cob.valor)}
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.82rem; color: #78350F; font-weight: 700;">
+                <span>Vencimento: <strong>${formatDate(cob.dataVencimento)}</strong></span>
+                <span>Envio WhatsApp: <strong>${formatDateTime(cob.dataHoraEnvio)}</strong></span>
+              </div>
+            </div>
+
+            ${cob.descricao ? `<p style="font-size: 0.82rem; color: #475569; background: #F1F5F9; padding: 0.55rem; border-radius: 8px; margin-bottom: 0.85rem; font-weight: 600;"><i class="fa-regular fa-file-lines"></i> ${cob.descricao}</p>` : ''}
+          </div>
+
+          <!-- AÇÕES RÁPIDAS -->
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; border-top: 1.5px solid #E2E8F0; padding-top: 0.85rem;">
+            <button class="btn-success-sm" style="width: 100%; justify-content: center; font-size: 0.9rem; padding: 0.6rem; background: #059669; color: #FFFFFF; font-weight: 800; border-radius: 8px;" onclick="abrirModalBaixa('${cob.id}')" title="Dar Baixa no Pagamento">
+              <i class="fa-solid fa-check-circle"></i> Dar Baixa no Pagamento
+            </button>
+            <button class="btn-whatsapp-sm" style="width: 100%; justify-content: center; font-size: 0.85rem; padding: 0.5rem; font-weight: 800;" onclick="dispararWhatsApp('${cob.id}')" title="Disparar Notificação no WhatsApp">
+              <i class="fa-brands fa-whatsapp"></i> Disparar Lembrete WhatsApp
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+window.renderTabelaProximosVencer = renderTabelaProximosVencer;
 
 // -------------------------------------------------------------
 // 4. GESTÃO DE COBRANÇAS (TABELA & CARDS)
@@ -732,8 +924,10 @@ function calcularStatusPlano(dataVencimento, isPago = false) {
       color: '#EF4444',
       badgeHtml: `<span class="badge badge-vencido"><i class="fa-solid fa-circle-xmark"></i> Plano Vencido</span>`
     };
-  } else if (diffDays <= 1) {
-    const labelTxt = diffDays === 0 ? 'Vence Hoje' : 'Vence em 1 Dia';
+  } else if (diffDays <= 2) {
+    let labelTxt = 'Vence em 2 Dias';
+    if (diffDays === 0) labelTxt = 'Vence Hoje';
+    else if (diffDays === 1) labelTxt = 'Vence em 1 Dia';
     return {
       statusKey: 'A_VENCER',
       text: labelTxt,
