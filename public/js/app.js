@@ -777,10 +777,18 @@ function obterStatusCliente(cli) {
   return calcularStatusPlano(null, true);
 }
 
+function filtrarTabelaCobrancas() {
+  renderTabelaCobrancas();
+}
+window.filtrarTabelaCobrancas = filtrarTabelaCobrancas;
+
 function renderTabelaCobrancas() {
   const tbody = document.getElementById('cobrancasTableBody');
   const grid = document.getElementById('cobrancasCardsGrid');
   if (!tbody && !grid) return;
+
+  const filterInput = document.getElementById('filterCobrancas');
+  const query = filterInput ? filterInput.value.toLowerCase().trim() : '';
 
   if (globalCobrancas.length === 0) {
     if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-brown-muted); padding: 2rem;">Nenhuma cobrança cadastrada.</td></tr>`;
@@ -788,12 +796,24 @@ function renderTabelaCobrancas() {
     return;
   }
 
-  // Ordenar cobranças por ordem de criação (ID descendente) para mostrar o cliente recém-adicionado no TOPO da lista
+  // Ordenar cobranças por ordem de criação (ID descendente) e aplicar filtro de pesquisa
   const cobrancasOrdenadas = [...globalCobrancas].sort((a, b) => {
     const numA = parseInt((a.id || '').replace(/\D/g, '')) || 0;
     const numB = parseInt((b.id || '').replace(/\D/g, '')) || 0;
     return numB - numA;
+  }).filter(cob => {
+    if (!query) return true;
+    const nome = (cob.clienteNome || '').toLowerCase();
+    const tel = (cob.clienteTelefone || '').toLowerCase();
+    const desc = (cob.descricao || '').toLowerCase();
+    return nome.includes(query) || tel.includes(query) || desc.includes(query);
   });
+
+  if (cobrancasOrdenadas.length === 0) {
+    if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-brown-muted); padding: 2rem;">Nenhuma renovação encontrada com este termo.</td></tr>`;
+    if (grid) grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--text-brown-muted); padding: 3rem;">Nenhuma renovação encontrada com este termo de pesquisa.</div>`;
+    return;
+  }
 
   // 1. RENDERIZAR TABELA
   if (tbody) {
@@ -1366,31 +1386,26 @@ async function darBaixaRapida(id) {
           console.warn('Aviso ao atualizar listas locais:', uiErr);
         }
 
-        const msgSucesso = data.enviouDireto
-          ? `O plano de ${nomeCliente} agora está ATIVO (Em Dia) com novo vencimento em ${proxDataBr}! A mensagem de confirmação foi enviada para o WhatsApp.`
-          : `O plano de ${nomeCliente} agora está ATIVO (Em Dia) com novo vencimento em ${proxDataBr}!`;
-
-        let swalConfig = {
+        const resSwal = await Swal.fire({
           icon: 'success',
           title: '🎉 Baixa Concluída com Sucesso!',
-          text: msgSucesso,
+          text: `A baixa de ${nomeCliente} foi registrada e o plano foi renovado para ${proxDataBr}! Deseja enviar a mensagem de confirmação para o cliente via WhatsApp?`,
+          showCancelButton: true,
+          showDenyButton: true,
+          confirmButtonText: '📱 Enviar Mensagem no WhatsApp',
+          denyButtonText: '📄 Ver Recibo Digital',
+          cancelButtonText: 'OK / Fechar',
           confirmButtonColor: '#059669',
+          denyButtonColor: '#0284C7',
+          cancelButtonColor: '#64748B',
           background: '#FFFFFF',
-          color: '#1E293B'
-        };
+          color: '#0F172A'
+        });
 
-        if (!data.enviouDireto && data.linkWhatsAppRenovacao) {
-          swalConfig.showCancelButton = true;
-          swalConfig.confirmButtonText = '📱 Abrir no WhatsApp';
-          swalConfig.cancelButtonText = 'OK / Fechar';
-          swalConfig.cancelButtonColor = '#64748B';
-        }
-
-        const resSwal = await Swal.fire(swalConfig);
-        if (!data.enviouDireto && resSwal.isConfirmed && data.linkWhatsAppRenovacao) {
-          try {
-            window.open(data.linkWhatsAppRenovacao, '_blank');
-          } catch(e) {}
+        if (resSwal.isConfirmed && data.linkWhatsAppRenovacao) {
+          try { window.open(data.linkWhatsAppRenovacao, '_blank'); } catch(e) {}
+        } else if (resSwal.isDenied && targetId) {
+          abrirModalRecibo(targetId);
         }
       } else {
         Swal.fire({
@@ -1660,21 +1675,38 @@ function abrirModalNovaCobrancaComCliente(clienteId) {
   }
 }
 
+function filtrarTabelaClientes() {
+  renderTabelaClientes();
+}
+window.filtrarTabelaClientes = filtrarTabelaClientes;
+
 function renderTabelaClientes() {
   const tbody = document.getElementById('clientesTableBody');
   const grid = document.getElementById('clientesCardsGrid');
 
   if (!tbody && !grid) return;
 
-  if (globalClientes.length === 0) {
-    if (tbody) tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-brown-muted); padding: 2rem;">Nenhum cliente cadastrado.</td></tr>`;
-    if (grid) grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--text-brown-muted); padding: 3rem;">Nenhum cliente cadastrado. Clique no botão acima para adicionar!</div>`;
+  const filterInput = document.getElementById('filterClientes');
+  const query = filterInput ? filterInput.value.toLowerCase().trim() : '';
+
+  const clientesFiltrados = globalClientes.filter(cli => {
+    if (!query) return true;
+    const nome = (cli.nome || '').toLowerCase();
+    const tel = (cli.telefone || '').toLowerCase();
+    const planoObj = globalPlanos.find(p => p.id === cli.planoId);
+    const planoNome = planoObj ? planoObj.nome.toLowerCase() : '';
+    return nome.includes(query) || tel.includes(query) || planoNome.includes(query);
+  });
+
+  if (clientesFiltrados.length === 0) {
+    if (tbody) tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: var(--text-brown-muted); padding: 2rem;">Nenhum cliente encontrado.</td></tr>`;
+    if (grid) grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--text-brown-muted); padding: 3rem;">Nenhum cliente encontrado com este termo de pesquisa.</div>`;
     return;
   }
 
   // 1. RENDERIZAR TABELA
   if (tbody) {
-    tbody.innerHTML = globalClientes.map(cli => {
+    tbody.innerHTML = clientesFiltrados.map(cli => {
       const planoObj = globalPlanos.find(p => p.id === cli.planoId);
       const srvObj = globalServidores.find(s => s.id === cli.servidorId);
       const appObj = globalApps.find(a => a.id === cli.appId);
@@ -1732,9 +1764,9 @@ function renderTabelaClientes() {
     }).join('');
   }
 
-  // 2. RENDERIZAR CARDS VISUAIS ULTRA ELEGANTES E DETALHADOS
+  // 2. RENDERIZAR CARDS VISUAIS ELEGANTES E ALTAMENTE ESTRUTURADOS
   if (grid) {
-    grid.innerHTML = globalClientes.map(cli => {
+    grid.innerHTML = clientesFiltrados.map(cli => {
       const planoObj = globalPlanos.find(p => p.id === cli.planoId);
       const srvObj = globalServidores.find(s => s.id === cli.servidorId);
       const appObj = globalApps.find(a => a.id === cli.appId);
@@ -1743,23 +1775,22 @@ function renderTabelaClientes() {
       const cobPendente = globalCobrancas.find(c => c.clienteId === cli.id && c.status === 'PENDENTE');
 
       const qtdTelasInt = parseInt(cli.qtdTelas || (cobPendente ? cobPendente.qtdTelas : 1)) || 1;
-      const telasBadge = `<span class="badge" style="background: rgba(0, 240, 255, 0.15); color: var(--neon-blue); border: 1px solid var(--neon-blue); font-size: 0.78rem;"><i class="fa-solid fa-desktop"></i> ${qtdTelasInt === 1 ? '1 Tela' : qtdTelasInt + ' Telas'}</span>`;
 
       const badgePlano = planoObj 
-        ? `<span class="badge badge-agendado" style="font-size: 0.78rem;"><i class="fa-solid fa-tv"></i> ${planoObj.nome} (${formatCurrency(planoObj.valor)})</span>` 
-        : `<span style="color: var(--text-brown-muted); font-size: 0.8rem;">Sem plano</span>`;
+        ? `<span class="badge badge-agendado" style="font-size: 0.8rem; font-weight: 700;"><i class="fa-solid fa-tv"></i> ${planoObj.nome} (${formatCurrency(planoObj.valor)})</span>` 
+        : `<span style="color: #64748B; font-size: 0.8rem; font-weight: 600;">Sem plano</span>`;
 
       const badgeSrv = srvObj 
-        ? `<span class="badge badge-pago" style="background: rgba(0, 240, 255, 0.15); color: var(--neon-blue); border-color: var(--neon-blue); font-size: 0.78rem;"><i class="fa-solid fa-server"></i> ${srvObj.nome}</span>` 
-        : `<span style="color: var(--text-brown-muted); font-size: 0.8rem;">Sem servidor</span>`;
+        ? `<span class="badge badge-pago" style="background: #E0F2FE; color: #0284C7; border: 1px solid #38BDF8; font-size: 0.8rem; font-weight: 700;"><i class="fa-solid fa-server"></i> ${srvObj.nome}</span>` 
+        : `<span style="color: #64748B; font-size: 0.8rem; font-weight: 600;">Sem servidor</span>`;
 
       const badgeApp = appObj 
-        ? `<span class="badge badge-vencido" style="background: rgba(16, 185, 129, 0.15); color: var(--emerald-light); border-color: var(--emerald-primary); font-size: 0.78rem;"><i class="fa-solid fa-mobile-screen-button"></i> ${appObj.nome}</span>` 
-        : `<span style="color: var(--text-brown-muted); font-size: 0.8rem;">Sem app</span>`;
+        ? `<span class="badge badge-vencido" style="background: #D1FAE5; color: #059669; border: 1px solid #34D399; font-size: 0.8rem; font-weight: 700;"><i class="fa-solid fa-mobile-screen-button"></i> ${appObj.nome}</span>` 
+        : `<span style="color: #64748B; font-size: 0.8rem; font-weight: 600;">Sem app</span>`;
 
       const badgeModelo = modeloObj 
-        ? `<span class="badge badge-pago" style="background: rgba(0, 240, 255, 0.15); color: var(--neon-blue); border-color: var(--neon-blue); font-size: 0.78rem;"><i class="fa-solid fa-comment-dots"></i> ${modeloObj.titulo}</span>` 
-        : `<span style="color: var(--text-brown-muted); font-size: 0.8rem;">Padrão</span>`;
+        ? `<span class="badge badge-pago" style="background: #F3E8FF; color: #7E22CE; border: 1px solid #C084FC; font-size: 0.8rem; font-weight: 700;"><i class="fa-solid fa-comment-dots"></i> ${modeloObj.titulo}</span>` 
+        : `<span style="color: #64748B; font-size: 0.8rem; font-weight: 600;">Padrão</span>`;
 
       // Cálculos Financeiros com Desconto por Tela
       const valPlano = planoObj ? (planoObj.valor || 0) : 0;
@@ -1768,98 +1799,100 @@ function renderTabelaClientes() {
       const valFinal = Math.max(0, valBruto - valDesconto);
 
       return `
-        <div class="card card-hover" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div class="card card-hover" style="background: #FFFFFF !important; border: 1.5px solid #CBD5E1; border-radius: 16px; padding: 1.2rem; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05); display: flex; flex-direction: column; justify-content: space-between; gap: 0.85rem;">
           <div>
-            <!-- Cabeçalho do Card (Nome + Status do Plano) -->
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.85rem;">
-              <h3 style="font-size: 1.15rem; font-weight: 800; color: #000000; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-                <i class="fa-solid fa-circle-user" style="color: var(--neon-blue);"></i> ${cli.nome}
+            <!-- SEÇÃO 1: NOME & STATUS DO CLIENTE -->
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.75rem; border-bottom: 2px solid #E2E8F0; margin-bottom: 0.85rem;">
+              <h3 style="font-size: 1.2rem; font-weight: 900; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.55rem;">
+                <i class="fa-solid fa-user-circle" style="color: #0284C7;"></i> ${cli.nome}
               </h3>
               ${statusObj.badgeHtml}
             </div>
 
-            <!-- WhatsApp & Atalho de Conversa Direct -->
-            <div style="background: rgba(0, 240, 255, 0.04); padding: 0.65rem 0.85rem; border-radius: 10px; border: 1px solid rgba(0, 240, 255, 0.15); margin-bottom: 0.85rem; display: flex; align-items: center; justify-content: space-between;">
-              <div style="font-size: 0.85rem; color: var(--emerald-light); font-weight: 700; display: flex; align-items: center; gap: 0.4rem;">
-                <i class="fa-brands fa-whatsapp" style="font-size: 1.1rem; color: var(--emerald-primary);"></i> ${formatPhone(cli.telefone)}
+            <!-- SEÇÃO 2: CONTATO WHATSAPP -->
+            <div style="background: #F8FAFC; padding: 0.75rem 0.9rem; border-radius: 12px; border: 1px solid #E2E8F0; margin-bottom: 0.85rem; display: flex; align-items: center; justify-content: space-between;">
+              <div style="font-size: 0.88rem; color: #0F172A; font-weight: 800; display: flex; align-items: center; gap: 0.45rem;">
+                <i class="fa-brands fa-whatsapp" style="font-size: 1.2rem; color: #10B981;"></i> ${formatPhone(cli.telefone)}
               </div>
-              <button class="btn-whatsapp-sm" style="font-size: 0.75rem; padding: 0.25rem 0.55rem;" onclick="window.open('https://wa.me/${cli.telefone}', '_blank')">
+              <button class="btn-whatsapp-sm" style="font-size: 0.78rem; padding: 0.3rem 0.65rem; font-weight: 800; background: #10B981; color: #FFFFFF;" onclick="window.open('https://wa.me/${cli.telefone}', '_blank')">
                 <i class="fa-brands fa-whatsapp"></i> Conversar
               </button>
             </div>
 
-            <!-- Painel de Resumo Financeiro (Telas + Valor + Desconto) -->
-            <div style="background: rgba(0, 255, 136, 0.05); padding: 0.75rem 0.85rem; border-radius: 10px; border: 1px solid rgba(0, 255, 136, 0.2); margin-bottom: 0.85rem;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-                ${telasBadge}
-                <div style="font-size: 1.35rem; font-weight: 900; color: var(--emerald-light);">
+            <!-- SEÇÃO 3: RESUMO FINANCEIRO -->
+            <div style="background: #F0FDF4; padding: 0.85rem 1rem; border-radius: 12px; border: 1.5px solid #86EFAC; margin-bottom: 0.85rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                <span class="badge" style="background: #E0F2FE; color: #0284C7; border: 1px solid #7DD3FC; font-weight: 800; font-size: 0.8rem;">
+                  <i class="fa-solid fa-desktop"></i> ${qtdTelasInt === 1 ? '1 Tela' : qtdTelasInt + ' Telas'}
+                </span>
+                <div style="font-size: 1.4rem; font-weight: 900; color: #059669;">
                   ${formatCurrency(valFinal)}
                 </div>
               </div>
-              <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-brown-muted);">
-                <span>Bruto (${qtdTelasInt}x): <strong>${formatCurrency(valBruto)}</strong></span>
-                ${valDesconto > 0 ? `<span style="color: var(--neon-pink); font-weight: 700;"><i class="fa-solid fa-tag"></i> Desc: -${formatCurrency(valDesconto)}</span>` : '<span>Sem desconto</span>'}
+              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #475569; font-weight: 600;">
+                <span>Plano Bruto (${qtdTelasInt}x): <strong>${formatCurrency(valBruto)}</strong></span>
+                ${valDesconto > 0 ? `<span style="color: #E11D48; font-weight: 800;"><i class="fa-solid fa-tag"></i> Desc: -${formatCurrency(valDesconto)}</span>` : '<span>Sem desconto</span>'}
               </div>
             </div>
 
-            <!-- Detalhes dos Serviços Atribuídos -->
-            <div style="display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 1rem; background: rgba(0,0,0,0.25); padding: 0.75rem; border-radius: 10px;">
-              <div style="font-size: 0.82rem; display: flex; justify-content: space-between; align-items: center;">
-                <strong style="color: var(--text-brown-muted);"><i class="fa-solid fa-tv" style="color: var(--neon-blue);"></i> Plano:</strong> 
+            <!-- SEÇÃO 4: DETALHES DOS SERVIÇOS ATRIBUÍDOS -->
+            <div style="background: #F1F5F9; padding: 0.85rem; border-radius: 12px; border: 1px solid #CBD5E1; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.85rem;">
+              <div style="font-size: 0.84rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E2E8F0; padding-bottom: 0.35rem;">
+                <strong style="color: #475569;"><i class="fa-solid fa-tv" style="color: #0284C7;"></i> Plano de Canais:</strong>
                 ${badgePlano}
               </div>
-              <div style="font-size: 0.82rem; display: flex; justify-content: space-between; align-items: center;">
-                <strong style="color: var(--text-brown-muted);"><i class="fa-solid fa-server" style="color: var(--neon-blue);"></i> Servidor:</strong> 
+              <div style="font-size: 0.84rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E2E8F0; padding-bottom: 0.35rem;">
+                <strong style="color: #475569;"><i class="fa-solid fa-server" style="color: #0284C7;"></i> Servidor / Painel:</strong>
                 ${badgeSrv}
               </div>
-              <div style="font-size: 0.82rem; display: flex; justify-content: space-between; align-items: center;">
-                <strong style="color: var(--text-brown-muted);"><i class="fa-solid fa-mobile-screen-button" style="color: var(--emerald-light);"></i> App:</strong> 
+              <div style="font-size: 0.84rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E2E8F0; padding-bottom: 0.35rem;">
+                <strong style="color: #475569;"><i class="fa-solid fa-mobile-screen-button" style="color: #10B981;"></i> Aplicativo / App:</strong>
                 ${badgeApp}
               </div>
-              <div style="font-size: 0.82rem; display: flex; justify-content: space-between; align-items: center;">
-                <strong style="color: var(--text-brown-muted);"><i class="fa-solid fa-comment-dots" style="color: var(--neon-blue);"></i> Mensagem:</strong> 
+              <div style="font-size: 0.84rem; display: flex; justify-content: space-between; align-items: center;">
+                <strong style="color: #475569;"><i class="fa-solid fa-comment-dots" style="color: #0284C7;"></i> Modelo Mensagem:</strong>
                 ${badgeModelo}
               </div>
             </div>
 
-            <!-- Informações do Envio Agendado -->
+            <!-- SEÇÃO 5: DISPARO AGENDADO / VENCIMENTO -->
             ${cobPendente ? `
-              <div style="background: rgba(0, 240, 255, 0.08); padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px dashed var(--neon-blue); margin-bottom: 1rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; margin-bottom: 0.25rem;">
-                  <span style="color: var(--neon-blue); font-weight: 700;"><i class="fa-solid fa-clock"></i> Disparo WhatsApp:</span>
-                  <span style="color: #000000; font-weight: 600;">${formatDateTime(cobPendente.dataHoraEnvio)}</span>
+              <div style="background: #EFF6FF; padding: 0.75rem 0.9rem; border-radius: 10px; border: 1.5px dashed #3B82F6; margin-bottom: 0.85rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.83rem; margin-bottom: 0.3rem;">
+                  <span style="color: #1D4ED8; font-weight: 800;"><i class="fa-solid fa-clock"></i> Disparo Agendado:</span>
+                  <span style="color: #0F172A; font-weight: 700;">${formatDateTime(cobPendente.dataHoraEnvio)}</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;">
-                  <span style="color: var(--text-brown-muted);"><i class="fa-regular fa-calendar"></i> Vencimento:</span>
-                  <span style="color: var(--emerald-light); font-weight: 700;">${formatDate(cobPendente.dataVencimento)}</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.83rem;">
+                  <span style="color: #475569; font-weight: 700;"><i class="fa-regular fa-calendar"></i> Data de Vencimento:</span>
+                  <span style="color: #059669; font-weight: 900;">${formatDate(cobPendente.dataVencimento)}</span>
                 </div>
               </div>
             ` : ''}
 
-            ${cli.notas ? `<p style="font-size: 0.8rem; color: var(--text-brown-muted); background: rgba(255,255,255,0.02); padding: 0.5rem; border-radius: 6px; margin-bottom: 1rem;"><i class="fa-regular fa-comment"></i> ${cli.notas}</p>` : ''}
+            ${cli.notas ? `<p style="font-size: 0.82rem; color: #475569; background: #FFFBEB; border: 1px solid #FDE68A; padding: 0.55rem; border-radius: 8px; margin-bottom: 0.85rem; font-weight: 600;"><i class="fa-regular fa-comment"></i> ${cli.notas}</p>` : ''}
           </div>
 
-          <!-- Grade de Botões de Ação Completa -->
-          <div style="display: flex; flex-direction: column; gap: 0.5rem; border-top: 1px dashed var(--border-color); padding-top: 0.75rem;">
+          <!-- SEÇÃO 6: AÇÕES RÁPIDAS -->
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; border-top: 1.5px solid #E2E8F0; padding-top: 0.85rem;">
             ${cobPendente ? `
-              <button class="btn-success-sm" style="width: 100%; justify-content: center; font-size: 0.85rem; padding: 0.5rem; background: var(--emerald-primary); color: #000; font-weight: 800; margin-bottom: 0.2rem;" onclick="abrirModalBaixa('${cobPendente.id}')" title="Dar Baixa no Recebimento">
-                <i class="fa-solid fa-check"></i> Dar Baixa no Pagamento
+              <button class="btn-success-sm" style="width: 100%; justify-content: center; font-size: 0.9rem; padding: 0.6rem; background: #059669; color: #FFFFFF; font-weight: 800; border-radius: 8px;" onclick="abrirModalBaixa('${cobPendente.id}')" title="Dar Baixa no Recebimento">
+                <i class="fa-solid fa-check-circle"></i> Dar Baixa no Pagamento
               </button>
             ` : ''}
-            <div style="display: flex; gap: 0.4rem;">
-              <button class="btn-whatsapp-sm" style="flex: 1; justify-content: center; font-size: 0.78rem; padding: 0.4rem;" onclick="abrirModalDispararModelo(null, '${cli.id}')" title="Escolher Modelo de Mensagem e Enviar">
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="btn-whatsapp-sm" style="flex: 1; justify-content: center; font-size: 0.8rem; padding: 0.45rem; font-weight: 700;" onclick="abrirModalDispararModelo(null, '${cli.id}')" title="Escolher Modelo de Mensagem e Enviar">
                 <i class="fa-solid fa-paper-plane"></i> Enviar Mensagem
               </button>
-              <button class="btn-success-sm" style="flex: 1; justify-content: center; font-size: 0.78rem; padding: 0.4rem;" onclick="abrirModalNovaCobrancaComCliente('${cli.id}')" title="Gerar Renovação Manual">
+              <button class="btn-success-sm" style="flex: 1; justify-content: center; font-size: 0.8rem; padding: 0.45rem; font-weight: 700;" onclick="abrirModalNovaCobrancaComCliente('${cli.id}')" title="Gerar Renovação Manual">
                 <i class="fa-solid fa-plus-circle"></i> + Renovação
               </button>
             </div>
-            <div style="display: flex; gap: 0.4rem; justify-content: flex-end;">
-              <button class="btn-secondary" style="flex: 1; justify-content: center; padding: 0.35rem; font-size: 0.78rem;" onclick="editarCliente('${cli.id}')">
+            <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+              <button class="btn-secondary" style="flex: 1; justify-content: center; padding: 0.4rem; font-size: 0.8rem; font-weight: 700;" onclick="editarCliente('${cli.id}')">
                 <i class="fa-solid fa-pen"></i> Editar
               </button>
-              <button class="btn-danger-sm" style="padding: 0.35rem 0.65rem; font-size: 0.78rem;" onclick="deletarCliente('${cli.id}')" title="Excluir Cliente">
-                <i class="fa-solid fa-trash"></i>
+              <button class="btn-danger-sm" style="padding: 0.4rem 0.75rem; font-size: 0.8rem; font-weight: 700;" onclick="deletarCliente('${cli.id}')" title="Excluir Cliente">
+                <i class="fa-solid fa-trash"></i> Excluir
               </button>
             </div>
           </div>
@@ -2313,24 +2346,27 @@ function setupForms() {
         const proxDataBr = bodyData.proximoVencimento ? bodyData.proximoVencimento.split('-').reverse().join('/') : '';
         const cobrancaBaixadaId = (data.cobranca && data.cobranca.id) ? data.cobranca.id : id;
 
-        Swal.fire({
+        const resSwal = await Swal.fire({
           icon: 'success',
-          title: '🎉 Baixa Efetuada & Plano Renovado!',
-          text: `O plano foi renovado com sucesso (novo vencimento: ${proxDataBr}). Deseja emitir o recibo digital?`,
+          title: '🎉 Baixa Concluída com Sucesso!',
+          text: `A baixa foi efetuada e o plano foi renovado para ${proxDataBr}! Deseja enviar a mensagem de confirmação para o cliente via WhatsApp?`,
           showCancelButton: true,
-          confirmButtonText: '📄 Ver Recibo Digital',
+          showDenyButton: true,
+          confirmButtonText: '📱 Enviar Mensagem no WhatsApp',
+          denyButtonText: '📄 Ver Recibo Digital',
           cancelButtonText: 'OK / Fechar',
           confirmButtonColor: '#059669',
+          denyButtonColor: '#0284C7',
           cancelButtonColor: '#64748B',
           background: '#FFFFFF',
-          color: '#1E293B'
-        }).then((r) => {
-          if (r.isConfirmed && cobrancaBaixadaId) {
-            abrirModalRecibo(cobrancaBaixadaId);
-          } else if (bodyData.enviarNotificacaoWhatsApp && data.linkWhatsAppRenovacao) {
-            try { window.open(data.linkWhatsAppRenovacao, '_blank'); } catch(e) {}
-          }
+          color: '#0F172A'
         });
+
+        if (resSwal.isConfirmed && data.linkWhatsAppRenovacao) {
+          try { window.open(data.linkWhatsAppRenovacao, '_blank'); } catch(e) {}
+        } else if (resSwal.isDenied && cobrancaBaixadaId) {
+          abrirModalRecibo(cobrancaBaixadaId);
+        }
 
         await fetchClientes();
         await fetchCobrancas();
