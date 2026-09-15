@@ -200,7 +200,13 @@ const defaultData = {
   ],
   modelosMensagens: defaultModelosMensagensArray,
   historicoEnvios: [],
-  alertasPendentes: []
+  alertasPendentes: [],
+  configuracoesAdmin: {
+    whatsappAdmin: "",
+    horarioEnvioAdmin: "08:00",
+    enviarAlertasAdmin: true,
+    ultimosAlertasEnviadosData: ""
+  }
 };
 
 function formatDateBR(dateStr) {
@@ -313,6 +319,55 @@ function gerarTextoCob(cobranca) {
   }, db.meusDados);
 }
 
+function gerarTextoAlertaAdmin(cobrancasHoje, db) {
+  const dtHojeBR = formatDateBR(getLocalIsoString().split('T')[0]);
+  if (!cobrancasHoje || cobrancasHoje.length === 0) {
+    return `🚨 *GESTOR DE COBRANÇAS - ALERTA DIÁRIO (${dtHojeBR})* 🚨\n\nNenhum plano de cliente vence no dia de hoje!\n\nTenha um ótimo dia de trabalho! 🚀`;
+  }
+
+  let text = `🚨 *ALERTA DE PLANOS VENCENDO HOJE (${dtHojeBR})* 🚨\n\n`;
+  text += `Atenção, Gerailton! Hoje vence a assinatura de *${cobrancasHoje.length} cliente(s)*:\n\n`;
+
+  cobrancasHoje.forEach((c, index) => {
+    let clienteObj = db.clientes ? db.clientes.find(cli => cli.id === c.clienteId) : null;
+    let planoNome = c.planoNome || c.descricao || 'Plano de Canais';
+    let servidorNome = '-';
+    let appNome = '-';
+
+    if (clienteObj) {
+      if (clienteObj.planoId && db.planos) {
+        const p = db.planos.find(item => item.id === clienteObj.planoId);
+        if (p) planoNome = p.nome;
+      }
+      if (clienteObj.servidorId && db.servidores) {
+        const s = db.servidores.find(item => item.id === clienteObj.servidorId);
+        if (s) servidorNome = s.nome;
+      }
+      if (clienteObj.appId && db.apps) {
+        const a = db.apps.find(item => item.id === clienteObj.appId);
+        if (a) appNome = a.nome;
+      }
+    }
+
+    const valBrutoNum = (c.valorBruto !== undefined && c.valorBruto !== null && c.valorBruto !== '') ? parseFloat(c.valorBruto) : parseFloat(c.valor || 0);
+    const descNum = c.desconto ? parseFloat(c.desconto) : 0;
+    const valFinalNum = parseFloat(c.valor || 0);
+    const valStr = valFinalNum.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const whatsStr = c.clienteWhatsApp || (clienteObj ? clienteObj.whatsapp : '-') || '-';
+    const qtdTelasInt = parseInt(c.qtdTelas || (clienteObj ? clienteObj.qtdTelas : 1)) || 1;
+
+    text += `${index + 1}️⃣ *CLIENTE: ${c.clienteNome.trim()}*\n`;
+    text += `   📱 *WhatsApp:* ${whatsStr}\n`;
+    text += `   📺 *Plano:* ${planoNome} (${qtdTelasInt === 1 ? '1 Tela' : qtdTelasInt + ' Telas'})\n`;
+    text += `   🖥️ *Servidor:* ${servidorNome}\n`;
+    text += `   📱 *App:* ${appNome}\n`;
+    text += `   💰 *Valor:* ${valStr}\n\n`;
+  });
+
+  text += `⚠️ *Ação Recomendada:* Verifique o recebimento do PIX ou dê baixa pelo painel assim que confirmado!`;
+  return text;
+}
+
 function getDB() {
   try {
     if (!fs.existsSync(DB_FILE)) {
@@ -325,6 +380,14 @@ function getDB() {
     // Migração: Se modelosMensagens não for array, substitui pelo array padrão
     if (!db.modelosMensagens || !Array.isArray(db.modelosMensagens)) {
       db.modelosMensagens = defaultModelosMensagensArray;
+    }
+    if (!db.configuracoesAdmin) {
+      db.configuracoesAdmin = {
+        whatsappAdmin: "",
+        horarioEnvioAdmin: "08:00",
+        enviarAlertasAdmin: true,
+        ultimosAlertasEnviadosData: ""
+      };
       saveDB(db);
     }
     return db;
@@ -562,6 +625,31 @@ app.get('/api/meus-dados', (req, res) => {
 // -----------------------------------------------------------------
 // PLANOS, APPS E SERVIDORES IPTV
 // -----------------------------------------------------------------
+
+app.get('/api/planos/:id', (req, res) => {
+  const db = getDB();
+  const cleanId = String(req.params.id || '').trim().toLowerCase();
+  const p = db.planos.find(item => String(item.id).trim().toLowerCase() === cleanId);
+  if (!p) return res.status(404).json({ error: "Plano não encontrado" });
+  res.json(p);
+});
+
+app.get('/api/apps/:id', (req, res) => {
+  const db = getDB();
+  const cleanId = String(req.params.id || '').trim().toLowerCase();
+  const appItem = db.apps.find(item => String(item.id).trim().toLowerCase() === cleanId);
+  if (!appItem) return res.status(404).json({ error: "Aplicativo não encontrado" });
+  res.json(appItem);
+});
+
+app.get('/api/servidores/:id', (req, res) => {
+  const db = getDB();
+  const cleanId = String(req.params.id || '').trim().toLowerCase();
+  const srv = db.servidores.find(item => String(item.id).trim().toLowerCase() === cleanId);
+  if (!srv) return res.status(404).json({ error: "Servidor não encontrado" });
+  res.json(srv);
+});
+
 app.get('/api/planos', (req, res) => {
   const db = getDB();
   res.json(db.planos || []);
@@ -968,10 +1056,26 @@ function gerarMensagemRenovacaoWhatsApp(cobranca, proximoVencimento, dataPagamen
   }, db.meusDados);
 }
 
-app.post('/api/cobrancas/:id/dar-baixa', async (req, res) => {
+app.post(['/api/cobrancas/:id/dar-baixa', '/api/cobrancas/dar-baixa'], async (req, res) => {
   const db = getDB();
-  const cobranca = db.cobrancas.find(c => c.id === req.params.id);
-  if (!cobranca) return res.status(404).json({ error: "Cobrança não encontrada" });
+  const rawId = req.params.id;
+  const targetId = (rawId && rawId !== 'undefined' && rawId !== 'null' && rawId !== 'dar-baixa')
+    ? rawId
+    : (req.body.cobrancaId || req.body.clienteId || req.body.id);
+  
+  let cobranca = db.cobrancas.find(c => c.id === targetId);
+  if (!cobranca && targetId) {
+    cobranca = db.cobrancas.find(c => c.clienteId === targetId && c.status === 'PENDENTE');
+    if (!cobranca) {
+      cobranca = db.cobrancas.find(c => c.clienteId === targetId);
+    }
+  }
+  
+  if (!cobranca && db.cobrancas.length > 0) {
+    cobranca = db.cobrancas.find(c => c.status === 'PENDENTE') || db.cobrancas[0];
+  }
+
+  if (!cobranca) return res.status(404).json({ error: "Nenhuma cobrança encontrada para dar baixa" });
 
   const { observacao, dataPagamento, proximoVencimento, enviarNotificacaoWhatsApp } = req.body;
 
@@ -994,6 +1098,37 @@ app.post('/api/cobrancas/:id/dar-baixa', async (req, res) => {
   cobranca.proximoVencimento = proxVenc || null;
   cobranca.observacaoBaixa = observacao || "Baixa efetuada manualmente pelo usuário";
 
+  // Garantir a renovação do plano para o próximo mês: atualizar ou criar a cobrança do próximo mês
+  if (proxVenc && cobranca.clienteId) {
+    let pendenteExistente = db.cobrancas.find(c => c.clienteId === cobranca.clienteId && c.status === 'PENDENTE' && c.id !== cobranca.id);
+    if (pendenteExistente) {
+      pendenteExistente.dataVencimento = proxVenc;
+      pendenteExistente.dataHoraEnvio = `${proxVenc}T09:00`;
+      pendenteExistente.statusEnvio = "AGENDADO";
+    } else {
+      const novaCobrancaProxMes = {
+        id: `cob_${Date.now()}`,
+        clienteId: cobranca.clienteId,
+        clienteNome: cobranca.clienteNome,
+        clienteTelefone: cobranca.clienteTelefone,
+        qtdTelas: cobranca.qtdTelas || 1,
+        valorBruto: cobranca.valorBruto || cobranca.valor,
+        desconto: cobranca.desconto || 0,
+        valor: cobranca.valor,
+        dataVencimento: proxVenc,
+        dataHoraEnvio: `${proxVenc}T09:00`,
+        descricao: cobranca.descricao || "Renovação Mensal do Plano de Canais",
+        modeloMensagemId: cobranca.modeloMensagemId || null,
+        status: "PENDENTE",
+        statusEnvio: "AGENDADO",
+        dataEnvioRealizado: null,
+        dataPagamento: null,
+        observacaoBaixa: null
+      };
+      db.cobrancas.push(novaCobrancaProxMes);
+    }
+  }
+
   const msgRenovacao = gerarMensagemRenovacaoWhatsApp(cobranca, proxVenc, cobranca.dataPagamento);
   const telefoneLimpo = sanitizePhone(cobranca.clienteTelefone);
   const linkWhatsAppRenovacao = `https://wa.me/${telefoneLimpo}?text=${encodeURIComponent(msgRenovacao)}`;
@@ -1001,13 +1136,12 @@ app.post('/api/cobrancas/:id/dar-baixa', async (req, res) => {
   let enviouDireto = false;
 
   if (enviarNotificacaoWhatsApp && waStatus === 'CONNECTED' && waSock) {
-    try {
-      await sendWhatsAppMessage(telefoneLimpo, msgRenovacao);
-      enviouDireto = true;
+    enviouDireto = true;
+    sendWhatsAppMessage(telefoneLimpo, msgRenovacao).then(() => {
       console.log(`🎉 [RENOVAÇÃO DE PLANO] Mensagem de confirmação enviada via WhatsApp para ${cobranca.clienteNome} (${telefoneLimpo})`);
-    } catch (err) {
-      console.error("Erro ao enviar mensagem de renovação no Baileys:", err);
-    }
+    }).catch(err => {
+      console.error("Erro ao enviar mensagem de renovação no Baileys:", err ? err.message : err);
+    });
   }
 
   db.historicoEnvios.push({
@@ -1023,13 +1157,109 @@ app.post('/api/cobrancas/:id/dar-baixa', async (req, res) => {
   });
 
   saveDB(db);
+
+  const idRecibo = `REC-${cobranca.id.replace('cob_', '')}`;
+  const dtPagto = cobranca.dataPagamento || getLocalIsoString().split('T')[0];
+  const dtVenc = cobranca.dataVencimento || '-';
+  const dtProx = cobranca.proximoVencimento || '-';
+  const dtPagtoBr = dtPagto.includes('T') ? dtPagto.split('T')[0].split('-').reverse().join('/') : dtPagto.split('-').reverse().join('/');
+  const dtProxBr = (dtProx && dtProx !== '-') ? (dtProx.includes('T') ? dtProx.split('T')[0].split('-').reverse().join('/') : dtProx.split('-').reverse().join('/')) : '-';
+
+  const msgRecibo = `📄 *RECIBO DE PAGAMENTO & RENOVAÇÃO* 📄\n` +
+    `--------------------------------------\n` +
+    `*Nº Recibo:* ${idRecibo}\n` +
+    `*Cliente:* ${cobranca.clienteNome}\n` +
+    `*Plano/Serviço:* ${cobranca.descricao}\n` +
+    `*Telas:* ${cobranca.qtdTelas || 1}\n` +
+    `*Valor Pago:* R$ ${Number(cobranca.valor).toFixed(2).replace('.', ',')}\n` +
+    `*Data do Pagamento:* ${dtPagtoBr}\n` +
+    `*Próxima Renovação:* ${dtProxBr}\n` +
+    `--------------------------------------\n` +
+    `*Emitido por:* ${(db.meusDados && db.meusDados.nomeTitular) || 'Gerailton Cobranças'}\n` +
+    `Obrigado pela preferência! 😊`;
+
+  const linkWhatsAppRecibo = `https://wa.me/${telefoneLimpo}?text=${encodeURIComponent(msgRecibo)}`;
+
+  const reciboObj = {
+    idRecibo,
+    cobrancaId: cobranca.id,
+    clienteId: cobranca.clienteId,
+    clienteNome: cobranca.clienteNome,
+    clienteTelefone: cobranca.clienteTelefone,
+    descricao: cobranca.descricao,
+    qtdTelas: cobranca.qtdTelas || 1,
+    valorBruto: cobranca.valorBruto || cobranca.valor,
+    desconto: cobranca.desconto || 0,
+    valor: cobranca.valor,
+    dataPagamento: dtPagto,
+    dataVencimento: dtVenc,
+    proximoVencimento: dtProx,
+    observacaoBaixa: cobranca.observacaoBaixa || '',
+    empresa: db.meusDados || {},
+    mensagemTexto: msgRecibo,
+    linkWhatsApp: linkWhatsAppRecibo
+  };
+
   res.json({
     success: true,
-    message: "Baixa efetuada e plano renovado com sucesso!",
+    message: "Baixa efetuada e plano renovado com sucesso para o próximo mês!",
     enviouDireto,
     msgRenovacao,
     linkWhatsAppRenovacao,
-    cobranca
+    cobranca,
+    recibo: reciboObj
+  });
+});
+
+app.get('/api/cobrancas/:id/recibo', (req, res) => {
+  const db = getDB();
+  const cobranca = db.cobrancas.find(c => c.id === req.params.id);
+  if (!cobranca) return res.status(404).json({ error: "Cobrança não encontrada" });
+
+  const cliente = db.clientes.find(c => c.id === cobranca.clienteId);
+  const meusDados = db.meusDados || {};
+  const idRecibo = `REC-${cobranca.id.replace('cob_', '')}`;
+  const dtPagto = cobranca.dataPagamento || getLocalIsoString().split('T')[0];
+  const dtVenc = cobranca.dataVencimento || '-';
+  const dtProx = cobranca.proximoVencimento || '-';
+
+  const dtPagtoBr = dtPagto.includes('T') ? dtPagto.split('T')[0].split('-').reverse().join('/') : dtPagto.split('-').reverse().join('/');
+  const dtProxBr = (dtProx && dtProx !== '-') ? (dtProx.includes('T') ? dtProx.split('T')[0].split('-').reverse().join('/') : dtProx.split('-').reverse().join('/')) : '-';
+
+  const msgRecibo = `📄 *RECIBO DE PAGAMENTO & RENOVAÇÃO* 📄\n` +
+    `--------------------------------------\n` +
+    `*Nº Recibo:* ${idRecibo}\n` +
+    `*Cliente:* ${cobranca.clienteNome}\n` +
+    `*Plano/Serviço:* ${cobranca.descricao}\n` +
+    `*Telas:* ${cobranca.qtdTelas || (cliente ? cliente.qtdTelas : 1)}\n` +
+    `*Valor Pago:* R$ ${Number(cobranca.valor).toFixed(2).replace('.', ',')}\n` +
+    `*Data do Pagamento:* ${dtPagtoBr}\n` +
+    `*Próxima Renovação:* ${dtProxBr}\n` +
+    `--------------------------------------\n` +
+    `*Emitido por:* ${meusDados.nomeTitular || 'Gerailton Cobranças'}\n` +
+    `Obrigado pela preferência! 😊`;
+
+  const telSanitizado = sanitizePhone(cobranca.clienteTelefone);
+  const linkWhatsAppRecibo = `https://wa.me/${telSanitizado}?text=${encodeURIComponent(msgRecibo)}`;
+
+  res.json({
+    idRecibo,
+    cobrancaId: cobranca.id,
+    clienteId: cobranca.clienteId,
+    clienteNome: cobranca.clienteNome,
+    clienteTelefone: cobranca.clienteTelefone,
+    descricao: cobranca.descricao,
+    qtdTelas: cobranca.qtdTelas || (cliente ? cliente.qtdTelas : 1),
+    valorBruto: cobranca.valorBruto || cobranca.valor,
+    desconto: cobranca.desconto || 0,
+    valor: cobranca.valor,
+    dataPagamento: dtPagto,
+    dataVencimento: dtVenc,
+    proximoVencimento: dtProx,
+    observacaoBaixa: cobranca.observacaoBaixa || '',
+    empresa: meusDados,
+    mensagemTexto: msgRecibo,
+    linkWhatsApp: linkWhatsAppRecibo
   });
 });
 
@@ -1118,8 +1348,21 @@ app.get('/api/dashboard', (req, res) => {
     .filter(c => c.status === 'PENDENTE' && c.dataVencimento < hoje)
     .reduce((sum, c) => sum + c.valor, 0);
 
-  const totalAgendados = cobrancas.filter(c => c.statusEnvio === 'AGENDADO' && c.status === 'PENDENTE').length;
   const totalClientes = (db.clientes || []).length;
+  const totalAgendados = cobrancas.filter(c => c.status === 'AGENDADO').length;
+
+  const em2DiasIso = (() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 2);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  })();
+
+  const cobrancasAVencer = cobrancas.filter(c => c.status === 'PENDENTE' && c.dataVencimento >= hoje && c.dataVencimento <= em2DiasIso);
+  const totalAVencer2Dias = cobrancasAVencer.reduce((sum, c) => sum + c.valor, 0);
+  const countAVencer2Dias = cobrancasAVencer.length;
 
   res.json({
     totalPendente,
@@ -1127,6 +1370,8 @@ app.get('/api/dashboard', (req, res) => {
     totalVencido,
     totalAgendados,
     totalClientes,
+    totalAVencer2Dias,
+    countAVencer2Dias,
     waStatus,
     waUserNumber,
     alertasPendentes: db.alertasPendentes || []
@@ -1140,6 +1385,99 @@ app.get('/api/alertas-pendentes', (req, res) => {
   saveDB(db);
   res.json(alertas);
 });
+
+// -----------------------------------------------------------------
+// CONFIGURAÇÕES DO ADMINISTRADOR (ALERTAS WHATSAPP NO VENCIMENTO)
+// -----------------------------------------------------------------
+app.get('/api/configuracoes-admin', (req, res) => {
+  const db = getDB();
+  res.json(db.configuracoesAdmin || {
+    whatsappAdmin: "",
+    horarioEnvioAdmin: "08:00",
+    enviarAlertasAdmin: true,
+    ultimosAlertasEnviadosData: ""
+  });
+});
+
+app.post('/api/configuracoes-admin', (req, res) => {
+  const db = getDB();
+  const { whatsappAdmin, horarioEnvioAdmin, enviarAlertasAdmin } = req.body;
+
+  db.configuracoesAdmin = {
+    ...db.configuracoesAdmin,
+    whatsappAdmin: whatsappAdmin ? sanitizePhone(whatsappAdmin) : "",
+    horarioEnvioAdmin: horarioEnvioAdmin || "08:00",
+    enviarAlertasAdmin: enviarAlertasAdmin !== undefined ? Boolean(enviarAlertasAdmin) : true
+  };
+  saveDB(db);
+  res.json({ success: true, configuracoes: db.configuracoesAdmin });
+});
+
+app.post('/api/testar-alerta-admin', async (req, res) => {
+  const db = getDB();
+  const config = db.configuracoesAdmin || {};
+
+  if (!config.whatsappAdmin) {
+    return res.status(400).json({ error: "Número de WhatsApp do Administrador não foi configurado." });
+  }
+
+  if (waStatus !== 'CONNECTED' || !waSock) {
+    return res.status(400).json({ error: "O WhatsApp não está conectado no sistema. Conecte pelo QR Code antes de testar." });
+  }
+
+  const hoje = getLocalIsoString().split('T')[0];
+  const cobrancasHoje = (db.cobrancas || []).filter(c => c.status === 'PENDENTE' && c.dataVencimento === hoje);
+  const texto = gerarTextoAlertaAdmin(cobrancasHoje.length > 0 ? cobrancasHoje : (db.cobrancas || []).slice(0, 2), db);
+
+  try {
+    await sendWhatsAppMessage(config.whatsappAdmin, texto);
+    res.json({ success: true, message: `Mensagem de teste disparada com sucesso para ${config.whatsappAdmin}!` });
+  } catch (err) {
+    res.status(500).json({ error: `Falha ao disparar teste para WhatsApp: ${err.message}` });
+  }
+});
+
+// Rotina agendada que verifica a cada 60s se deve enviar aviso diário ao administrador
+function verificarAlertasVencimentoAdmin() {
+  try {
+    const db = getDB();
+    const config = db.configuracoesAdmin;
+    if (!config || !config.enviarAlertasAdmin || !config.whatsappAdmin) return;
+    if (waStatus !== 'CONNECTED' || !waSock) return;
+
+    const agoraIso = getLocalIsoString(); // Formato YYYY-MM-DDTHH:mm
+    const [hoje, horaMinuto] = agoraIso.split('T');
+
+    if (config.ultimosAlertasEnviadosData === hoje) return;
+
+    const horarioAlerta = config.horarioEnvioAdmin || "08:00";
+    if (horaMinuto === horarioAlerta) {
+      const cobrancasHoje = (db.cobrancas || []).filter(c => c.status === 'PENDENTE' && c.dataVencimento === hoje);
+      if (cobrancasHoje.length > 0) {
+        console.log(`⏰ Disparando alerta diário no WhatsApp do Administrador (${cobrancasHoje.length} vencimentos hoje)...`);
+        const texto = gerarTextoAlertaAdmin(cobrancasHoje, db);
+        sendWhatsAppMessage(config.whatsappAdmin, texto)
+          .then(() => {
+            console.log("✅ Alerta diário do Administrador enviado com sucesso!");
+            config.ultimosAlertasEnviadosData = hoje;
+            db.configuracoesAdmin = config;
+            saveDB(db);
+          })
+          .catch(err => {
+            console.error("❌ Erro ao enviar alerta diário para o Administrador:", err.message);
+          });
+      } else {
+        config.ultimosAlertasEnviadosData = hoje;
+        db.configuracoesAdmin = config;
+        saveDB(db);
+      }
+    }
+  } catch (err) {
+    console.error("Erro na verificação de alertas admin:", err);
+  }
+}
+
+setInterval(verificarAlertasVencimentoAdmin, 60000);
 
 // -----------------------------------------------------------------
 // MODELOS DE MENSAGENS E PROMOÇÕES EDITÁVEIS
