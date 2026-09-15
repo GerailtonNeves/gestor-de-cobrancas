@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="GestorCob">
   
   <!-- CSS Principal -->
-  <link rel="stylesheet" href="css/styles.css?v=97.0">
+  <link rel="stylesheet" href="css/styles.css?v=98.0">
   
   <!-- Icones Remixicon & FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -193,6 +193,11 @@
         <li>
           <a class="nav-item" data-tab="meus-dados" onclick="switchTab('meus-dados')">
             <i class="fa-solid fa-shield-halved"></i> Meus Dados PIX
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-tab="configuracoes-admin" onclick="switchTab('configuracoes-admin')">
+            <i class="fa-solid fa-bell-concierge" style="color: #00E676;"></i> Alertas no Meu WhatsApp
           </a>
         </li>
       </ul>
@@ -829,6 +834,107 @@
         <!-- GRID DE CARDS DOS SERVIDORES -->
         <div id="servidoresCardsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
           <!-- Renderizado dinamicamente pelo JS -->
+        </div>
+      </section>
+
+      <!-- ABA: CONFIGURAÇÕES DE ALERTAS DO ADMINISTRADOR NO WHATSAPP -->
+      <section id="tab-configuracoes-admin" class="tab-content" style="display: none;">
+        <div class="page-header">
+          <div>
+            <h1><i class="fa-solid fa-bell-concierge" style="color: var(--emerald-primary);"></i> Alertas no Meu WhatsApp (Administrador)</h1>
+            <p>Receba avisos automáticos no seu próprio WhatsApp no dia dos vencimentos dos planos dos clientes.</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+          <!-- FORMULÁRIO DE CONFIGURAÇÃO -->
+          <div class="glass-panel" style="background: var(--bg-card); border-radius: 16px; padding: 1.5rem; border: 1.5px solid var(--border-color); box-shadow: var(--shadow-sm);">
+            <h3 style="font-size: 1.1rem; color: #000000; font-weight: 800; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-gears" style="color: var(--emerald-primary);"></i> Definir WhatsApp e Horário
+            </h3>
+
+            <form id="formConfigAdmin" onsubmit="salvarConfiguracoesAdmin(event)">
+              <div class="form-group" style="margin-bottom: 1.25rem;">
+                <label for="adminWhatsappInput" style="font-weight: 700; color: #000000;">
+                  <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> Seu WhatsApp para Receber Notificações *
+                </label>
+                <input type="tel" id="adminWhatsappInput" class="form-control" placeholder="Ex: (11) 99999-9999" required style="font-size: 1rem; font-weight: 600;">
+                <small style="color: #64748B; font-size: 0.78rem; display: block; margin-top: 0.35rem;">
+                  Digite o número do seu celular com DDD onde você deseja receber os avisos diários dos vencimentos.
+                </small>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1.25rem;">
+                <label for="adminHorarioSelect" style="font-weight: 700; color: #000000;">
+                  <i class="fa-solid fa-clock" style="color: #F59E0B;"></i> Horário do Envio Automático Diário *
+                </label>
+                <select id="adminHorarioSelect" class="form-control" required style="font-size: 1rem; font-weight: 700;">
+                  <option value="07:00">07:00 - Manhã Cedo</option>
+                  <option value="08:00" selected>08:00 - Manhã (Recomendado)</option>
+                  <option value="09:00">09:00 - Manhã</option>
+                  <option value="10:00">10:00 - Manhã</option>
+                  <option value="11:00">11:00 - Manhã</option>
+                  <option value="12:00">12:00 - Meio-Dia</option>
+                  <option value="14:00">14:00 - Tarde</option>
+                  <option value="16:00">16:00 - Tarde</option>
+                  <option value="18:00">18:00 - Noite</option>
+                  <option value="20:00">20:00 - Noite</option>
+                </select>
+                <small style="color: #64748B; font-size: 0.78rem; display: block; margin-top: 0.35rem;">
+                  O sistema verificará diariamente neste horário os clientes que vencem no dia e te enviará uma mensagem detalhada.
+                </small>
+              </div>
+
+              <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+                <div>
+                  <div style="font-weight: 800; color: #000000; font-size: 0.95rem;">Status do Alerta Automático</div>
+                  <div style="font-size: 0.8rem; color: #64748B;">Ativar disparo automático no dia do vencimento</div>
+                </div>
+                <label class="switch" style="position: relative; display: inline-block; width: 48px; height: 26px; flex-shrink: 0;">
+                  <input type="checkbox" id="adminEnviarCheck" checked style="opacity: 0; width: 0; height: 0;">
+                  <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #CBD5E1; transition: .4s; border-radius: 34px;"></span>
+                </label>
+              </div>
+
+              <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <button type="submit" class="btn-primary" style="flex: 1; padding: 0.75rem 1.25rem; font-weight: 800; border-radius: 10px; font-size: 0.95rem;">
+                  <i class="fa-solid fa-floppy-disk"></i> Salvar Configurações
+                </button>
+                <button type="button" class="btn-success-sm" onclick="testarAlertaAdmin()" style="padding: 0.75rem 1.25rem; font-weight: 800; border-radius: 10px; font-size: 0.95rem; background: #0284C7; border: none; color: #FFF;">
+                  <i class="fa-solid fa-paper-plane"></i> 🧪 Disparar Teste Agora
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- PRÉ-VISUALIZAÇÃO DA MENSAGEM -->
+          <div class="glass-panel" style="background: #0F172A; border-radius: 16px; padding: 1.5rem; color: #FFFFFF; border: 1.5px solid #1E293B; box-shadow: var(--shadow-sm);">
+            <h3 style="font-size: 1.1rem; color: #38BDF8; font-weight: 800; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-eye" style="color: #38BDF8;"></i> Modelo da Mensagem que Você Receberá
+            </h3>
+
+            <div style="background: #1E293B; border: 1px solid #334155; border-radius: 12px; padding: 1rem; font-family: monospace; font-size: 0.85rem; color: #E2E8F0; white-space: pre-wrap; line-height: 1.5; max-height: 360px; overflow-y: auto;">
+🚨 *ALERTA DE PLANOS VENCENDO HOJE (15/09/2026)* 🚨
+
+Atenção, Gerailton! Hoje vence a assinatura de *2 cliente(s)*:
+
+1️⃣ *CLIENTE: João da Silva*
+   📱 *WhatsApp:* (11) 98888-7777
+   📺 *Plano:* Plano IPTV Completo 4K (1 Tela)
+   🖥️ *Servidor:* Servidor Antitrava 01
+   📱 *App:* IBO Player
+   💰 *Valor:* R$ 35,00
+
+2️⃣ *CLIENTE: Maria Oliveira*
+   📱 *WhatsApp:* (21) 97777-6666
+   📺 *Plano:* Plano P2P Turbo (2 Telas)
+   🖥️ *Servidor:* Servidor Premium
+   📱 *App:* XCIPTV
+   💰 *Valor:* R$ 45,00
+
+⚠️ *Ação Recomendada:* Verifique o recebimento do PIX ou dê baixa pelo painel assim que confirmado!
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1583,6 +1689,6 @@
   </div>
 
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=97.0"></script>
+  <script src="js/app.js?v=98.0"></script>
 </body>
 </html>
