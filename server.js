@@ -1285,8 +1285,18 @@ app.get('/api/dashboard', (req, res) => {
     .filter(c => c.status === 'PENDENTE' && c.dataVencimento < hoje)
     .reduce((sum, c) => sum + c.valor, 0);
 
-  const totalAgendados = cobrancas.filter(c => c.statusEnvio === 'AGENDADO' && c.status === 'PENDENTE').length;
-  const totalClientes = (db.clientes || []).length;
+  const em2DiasIso = (() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 2);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  })();
+
+  const cobrancasAVencer = cobrancas.filter(c => c.status === 'PENDENTE' && c.dataVencimento >= hoje && c.dataVencimento <= em2DiasIso);
+  const totalAVencer2Dias = cobrancasAVencer.reduce((sum, c) => sum + c.valor, 0);
+  const countAVencer2Dias = cobrancasAVencer.length;
 
   res.json({
     totalPendente,
@@ -1294,6 +1304,8 @@ app.get('/api/dashboard', (req, res) => {
     totalVencido,
     totalAgendados,
     totalClientes,
+    totalAVencer2Dias,
+    countAVencer2Dias,
     waStatus,
     waUserNumber,
     alertasPendentes: db.alertasPendentes || []
