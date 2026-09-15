@@ -429,7 +429,8 @@ async function loadAllData() {
     fetchPlanos(),
     fetchApps(),
     fetchServidores(),
-    fetchModelosMensagens()
+    fetchModelosMensagens(),
+    loadConfiguracoesAdmin()
   ]);
   
   loadDashboardData();
@@ -4067,7 +4068,13 @@ async function salvarConfiguracoesAdmin(event) {
   const enviarAlertasAdmin = checkEnviar ? checkEnviar.checked : true;
 
   if (!whatsappAdmin) {
-    alert("Por favor, informe seu número de WhatsApp com DDD para receber os alertas.");
+    Swal.fire({
+      icon: 'warning',
+      title: 'Atenção',
+      text: 'Por favor, informe seu número de WhatsApp com DDD para receber os alertas diários.',
+      background: '#FFFFFF',
+      color: '#000000'
+    });
     return;
   }
 
@@ -4079,12 +4086,33 @@ async function salvarConfiguracoesAdmin(event) {
     });
 
     if (result.success) {
-      alert("✅ Configurações salvas com sucesso! O sistema te enviará as notificações diariamente no horário definido.");
+      if (inputWhats && result.configuracoes && result.configuracoes.whatsappAdmin) {
+        inputWhats.value = result.configuracoes.whatsappAdmin;
+      }
+      Swal.fire({
+        icon: 'success',
+        title: 'Configurações Salvas!',
+        text: 'Seu número de WhatsApp e o horário foram salvos com sucesso no sistema. Você receberá avisos automáticos diariamente nos dias de vencimento!',
+        background: '#FFFFFF',
+        color: '#000000'
+      });
     } else {
-      alert(`❌ Erro ao salvar configurações: ${result.error || 'Erro desconhecido'}`);
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro ao Salvar',
+        text: result.error || 'Não foi possível salvar as configurações.',
+        background: '#FFFFFF',
+        color: '#000000'
+      });
     }
   } catch (err) {
-    alert(`❌ ${err.message}`);
+    Swal.fire({
+      icon: 'error',
+      title: 'Erro de Conexão',
+      text: err.message || 'Falha ao se comunicar com o servidor.',
+      background: '#FFFFFF',
+      color: '#000000'
+    });
   }
 }
 
@@ -4093,13 +4121,29 @@ async function testarAlertaAdmin() {
   const whatsappAdmin = inputWhats ? inputWhats.value.trim() : '';
 
   if (!whatsappAdmin) {
-    alert("Primeiro salve seu número de WhatsApp nas configurações antes de testar.");
+    Swal.fire({
+      icon: 'warning',
+      title: 'Atenção',
+      text: 'Primeiro salve seu número de WhatsApp nas configurações antes de disparar o teste.',
+      background: '#FFFFFF',
+      color: '#000000'
+    });
     return;
   }
 
-  if (!confirm(`Deseja disparar uma mensagem de teste agora para o WhatsApp ${whatsappAdmin}?`)) {
-    return;
-  }
+  const confirmRes = await Swal.fire({
+    icon: 'question',
+    title: 'Disparar Teste?',
+    text: `Deseja enviar uma mensagem de teste agora para o seu WhatsApp (${whatsappAdmin})?`,
+    showCancelButton: true,
+    confirmButtonText: 'Sim, Disparar Teste',
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#0284C7',
+    background: '#FFFFFF',
+    color: '#000000'
+  });
+
+  if (!confirmRes.isConfirmed) return;
 
   try {
     const result = await safeFetchJson('/api/testar-alerta-admin', {
@@ -4108,12 +4152,30 @@ async function testarAlertaAdmin() {
     });
 
     if (result.success) {
-      alert(`🎉 Sucesso! Mensagem de teste enviada para o seu WhatsApp (${whatsappAdmin})!`);
+      Swal.fire({
+        icon: 'success',
+        title: 'Teste Enviado!',
+        text: `Mensagem de alerta disparada com sucesso para o seu WhatsApp (${whatsappAdmin})!`,
+        background: '#FFFFFF',
+        color: '#000000'
+      });
     } else {
-      alert(`⚠️ Não foi possível enviar o teste: ${result.error || 'Verifique se o WhatsApp QR Code está conectado no painel.'}`);
+      Swal.fire({
+        icon: 'warning',
+        title: 'Não foi possível enviar',
+        text: result.error || 'Verifique se o WhatsApp QR Code está conectado na aba "Conectar WhatsApp (QR)".',
+        background: '#FFFFFF',
+        color: '#000000'
+      });
     }
   } catch (err) {
-    alert(`❌ Falha ao tentar disparar o teste: ${err.message}`);
+    Swal.fire({
+      icon: 'error',
+      title: 'Erro no Teste',
+      text: err.message || 'Falha ao tentar disparar a mensagem de teste.',
+      background: '#FFFFFF',
+      color: '#000000'
+    });
   }
 }
 
