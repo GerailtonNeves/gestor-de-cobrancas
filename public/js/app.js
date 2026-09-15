@@ -405,6 +405,7 @@ function switchTab(tabName) {
   if (tabName === 'whatsapp-qr') checkWhatsAppStatus();
   if (tabName === 'meus-dados') fillFormMeusDados();
   if (tabName === 'modelos-mensagens') fetchModelosMensagens();
+  if (tabName === 'configuracoes-admin') loadConfiguracoesAdmin();
 }
 
 function initMobileMenu() {
@@ -3999,5 +4000,95 @@ window.iniciarInstalacaoPwa = iniciarInstalacaoPwa;
 window.dismissPwaBanner = dismissPwaBanner;
 window.abrirModalPwaInstalar = abrirModalPwaInstalar;
 window.fecharModalPwaInstalar = fecharModalPwaInstalar;
+
+// -----------------------------------------------------------------
+// CONFIGURAÇÕES DE ALERTAS DO ADMINISTRADOR NO WHATSAPP
+// -----------------------------------------------------------------
+async function loadConfiguracoesAdmin() {
+  try {
+    const res = await fetch('/api/configuracoes-admin');
+    if (!res.ok) return;
+    const data = await res.json();
+    
+    const inputWhats = document.getElementById('adminWhatsappInput');
+    const selectHorario = document.getElementById('adminHorarioSelect');
+    const checkEnviar = document.getElementById('adminEnviarCheck');
+
+    if (inputWhats) inputWhats.value = data.whatsappAdmin || '';
+    if (selectHorario) selectHorario.value = data.horarioEnvioAdmin || '08:00';
+    if (checkEnviar) checkEnviar.checked = data.enviarAlertasAdmin !== false;
+  } catch (err) {
+    console.error("Erro ao carregar configurações do admin:", err);
+  }
+}
+
+async function salvarConfiguracoesAdmin(event) {
+  if (event) event.preventDefault();
+  
+  const inputWhats = document.getElementById('adminWhatsappInput');
+  const selectHorario = document.getElementById('adminHorarioSelect');
+  const checkEnviar = document.getElementById('adminEnviarCheck');
+
+  const whatsappAdmin = inputWhats ? inputWhats.value.trim() : '';
+  const horarioEnvioAdmin = selectHorario ? selectHorario.value : '08:00';
+  const enviarAlertasAdmin = checkEnviar ? checkEnviar.checked : true;
+
+  if (!whatsappAdmin) {
+    alert("Por favor, informe seu número de WhatsApp com DDD para receber os alertas.");
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/configuracoes-admin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ whatsappAdmin, horarioEnvioAdmin, enviarAlertasAdmin })
+    });
+
+    const result = await res.json();
+    if (res.ok && result.success) {
+      alert("✅ Configurações salvas com sucesso! O sistema te enviará as notificações diariamente no horário definido.");
+    } else {
+      alert(`❌ Erro ao salvar configurações: ${result.error || 'Erro desconhecido'}`);
+    }
+  } catch (err) {
+    alert(`❌ Falha na comunicação com o servidor: ${err.message}`);
+  }
+}
+
+async function testarAlertaAdmin() {
+  const inputWhats = document.getElementById('adminWhatsappInput');
+  const whatsappAdmin = inputWhats ? inputWhats.value.trim() : '';
+
+  if (!whatsappAdmin) {
+    alert("Primeiro salve seu número de WhatsApp nas configurações antes de testar.");
+    return;
+  }
+
+  if (!confirm(`Deseja disparar uma mensagem de teste agora para o WhatsApp ${whatsappAdmin}?`)) {
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/testar-alerta-admin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    const result = await res.json();
+    if (res.ok && result.success) {
+      alert(`🎉 Sucesso! Mensagem de teste enviada para o seu WhatsApp (${whatsappAdmin})!`);
+    } else {
+      alert(`⚠️ Não foi possível enviar o teste: ${result.error || 'Verifique se o WhatsApp QR Code está conectado no painel.'}`);
+    }
+  } catch (err) {
+    alert(`❌ Falha ao tentar disparar o teste: ${err.message}`);
+  }
+}
+
+window.loadConfiguracoesAdmin = loadConfiguracoesAdmin;
+window.salvarConfiguracoesAdmin = salvarConfiguracoesAdmin;
+window.testarAlertaAdmin = testarAlertaAdmin;
+
 
 
