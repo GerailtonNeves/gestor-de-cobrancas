@@ -4001,15 +4001,48 @@ window.dismissPwaBanner = dismissPwaBanner;
 window.abrirModalPwaInstalar = abrirModalPwaInstalar;
 window.fecharModalPwaInstalar = fecharModalPwaInstalar;
 
+// Helper universal e robusto para requisições JSON que trata inicialização/reinício do servidor na nuvem (Railway)
+async function safeFetchJson(url, options = {}) {
+  try {
+    const res = await fetch(url, options);
+    const contentType = res.headers.get('content-type') || '';
+    
+    if (!res.ok) {
+      if (contentType.includes('application/json')) {
+        const errData = await res.json();
+        throw new Error(errData.error || errData.message || `Erro no servidor (${res.status})`);
+      } else {
+        const text = await res.text();
+        if (text.includes('<!DOCTYPE') || text.includes('<html')) {
+          throw new Error(`O servidor no Railway está atualizando/reiniciando. Por favor, aguarde de 10 a 20 segundos e tente novamente.`);
+        }
+        throw new Error(`Erro no servidor (${res.status})`);
+      }
+    }
+
+    if (!contentType.includes('application/json')) {
+      const text = await res.text();
+      if (text.includes('<!DOCTYPE') || text.includes('<html')) {
+        throw new Error(`O servidor na nuvem está finalizando o deploy da atualização. Aguarde alguns segundos e atualize a página.`);
+      }
+      throw new Error(`Resposta do servidor fora do formato JSON.`);
+    }
+
+    return await res.json();
+  } catch (err) {
+    if (err.message && (err.message.includes('Unexpected token') || err.message.includes('is not valid JSON'))) {
+      throw new Error(`O servidor na nuvem (Railway) está finalizando o deploy. Por favor, aguarde 15 segundos e recarregue a página.`);
+    }
+    throw err;
+  }
+}
+
 // -----------------------------------------------------------------
 // CONFIGURAÇÕES DE ALERTAS DO ADMINISTRADOR NO WHATSAPP
 // -----------------------------------------------------------------
 async function loadConfiguracoesAdmin() {
   try {
-    const res = await fetch('/api/configuracoes-admin');
-    if (!res.ok) return;
-    const data = await res.json();
-    
+    const data = await safeFetchJson('/api/configuracoes-admin');
     const inputWhats = document.getElementById('adminWhatsappInput');
     const selectHorario = document.getElementById('adminHorarioSelect');
     const checkEnviar = document.getElementById('adminEnviarCheck');
@@ -4039,20 +4072,19 @@ async function salvarConfiguracoesAdmin(event) {
   }
 
   try {
-    const res = await fetch('/api/configuracoes-admin', {
+    const result = await safeFetchJson('/api/configuracoes-admin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ whatsappAdmin, horarioEnvioAdmin, enviarAlertasAdmin })
     });
 
-    const result = await res.json();
-    if (res.ok && result.success) {
+    if (result.success) {
       alert("✅ Configurações salvas com sucesso! O sistema te enviará as notificações diariamente no horário definido.");
     } else {
       alert(`❌ Erro ao salvar configurações: ${result.error || 'Erro desconhecido'}`);
     }
   } catch (err) {
-    alert(`❌ Falha na comunicação com o servidor: ${err.message}`);
+    alert(`❌ ${err.message}`);
   }
 }
 
@@ -4070,13 +4102,12 @@ async function testarAlertaAdmin() {
   }
 
   try {
-    const res = await fetch('/api/testar-alerta-admin', {
+    const result = await safeFetchJson('/api/testar-alerta-admin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }
     });
 
-    const result = await res.json();
-    if (res.ok && result.success) {
+    if (result.success) {
       alert(`🎉 Sucesso! Mensagem de teste enviada para o seu WhatsApp (${whatsappAdmin})!`);
     } else {
       alert(`⚠️ Não foi possível enviar o teste: ${result.error || 'Verifique se o WhatsApp QR Code está conectado no painel.'}`);
@@ -4089,6 +4120,7 @@ async function testarAlertaAdmin() {
 window.loadConfiguracoesAdmin = loadConfiguracoesAdmin;
 window.salvarConfiguracoesAdmin = salvarConfiguracoesAdmin;
 window.testarAlertaAdmin = testarAlertaAdmin;
+
 
 
 
