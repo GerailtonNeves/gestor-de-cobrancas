@@ -1285,6 +1285,9 @@ app.get('/api/dashboard', (req, res) => {
     .filter(c => c.status === 'PENDENTE' && c.dataVencimento < hoje)
     .reduce((sum, c) => sum + c.valor, 0);
 
+  const totalClientes = (db.clientes || []).length;
+  const totalAgendados = cobrancas.filter(c => c.status === 'AGENDADO').length;
+
   const em2DiasIso = (() => {
     const d = new Date();
     d.setDate(d.getDate() + 2);
