@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="GestorCob">
   
   <!-- CSS Principal -->
-  <link rel="stylesheet" href="css/styles.css?v=99.0">
+  <link rel="stylesheet" href="css/styles.css?v=71.0">
   
   <!-- Icones Remixicon & FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -27,19 +27,8 @@
   <!-- Chart.js para Gráficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Inline Modal Controller Garantia Zero Delay e Limpeza de Cache -->
+  <!-- Inline Modal Controller Garantia Zero Delay -->
   <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for (let r of registrations) { r.unregister(); }
-      }).catch(function(e) {});
-    }
-    if (window.caches) {
-      caches.keys().then(function(names) {
-        for (let name of names) caches.delete(name);
-      }).catch(function(e) {});
-    }
-
     window.abrirModal = function(modalId) {
       const modal = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
       if (!modal) return;
@@ -49,19 +38,20 @@
         m.style.opacity = '0';
         m.style.visibility = 'hidden';
         m.style.pointerEvents = 'none';
+        const b = m.querySelector('.modal-box');
+        if (b) { b.style.opacity = '0'; b.style.visibility = 'hidden'; }
       });
+      modal.style.setProperty('display', 'flex', 'important');
+      modal.style.setProperty('opacity', '1', 'important');
+      modal.style.setProperty('visibility', 'visible', 'important');
+      modal.style.setProperty('pointer-events', 'auto', 'important');
       modal.classList.add('active');
-      modal.style.display = 'flex';
-      modal.style.opacity = '1';
-      modal.style.visibility = 'visible';
-      modal.style.pointerEvents = 'auto';
-
-      const modalBox = modal.querySelector('.modal-box');
-      if (modalBox) {
-        modalBox.style.display = 'block';
-        modalBox.style.opacity = '1';
-        modalBox.style.visibility = 'visible';
-        modalBox.style.transform = 'translateY(0)';
+      const box = modal.querySelector('.modal-box');
+      if (box) {
+        box.style.setProperty('display', 'block', 'important');
+        box.style.setProperty('opacity', '1', 'important');
+        box.style.setProperty('visibility', 'visible', 'important');
+        box.style.setProperty('transform', 'translateY(0)', 'important');
       }
     };
 
@@ -73,13 +63,57 @@
       modal.style.opacity = '0';
       modal.style.visibility = 'hidden';
       modal.style.pointerEvents = 'none';
-
-      const modalBox = modal.querySelector('.modal-box');
-      if (modalBox) {
-        modalBox.style.opacity = '0';
-        modalBox.style.visibility = 'hidden';
-      }
+      const box = modal.querySelector('.modal-box');
+      if (box) box.style.transform = 'translateY(20px)';
     };
+
+    window.abrirModalNovoPlano = function() {
+      try {
+        const pId = document.getElementById('planoId'); if (pId) pId.value = '';
+        const fPlano = document.getElementById('formPlano'); if (fPlano) fPlano.reset();
+        if (document.getElementById('planoDesconto')) document.getElementById('planoDesconto').value = '0.00';
+        if (typeof calcularValorFinalPlanoModal === 'function') calcularValorFinalPlanoModal();
+      } catch(e) {}
+      window.abrirModal('modalPlano');
+    };
+
+    window.abrirModalNovoApp = function() {
+      try {
+        const aId = document.getElementById('appId'); if (aId) aId.value = '';
+        const fApp = document.getElementById('formApp'); if (fApp) fApp.reset();
+      } catch(e) {}
+      window.abrirModal('modalApp');
+    };
+
+    window.abrirModalNovoServidor = function() {
+      try {
+        const sId = document.getElementById('servidorId'); if (sId) sId.value = '';
+        const fSrv = document.getElementById('formServidor'); if (fSrv) fSrv.reset();
+      } catch(e) {}
+      window.abrirModal('modalServidor');
+    };
+
+    window.abrirModalNovoCliente = function() {
+      try {
+        const cId = document.getElementById('clienteId'); if (cId) cId.value = '';
+        const fCli = document.getElementById('formCliente'); if (fCli) fCli.reset();
+      } catch(e) {}
+      window.abrirModal('modalCliente');
+    };
+
+    window.abrirModalNovaCobranca = function() {
+      try {
+        const cobId = document.getElementById('cobrancaId'); if (cobId) cobId.value = '';
+        const fCob = document.getElementById('formCobranca'); if (fCob) fCob.reset();
+      } catch(e) {}
+      window.abrirModal('modalCobranca');
+    };
+
+    window.fecharModalPlano = function() { window.fecharModal('modalPlano'); };
+    window.fecharModalApp = function() { window.fecharModal('modalApp'); };
+    window.fecharModalServidor = function() { window.fecharModal('modalServidor'); };
+    window.fecharModalCliente = function() { window.fecharModal('modalCliente'); };
+    window.fecharModalCobranca = function() { window.fecharModal('modalCobranca'); };
   </script>
 </head>
 <body>
@@ -89,7 +123,7 @@
     <div style="display: flex; align-items: center; gap: 0.85rem;">
       <img src="icon-192.png" alt="App Icon" style="width: 44px; height: 44px; border-radius: 12px; border: 1.5px solid var(--emerald-primary); box-shadow: 0 2px 10px rgba(0,0,0,0.4);">
       <div>
-        <div style="font-weight: 800; color: #000000; font-size: 1rem; display: flex; align-items: center; gap: 0.4rem;">
+        <div style="font-weight: 800; color: #FFF; font-size: 1rem; display: flex; align-items: center; gap: 0.4rem;">
           <i class="fa-solid fa-mobile-screen-button" style="color: var(--emerald-light);"></i> Instalar o App no Celular
         </div>
         <div style="font-size: 0.8rem; color: #CBD5E1; margin-top: 0.1rem;">Instale como aplicativo nativo para acessar rapidamente da tela inicial!</div>
@@ -109,7 +143,7 @@
   <header class="mobile-header">
     <div style="display: flex; align-items: center; gap: 0.75rem;">
       <img src="icon-192.png" alt="Logo" style="width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--emerald-primary);">
-      <span style="font-weight: 800; font-size: 1.1rem; color: #000000;">GESTOR DE COBRANÇAS</span>
+      <span style="font-weight: 800; font-size: 1.1rem; color: #FFF;">GESTOR DE COBRANÇAS</span>
     </div>
     <div style="display: flex; align-items: center; gap: 0.5rem;">
       <button id="mobileHeaderInstallBtn" class="btn-success-sm" style="display: none; padding: 0.4rem 0.75rem; font-size: 0.8rem; border-radius: 8px;" onclick="iniciarInstalacaoPwa()">
@@ -142,12 +176,6 @@
         <li>
           <a class="nav-item" data-tab="cobrancas" onclick="switchTab('cobrancas')">
             <i class="fa-solid fa-file-invoice-dollar"></i> Renovações
-          </a>
-        </li>
-        <li>
-          <a class="nav-item" data-tab="proximos-vencer" onclick="switchTab('proximos-vencer')">
-            <i class="fa-solid fa-clock-rotate-left" style="color: #F59E0B;"></i> A Vencer (2 Dias)
-            <span class="badge badge-a-vencer" id="navBadgeAVencer" style="font-size: 0.72rem; padding: 0.15rem 0.45rem; margin-left: auto;">0</span>
           </a>
         </li>
         <li>
@@ -193,11 +221,6 @@
         <li>
           <a class="nav-item" data-tab="meus-dados" onclick="switchTab('meus-dados')">
             <i class="fa-solid fa-shield-halved"></i> Meus Dados PIX
-          </a>
-        </li>
-        <li>
-          <a class="nav-item" data-tab="configuracoes-admin" onclick="switchTab('configuracoes-admin')">
-            <i class="fa-solid fa-bell-concierge" style="color: #00E676;"></i> Alertas no Meu WhatsApp
           </a>
         </li>
       </ul>
@@ -280,16 +303,6 @@
             </div>
           </div>
 
-          <div class="metric-card warning" onclick="switchTab('proximos-vencer')" style="cursor: pointer;" title="Clique para ver planos a vencer nos próximos 2 dias">
-            <div class="metric-info">
-              <h3>A Vencer (Até 2 Dias)</h3>
-              <div class="metric-value" id="dashTotalAVencer2Dias" style="color: #D97706;">R$ 0,00</div>
-            </div>
-            <div class="metric-icon" style="background: #FEF3C7; color: #D97706;">
-              <i class="fa-solid fa-clock-rotate-left"></i>
-            </div>
-          </div>
-
           <div class="metric-card info">
             <div class="metric-info">
               <h3>Envios Programados</h3>
@@ -320,56 +333,6 @@
             <div id="dashProximosEnviosList">
               <!-- Renderizado via JS -->
             </div>
-          </div>
-        </div>
-
-        <!-- PAINEL DE DESTAQUE: PLANOS PRÓXIMOS A VENCER (ATÉ 2 DIAS) -->
-        <div class="glass-panel" style="margin-top: 1.5rem; border: 1.5px solid #FCD34D;">
-          <div class="panel-header" style="background: #FFFBEB; border-bottom: 1.5px solid #FCD34D;">
-            <div class="panel-title" style="color: #92400E; font-weight: 900; display: flex; align-items: center; gap: 0.6rem;">
-              <i class="fa-solid fa-clock-rotate-left" style="color: #D97706; font-size: 1.2rem;"></i> Planos Próximos a Vencer (Até 2 Dias)
-            </div>
-            <button class="btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.84rem; background: #FDE68A; color: #78350F; font-weight: 800; border-color: #FCD34D;" onclick="switchTab('proximos-vencer')">
-              Ver Lista Completa
-            </button>
-          </div>
-          <div id="dashProximosVencerList" style="padding: 1.25rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem;">
-            <!-- Renderizado via JS -->
-          </div>
-        </div>
-      </section>
-
-      <!-- ABA NOVO: PLANOS PRÓXIMOS A VENCER (ATÉ 2 DIAS) -->
-      <section id="tab-proximos-vencer" class="tab-content" style="display: none;">
-        <div class="page-header">
-          <div>
-            <h1><i class="fa-solid fa-clock-rotate-left" style="color: #F59E0B;"></i> Planos Próximos a Vencer (Até 2 Dias)</h1>
-            <p>Clientes com vencimentos agendados para hoje, amanhã ou em até 2 dias. Dispare notificações pelo WhatsApp ou dê baixa no recebimento!</p>
-          </div>
-          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
-            <button type="button" class="btn-whatsapp-sm" style="padding: 0.55rem 1rem; font-size: 0.88rem; background: #059669; color: #FFF; font-weight: 800;" onclick="abrirModalDispararModelo()">
-              <i class="fa-solid fa-paper-plane"></i> 🚀 Disparar Mensagem no WhatsApp
-            </button>
-          </div>
-        </div>
-
-        <!-- BARRA DE PESQUISA RÁPIDA -->
-        <div style="margin-bottom: 1.25rem; background: #FFFFFF; padding: 0.85rem 1.15rem; border-radius: 14px; border: 1.5px solid #FCD34D; box-shadow: 0 2px 10px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 0.85rem;">
-          <i class="fa-solid fa-magnifying-glass" style="color: #D97706; font-size: 1.2rem;"></i>
-          <input type="text" id="filterProximosVencer" class="form-control" placeholder="🔍 Pesquisar por cliente, WhatsApp ou plano a vencer..." style="background: #FFFFFF !important; color: #000000 !important; font-weight: 800; border: none; font-size: 0.98rem; width: 100%; outline: none;" oninput="renderTabelaProximosVencer()">
-        </div>
-
-        <!-- TABELA / CARDS DE PLANOS PRÓXIMOS A VENCER -->
-        <div class="glass-panel">
-          <div class="panel-header" style="border-bottom: 2px solid #FCD34D; background: #FFFBEB;">
-            <div class="panel-title" style="color: #92400E; font-weight: 900; display: flex; align-items: center; gap: 0.5rem;">
-              <i class="fa-solid fa-triangle-exclamation" style="color: #D97706;"></i> Lista Detalhada de Planos Próximos ao Vencimento
-            </div>
-            <span id="badgeTotalProximosVencerCount" class="badge badge-a-vencer" style="font-size: 0.85rem; padding: 0.35rem 0.75rem; font-weight: 800;">0 Planos</span>
-          </div>
-
-          <div id="proximosVencerCardsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem; padding: 1.25rem;">
-            <!-- Renderizado dinamicamente via JS -->
           </div>
         </div>
       </section>
@@ -403,16 +366,13 @@
           </div>
         </div>
 
-        <!-- BARRA DE PESQUISA RÁPIDA DE RENOVAÇÕES -->
-        <div style="margin-bottom: 1.25rem; background: #FFFFFF; padding: 0.85rem 1.15rem; border-radius: 14px; border: 1.5px solid #CBD5E1; box-shadow: 0 2px 10px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 0.85rem;">
-          <i class="fa-solid fa-magnifying-glass" style="color: #0284C7; font-size: 1.2rem;"></i>
-          <input type="text" id="filterCobrancas" class="form-control" placeholder="🔍 Pesquisar renovação por nome do cliente, WhatsApp ou descrição..." style="background: #FFFFFF !important; color: #000000 !important; font-weight: 800; border: none; font-size: 0.98rem; width: 100%; outline: none;" oninput="filtrarTabelaCobrancas()">
-        </div>
-
         <!-- MODO 1: TABELA DE COBRANÇAS -->
         <div id="cobrancasTableView" class="glass-panel">
           <div class="panel-header">
             <div class="panel-title"><i class="fa-solid fa-list-check"></i> Lista de Renovações</div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <input type="text" id="filterCobrancas" class="form-control" placeholder="Buscar por cliente ou descrição..." style="width: 250px; font-size: 0.85rem;" oninput="filtrarTabelaCobrancas()">
+            </div>
           </div>
 
           <div class="table-responsive">
@@ -525,12 +485,6 @@
               <i class="fa-solid fa-user-plus"></i> Novo Cliente
             </button>
           </div>
-        </div>
-
-        <!-- BARRA DE PESQUISA RÁPIDA DE CLIENTES -->
-        <div style="margin-bottom: 1.25rem; background: #FFFFFF; padding: 0.85rem 1.15rem; border-radius: 14px; border: 1.5px solid #CBD5E1; box-shadow: 0 2px 10px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 0.85rem;">
-          <i class="fa-solid fa-magnifying-glass" style="color: #0284C7; font-size: 1.2rem;"></i>
-          <input type="text" id="filterClientes" class="form-control" placeholder="🔍 Pesquisar cliente por nome, WhatsApp ou plano..." style="background: #FFFFFF !important; color: #000000 !important; font-weight: 800; border: none; font-size: 0.98rem; width: 100%; outline: none;" oninput="filtrarTabelaClientes()">
         </div>
 
         <!-- MODO 1: TABELA DE CLIENTES -->
@@ -717,7 +671,7 @@
 
         <!-- Tags / Variáveis Disponíveis -->
         <div class="glass-panel" style="margin-bottom: 1.5rem; border-left: 4px solid var(--neon-blue);">
-          <h4 style="color: #000000; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <h4 style="color: #FFF; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
             <i class="fa-solid fa-tags" style="color: var(--neon-green);"></i> Variáveis Dinâmicas de Preenchimento Automático (Clique para inserir):
           </h4>
           <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;" id="tagChipsContainer">
@@ -752,7 +706,7 @@
             <p>Cadastre, edite e organize seus planos de canais com telas, valores e renovações.</p>
           </div>
           <div>
-            <button type="button" id="btnNovoPlano" class="btn-primary" onclick="abrirModalNovoPlano()">
+            <button type="button" id="btnNovoPlano" class="btn-primary" onclick="if (typeof abrirModalNovoPlano === 'function') { abrirModalNovoPlano(); } else { abrirModal('modalPlano'); }">
               <i class="fa-solid fa-plus"></i> + Cadastrar Novo Plano
             </button>
           </div>
@@ -765,7 +719,7 @@
             <input type="text" id="filterPlanosInput" class="form-control" style="padding-left: 2.5rem;" placeholder="Buscar plano por nome, categoria ou telas..." oninput="filtrarPlanos()">
           </div>
           <div style="font-size: 0.85rem; color: var(--text-brown-muted); font-weight: 700;">
-            <i class="fa-solid fa-tv" style="color: var(--neon-green);"></i> Total: <span id="statTotalPlanosCount" style="color: #000000;">0</span> Planos Cadastrados
+            <i class="fa-solid fa-tv" style="color: var(--neon-green);"></i> Total: <span id="statTotalPlanosCount" style="color: #FFF;">0</span> Planos Cadastrados
           </div>
         </div>
 
@@ -783,7 +737,7 @@
             <p>Cadastre os aplicativos e players que você disponibiliza para os seus clientes.</p>
           </div>
           <div>
-            <button type="button" id="btnNovoApp" class="btn-primary" style="background: linear-gradient(135deg, var(--neon-blue), #3b82f6); color: #000000;" onclick="abrirModalNovoApp()">
+            <button type="button" id="btnNovoApp" class="btn-primary" style="background: linear-gradient(135deg, var(--neon-blue), #3b82f6); color: #fff;" onclick="if (typeof abrirModalNovoApp === 'function') { abrirModalNovoApp(); } else { abrirModal('modalApp'); }">
               <i class="fa-solid fa-plus"></i> + Cadastrar Novo App
             </button>
           </div>
@@ -796,7 +750,7 @@
             <input type="text" id="filterAppsInput" class="form-control" style="padding-left: 2.5rem;" placeholder="Buscar aplicativo por nome ou plataforma..." oninput="filtrarApps()">
           </div>
           <div style="font-size: 0.85rem; color: var(--text-brown-muted); font-weight: 700;">
-            <i class="fa-solid fa-mobile-screen-button" style="color: var(--neon-blue);"></i> Total: <span id="statTotalAppsCount" style="color: #000000;">0</span> Apps Cadastrados
+            <i class="fa-solid fa-mobile-screen-button" style="color: var(--neon-blue);"></i> Total: <span id="statTotalAppsCount" style="color: #FFF;">0</span> Apps Cadastrados
           </div>
         </div>
 
@@ -814,7 +768,7 @@
             <p>Gerencie seus servidores e painéis de revenda para vincular aos clientes.</p>
           </div>
           <div>
-            <button type="button" id="btnNovoServidor" class="btn-primary" style="background: linear-gradient(135deg, var(--emerald-primary), #10b981); color: #000; font-weight: 800;" onclick="abrirModalNovoServidor()">
+            <button type="button" id="btnNovoServidor" class="btn-primary" style="background: linear-gradient(135deg, var(--emerald-primary), #10b981); color: #000; font-weight: 800;" onclick="if (typeof abrirModalNovoServidor === 'function') { abrirModalNovoServidor(); } else { abrirModal('modalServidor'); }">
               <i class="fa-solid fa-plus"></i> + Cadastrar Novo Servidor
             </button>
           </div>
@@ -827,114 +781,13 @@
             <input type="text" id="filterServidoresInput" class="form-control" style="padding-left: 2.5rem;" placeholder="Buscar servidor por nome ou tipo..." oninput="filtrarServidores()">
           </div>
           <div style="font-size: 0.85rem; color: var(--text-brown-muted); font-weight: 700;">
-            <i class="fa-solid fa-server" style="color: var(--emerald-light);"></i> Total: <span id="statTotalServidoresCount" style="color: #000000;">0</span> Servidores Cadastrados
+            <i class="fa-solid fa-server" style="color: var(--emerald-light);"></i> Total: <span id="statTotalServidoresCount" style="color: #FFF;">0</span> Servidores Cadastrados
           </div>
         </div>
 
         <!-- GRID DE CARDS DOS SERVIDORES -->
         <div id="servidoresCardsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
           <!-- Renderizado dinamicamente pelo JS -->
-        </div>
-      </section>
-
-      <!-- ABA: CONFIGURAÇÕES DE ALERTAS DO ADMINISTRADOR NO WHATSAPP -->
-      <section id="tab-configuracoes-admin" class="tab-content" style="display: none;">
-        <div class="page-header">
-          <div>
-            <h1><i class="fa-solid fa-bell-concierge" style="color: var(--emerald-primary);"></i> Alertas no Meu WhatsApp (Administrador)</h1>
-            <p>Receba avisos automáticos no seu próprio WhatsApp no dia dos vencimentos dos planos dos clientes.</p>
-          </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
-          <!-- FORMULÁRIO DE CONFIGURAÇÃO -->
-          <div class="glass-panel" style="background: var(--bg-card); border-radius: 16px; padding: 1.5rem; border: 1.5px solid var(--border-color); box-shadow: var(--shadow-sm);">
-            <h3 style="font-size: 1.1rem; color: #000000; font-weight: 800; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
-              <i class="fa-solid fa-gears" style="color: var(--emerald-primary);"></i> Definir WhatsApp e Horário
-            </h3>
-
-            <form id="formConfigAdmin" onsubmit="salvarConfiguracoesAdmin(event)">
-              <div class="form-group" style="margin-bottom: 1.25rem;">
-                <label for="adminWhatsappInput" style="font-weight: 700; color: #000000;">
-                  <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> Seu WhatsApp para Receber Notificações *
-                </label>
-                <input type="tel" id="adminWhatsappInput" class="form-control" placeholder="Ex: (11) 99999-9999" required style="font-size: 1rem; font-weight: 600;">
-                <small style="color: #64748B; font-size: 0.78rem; display: block; margin-top: 0.35rem;">
-                  Digite o número do seu celular com DDD onde você deseja receber os avisos diários dos vencimentos.
-                </small>
-              </div>
-
-              <div class="form-group" style="margin-bottom: 1.25rem;">
-                <label for="adminHorarioSelect" style="font-weight: 700; color: #000000;">
-                  <i class="fa-solid fa-clock" style="color: #F59E0B;"></i> Horário do Envio Automático Diário *
-                </label>
-                <select id="adminHorarioSelect" class="form-control" required style="font-size: 1rem; font-weight: 700;">
-                  <option value="07:00">07:00 - Manhã Cedo</option>
-                  <option value="08:00" selected>08:00 - Manhã (Recomendado)</option>
-                  <option value="09:00">09:00 - Manhã</option>
-                  <option value="10:00">10:00 - Manhã</option>
-                  <option value="11:00">11:00 - Manhã</option>
-                  <option value="12:00">12:00 - Meio-Dia</option>
-                  <option value="14:00">14:00 - Tarde</option>
-                  <option value="16:00">16:00 - Tarde</option>
-                  <option value="18:00">18:00 - Noite</option>
-                  <option value="20:00">20:00 - Noite</option>
-                </select>
-                <small style="color: #64748B; font-size: 0.78rem; display: block; margin-top: 0.35rem;">
-                  O sistema verificará diariamente neste horário os clientes que vencem no dia e te enviará uma mensagem detalhada.
-                </small>
-              </div>
-
-              <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
-                <div>
-                  <div style="font-weight: 800; color: #000000; font-size: 0.95rem;">Status do Alerta Automático</div>
-                  <div style="font-size: 0.8rem; color: #64748B;">Ativar disparo automático no dia do vencimento</div>
-                </div>
-                <label class="switch" style="position: relative; display: inline-block; width: 48px; height: 26px; flex-shrink: 0;">
-                  <input type="checkbox" id="adminEnviarCheck" checked style="opacity: 0; width: 0; height: 0;">
-                  <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #CBD5E1; transition: .4s; border-radius: 34px;"></span>
-                </label>
-              </div>
-
-              <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                <button type="submit" class="btn-primary" style="flex: 1; padding: 0.75rem 1.25rem; font-weight: 800; border-radius: 10px; font-size: 0.95rem;">
-                  <i class="fa-solid fa-floppy-disk"></i> Salvar Configurações
-                </button>
-                <button type="button" class="btn-success-sm" onclick="testarAlertaAdmin()" style="padding: 0.75rem 1.25rem; font-weight: 800; border-radius: 10px; font-size: 0.95rem; background: #0284C7; border: none; color: #FFF;">
-                  <i class="fa-solid fa-paper-plane"></i> 🧪 Disparar Teste Agora
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <!-- PRÉ-VISUALIZAÇÃO DA MENSAGEM -->
-          <div class="glass-panel" style="background: #0F172A; border-radius: 16px; padding: 1.5rem; color: #FFFFFF; border: 1.5px solid #1E293B; box-shadow: var(--shadow-sm);">
-            <h3 style="font-size: 1.1rem; color: #38BDF8; font-weight: 800; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-              <i class="fa-solid fa-eye" style="color: #38BDF8;"></i> Modelo da Mensagem que Você Receberá
-            </h3>
-
-            <div style="background: #1E293B; border: 1px solid #334155; border-radius: 12px; padding: 1rem; font-family: monospace; font-size: 0.85rem; color: #E2E8F0; white-space: pre-wrap; line-height: 1.5; max-height: 360px; overflow-y: auto;">
-🚨 *ALERTA DE PLANOS VENCENDO HOJE (15/09/2026)* 🚨
-
-Atenção, Gerailton! Hoje vence a assinatura de *2 cliente(s)*:
-
-1️⃣ *CLIENTE: João da Silva*
-   📱 *WhatsApp:* (11) 98888-7777
-   📺 *Plano:* Plano IPTV Completo 4K (1 Tela)
-   🖥️ *Servidor:* Servidor Antitrava 01
-   📱 *App:* IBO Player
-   💰 *Valor:* R$ 35,00
-
-2️⃣ *CLIENTE: Maria Oliveira*
-   📱 *WhatsApp:* (21) 97777-6666
-   📺 *Plano:* Plano P2P Turbo (2 Telas)
-   🖥️ *Servidor:* Servidor Premium
-   📱 *App:* XCIPTV
-   💰 *Valor:* R$ 45,00
-
-⚠️ *Ação Recomendada:* Verifique o recebimento do PIX ou dê baixa pelo painel assim que confirmado!
-            </div>
-          </div>
         </div>
       </section>
 
@@ -1034,7 +887,7 @@ Atenção, Gerailton! Hoje vence a assinatura de *2 cliente(s)*:
               </div>
               <div class="form-group" style="margin-bottom: 0;">
                 <label for="cobValor" style="font-size: 0.8rem; color: var(--neon-green); font-weight: 700;"><i class="fa-solid fa-calculator"></i> Valor Final (R$) *</label>
-                <input type="number" step="0.01" id="cobValor" class="form-control" placeholder="0.00" required oninput="calcularDeValorFinalCob()" style="border-color: var(--neon-green); background: rgba(0, 255, 136, 0.08); font-weight: 700; color: #000000;">
+                <input type="number" step="0.01" id="cobValor" class="form-control" placeholder="0.00" required oninput="calcularDeValorFinalCob()" style="border-color: var(--neon-green); background: rgba(0, 255, 136, 0.08); font-weight: 700; color: #FFF;">
               </div>
             </div>
           </div>
@@ -1070,7 +923,7 @@ Atenção, Gerailton! Hoje vence a assinatura de *2 cliente(s)*:
   <div class="modal-overlay" id="modalCliente">
     <div class="modal-box" style="max-width: 680px;">
       <div class="modal-header" style="border-bottom: 2px solid rgba(0, 240, 255, 0.2); padding-bottom: 0.85rem;">
-        <h3 id="modalClienteTitle" style="color: #000000; font-weight: 800; display: flex; align-items: center; gap: 0.6rem;">
+        <h3 id="modalClienteTitle" style="color: #FFF; font-weight: 800; display: flex; align-items: center; gap: 0.6rem;">
           <i class="fa-solid fa-user-plus" style="color: var(--neon-blue);"></i> Cadastrar Cliente
         </h3>
         <button class="modal-close" onclick="fecharModalCliente()">&times;</button>
@@ -1080,43 +933,43 @@ Atenção, Gerailton! Hoje vence a assinatura de *2 cliente(s)*:
         <div class="modal-body" style="display: flex; flex-direction: column; gap: 1.1rem; padding-top: 1rem;">
           
           <!-- SEÇÃO 1: DADOS PESSOAIS & CONTATO -->
-          <div style="background: #F8FAFC; padding: 1.1rem; border-radius: 14px; border: 1.5px solid #CBD5E1; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);">
-            <h4 style="font-size: 0.95rem; color: var(--brand-accent); margin-bottom: 0.85rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem;">
+          <div style="background: rgba(13, 21, 39, 0.6); padding: 1.1rem; border-radius: 14px; border: 1px solid rgba(0, 240, 255, 0.25); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);">
+            <h4 style="font-size: 0.95rem; color: var(--neon-blue); margin-bottom: 0.85rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem;">
               <i class="fa-solid fa-address-card" style="font-size: 1.1rem;"></i> 1. Dados de Identificação & Contato
             </h4>
 
             <div class="form-group" style="margin-bottom: 0.85rem;">
-              <label for="cliNome" style="font-weight: 800; color: #000000;"><i class="fa-solid fa-user"></i> Nome Completo do Cliente *</label>
-              <input type="text" id="cliNome" class="form-control" placeholder="Ex: Carlos Eduardo Silva" required style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700;">
+              <label for="cliNome" style="font-weight: 700; color: #FFF;"><i class="fa-solid fa-user"></i> Nome Completo do Cliente *</label>
+              <input type="text" id="cliNome" class="form-control" placeholder="Ex: Carlos Eduardo Silva" required style="background: #090F1D; border-color: rgba(0, 240, 255, 0.3); color: #FFF;">
             </div>
 
             <div class="form-grid-2">
               <div class="form-group" style="margin-bottom: 0;">
-                <label for="cliTelefone" style="font-weight: 800; color: var(--emerald-light);"><i class="fa-brands fa-whatsapp"></i> WhatsApp (DDD + Número) *</label>
-                <input type="text" id="cliTelefone" class="form-control" placeholder="Ex: 5581999887766" required style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700;">
+                <label for="cliTelefone" style="font-weight: 700; color: var(--emerald-light);"><i class="fa-brands fa-whatsapp"></i> WhatsApp (DDD + Número) *</label>
+                <input type="text" id="cliTelefone" class="form-control" placeholder="Ex: 5581999887766" required style="background: #090F1D; border-color: var(--emerald-primary); color: #FFF;">
               </div>
               <div class="form-group" style="margin-bottom: 0;">
-                <label for="cliEmail" style="color: #000000; font-weight: 800;"><i class="fa-regular fa-envelope"></i> E-mail (Opcional)</label>
-                <input type="email" id="cliEmail" class="form-control" placeholder="cliente@email.com" style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700;">
+                <label for="cliEmail" style="color: var(--text-brown-muted);"><i class="fa-regular fa-envelope"></i> E-mail (Opcional)</label>
+                <input type="email" id="cliEmail" class="form-control" placeholder="cliente@email.com" style="background: #090F1D; color: #FFF;">
               </div>
             </div>
           </div>
 
           <!-- SEÇÃO 2: ATRIBUIÇÃO DE PLANO & SERVIÇOS -->
-          <div style="background: #F8FAFC; padding: 1.1rem; border-radius: 14px; border: 1.5px solid #CBD5E1; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);">
-            <h4 style="font-size: 0.95rem; color: var(--brand-accent); margin-bottom: 0.85rem; font-weight: 800; display: flex; align-items: center; justify-content: space-between;">
+          <div style="background: rgba(0, 240, 255, 0.04); padding: 1.1rem; border-radius: 14px; border: 1px solid var(--neon-blue); box-shadow: 0 4px 15px rgba(0, 240, 255, 0.08);">
+            <h4 style="font-size: 0.95rem; color: var(--neon-blue); margin-bottom: 0.85rem; font-weight: 800; display: flex; align-items: center; justify-content: space-between;">
               <span><i class="fa-solid fa-tv"></i> 2. Plano de Canais, Servidor & App</span>
               <span class="badge badge-agendado" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;"><i class="fa-solid fa-bolt"></i> Preenchimento Automático</span>
             </h4>
 
             <div class="form-group" style="margin-bottom: 0.85rem;">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
-                <label for="cliPlanoId" style="font-weight: 800; color: #000000; margin: 0;"><i class="fa-solid fa-tag" style="color: var(--neon-blue);"></i> Escolha o Plano de Canais</label>
+                <label for="cliPlanoId" style="font-weight: 700; color: #FFF; margin: 0;"><i class="fa-solid fa-tag" style="color: var(--neon-blue);"></i> Escolha o Plano de Canais</label>
                 <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoPlano()">
                   <i class="fa-solid fa-plus"></i> + Novo Plano
                 </button>
               </div>
-              <select id="cliPlanoId" class="form-control" onchange="autoPreencherPlanoCliente()" style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700;">
+              <select id="cliPlanoId" class="form-control" onchange="autoPreencherPlanoCliente()" style="background: #0D1527; border: 1px solid var(--neon-blue); color: #FFF; font-weight: 700;">
                 <option value="">-- Selecione o Plano --</option>
               </select>
             </div>
@@ -1124,91 +977,32 @@ Atenção, Gerailton! Hoje vence a assinatura de *2 cliente(s)*:
             <div class="form-grid-2">
               <div class="form-group" style="margin-bottom: 0;">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
-                  <label for="cliServidorId" style="font-weight: 800; color: #000000; margin: 0;"><i class="fa-solid fa-server" style="color: var(--neon-blue);"></i> Servidor / Painel</label>
+                  <label for="cliServidorId" style="font-weight: 600; color: #E2E8F0; margin: 0;"><i class="fa-solid fa-server" style="color: var(--neon-blue);"></i> Servidor / Painel</label>
                   <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoServidor()">
                     <i class="fa-solid fa-plus"></i> + Servidor
                   </button>
                 </div>
-                <select id="cliServidorId" class="form-control" style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700;">
+                <select id="cliServidorId" class="form-control" style="background: #090F1D; color: #FFF;">
                   <option value="">-- Nenhum Servidor --</option>
                 </select>
               </div>
 
               <div class="form-group" style="margin-bottom: 0;">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
-                  <label for="cliAppId" style="font-weight: 800; color: #000000; margin: 0;"><i class="fa-solid fa-mobile-screen-button" style="color: var(--emerald-light);"></i> Aplicativo / App</label>
+                  <label for="cliAppId" style="font-weight: 600; color: #E2E8F0; margin: 0;"><i class="fa-solid fa-mobile-screen-button" style="color: var(--emerald-light);"></i> Aplicativo / App</label>
                   <button type="button" class="btn-success-sm" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" onclick="abrirModalNovoApp()">
                     <i class="fa-solid fa-plus"></i> + App
                   </button>
                 </div>
-                <select id="cliAppId" class="form-control" style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700;">
+                <select id="cliAppId" class="form-control" style="background: #090F1D; color: #FFF;">
                   <option value="">-- Nenhum App --</option>
                 </select>
               </div>
             </div>
-          </div>
-
-          <!-- SEÇÃO 3: RENOVAÇÃO, COBRANÇA & MENSAGENS WHATSAPP -->
-          <div style="background: #F8FAFC; padding: 1.1rem; border-radius: 14px; border: 1.5px solid #CBD5E1; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);">
-            <h4 style="font-size: 0.95rem; color: var(--brand-accent); margin-bottom: 0.85rem; font-weight: 800; display: flex; align-items: center; justify-content: space-between;">
-              <span><i class="fa-solid fa-calculator"></i> 3. Datas, Valores & Disparo WhatsApp</span>
-              <label style="font-size: 0.8rem; color: #000000; font-weight: 700; display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
-                <input type="checkbox" id="cliGerarCobranca" checked style="accent-color: var(--neon-blue); width: 17px; height: 17px;">
-                Gerar Cobrança Pendente
-              </label>
-            </h4>
-
-            <div class="form-grid-2" style="margin-bottom: 0.85rem;">
-              <div class="form-group" style="margin-bottom: 0;">
-                <label for="cliDataVencimento" style="font-weight: 800; color: #000000;"><i class="fa-regular fa-calendar-days"></i> Data de Vencimento *</label>
-                <input type="date" id="cliDataVencimento" class="form-control" onchange="sincronizarDataEnvioCliente()" required style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700;">
-              </div>
-              <div class="form-group" style="margin-bottom: 0;">
-                <label for="cliDataHoraEnvio" style="font-weight: 800; color: #000000;"><i class="fa-solid fa-clock"></i> Data e Hora do Disparo WhatsApp</label>
-                <input type="datetime-local" id="cliDataHoraEnvio" class="form-control" style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700;">
-              </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1.2fr; gap: 0.6rem; margin-bottom: 0.85rem;">
-              <div class="form-group" style="margin-bottom: 0;">
-                <label for="cliQtdTelas" style="font-weight: 800; color: #000000; font-size: 0.82rem;"><i class="fa-solid fa-desktop"></i> Qtd. Telas</label>
-                <select id="cliQtdTelas" class="form-control" onchange="calcularValorClienteComDesconto()" style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700; padding: 0.4rem 0.5rem;">
-                  <option value="1">1 Tela</option>
-                  <option value="2">2 Telas</option>
-                  <option value="3">3 Telas</option>
-                  <option value="4">4 Telas</option>
-                  <option value="5">5 Telas</option>
-                </select>
-              </div>
-
-              <div class="form-group" style="margin-bottom: 0;">
-                <label for="cliValorBruto" style="font-weight: 800; color: #000000; font-size: 0.82rem;"><i class="fa-solid fa-dollar-sign"></i> Valor Plano (R$)</label>
-                <input type="number" step="0.01" id="cliValorBruto" class="form-control" placeholder="0.00" oninput="calcularValorClienteComDesconto()" style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700; padding: 0.4rem 0.5rem;">
-              </div>
-
-              <div class="form-group" style="margin-bottom: 0;">
-                <label for="cliDesconto" style="font-weight: 800; color: #000000; font-size: 0.82rem;"><i class="fa-solid fa-tag"></i> Desconto (R$)</label>
-                <input type="number" step="0.01" id="cliDesconto" class="form-control" placeholder="0.00" oninput="calcularValorClienteComDesconto()" style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700; padding: 0.4rem 0.5rem;">
-              </div>
-
-              <div class="form-group" style="margin-bottom: 0;">
-                <label for="cliValor" style="font-weight: 900; color: var(--emerald-light); font-size: 0.82rem;"><i class="fa-solid fa-receipt"></i> Valor Final (R$) *</label>
-                <input type="number" step="0.01" id="cliValor" class="form-control" placeholder="0.00" oninput="calcularDeValorFinalCliente()" style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 800; border: 2px solid var(--emerald-primary);" required>
-              </div>
-            </div>
-
-            <div class="form-group" style="margin-bottom: 0;">
-              <label for="cliModeloId" style="font-weight: 800; color: #000000;"><i class="fa-solid fa-comment-dots" style="color: var(--neon-blue);"></i> Modelo de Mensagem WhatsApp</label>
-              <select id="cliModeloId" class="form-control" style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700;">
-                <option value="">-- Seleção Automática (Padrão do Sistema) --</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- SEÇÃO 4: OBSERVAÇÕES -->
+          <!-- SEÇÃO 3: OBSERVAÇÕES -->
           <div class="form-group" style="margin-bottom: 0;">
-            <label for="cliNotas" style="color: #000000; font-size: 0.88rem; font-weight: 800;"><i class="fa-regular fa-clipboard"></i> Observações / Notas do Cliente</label>
-            <textarea id="cliNotas" class="form-control" rows="2" placeholder="Ex: Preferência para renovar no início do mês..." style="background-color: #FFFFFF !important; color: #000000 !important; font-weight: 700;"></textarea>
+            <label for="cliNotas" style="color: var(--text-brown-muted); font-size: 0.88rem;"><i class="fa-regular fa-clipboard"></i> Observações / Notas do Cliente</label>
+            <textarea id="cliNotas" class="form-control" rows="2" placeholder="Ex: Preferência para renovar no início do mês..." style="background: #090F1D; color: #FFF;"></textarea>
           </div>
 
         </div>
@@ -1232,16 +1026,8 @@ Atenção, Gerailton! Hoje vence a assinatura de *2 cliente(s)*:
       <form id="formBaixa">
         <input type="hidden" id="baixaCobrancaId">
         <div class="modal-body">
-          <div class="form-group" style="margin-bottom: 1rem;">
-            <label for="baixaClienteSelect" style="font-weight: 700; color: #000000; margin-bottom: 0.35rem; display: block;">
-              <i class="fa-solid fa-user-check" style="color: var(--emerald-primary);"></i> Cliente / Cobrança a Dar Baixa *
-            </label>
-            <select id="baixaClienteSelect" class="form-control" style="background: #090F1D; color: #000000; font-weight: 700; border: 1.5px solid var(--emerald-primary);" required onchange="if (typeof onBaixaClienteSelectChange === 'function') onBaixaClienteSelectChange(this.value)">
-              <option value="">-- Selecione o Cliente --</option>
-            </select>
-          </div>
-          <p style="margin-bottom: 1rem; color: var(--text-brown-muted); font-size: 0.85rem;">
-            Esta ação marcará o plano do cliente como <strong style="color: var(--emerald-light);">PAGO & ATIVO (Em Dia)</strong> e agendará a renovação para o mês seguinte.
+          <p style="margin-bottom: 1rem; color: var(--text-brown-muted);">
+            Esta ação marcará a cobrança como <strong style="color: var(--emerald-light);">PAGA</strong> e a transferirá para o setor de <strong>Contas Recebidas</strong>.
           </p>
           <div class="form-grid-2" style="margin-bottom: 1rem;">
             <div class="form-group">
@@ -1259,7 +1045,7 @@ Atenção, Gerailton! Hoje vence a assinatura de *2 cliente(s)*:
           </div>
           <div class="form-group" style="background: var(--bg-card); padding: 0.85rem; border-radius: 10px; border: 1px dashed var(--neon-blue); display: flex; align-items: center; gap: 0.65rem;">
             <input type="checkbox" id="baixaEnviarWhatsApp" checked style="width: 18px; height: 18px; accent-color: var(--emerald-primary); cursor: pointer;">
-            <label for="baixaEnviarWhatsApp" style="margin: 0; cursor: pointer; color: #000000; font-size: 0.85rem;">
+            <label for="baixaEnviarWhatsApp" style="margin: 0; cursor: pointer; color: #FFF; font-size: 0.85rem;">
               <i class="fa-brands fa-whatsapp" style="color: var(--emerald-primary);"></i> Enviar mensagem de <strong>confirmação e renovação de plano</strong> no WhatsApp do cliente
             </label>
           </div>
@@ -1299,7 +1085,7 @@ Atenção, Gerailton! Hoje vence a assinatura de *2 cliente(s)*:
             </select>
           </div>
 
-          <div style="background: rgba(255,215,0,0.08); border: 1px solid #FFD700; border-radius: 10px; padding: 0.85rem; font-size: 0.85rem; color: #000000;">
+          <div style="background: rgba(255,215,0,0.08); border: 1px solid #FFD700; border-radius: 10px; padding: 0.85rem; font-size: 0.85rem; color: #FFF;">
             <strong style="color: #FFD700;"><i class="fa-solid fa-circle-info"></i> Nota sobre os envios:</strong>
             <p style="margin-top: 0.25rem; color: var(--text-brown-muted);">
               Se o seu WhatsApp estiver conectado no QR Code, as mensagens serão enviadas <strong>automaticamente</strong>. Caso contrário, os links diretos para conversa serão gerados.
@@ -1334,7 +1120,7 @@ Atenção, Gerailton! Hoje vence a assinatura de *2 cliente(s)*:
 
           <div class="form-group">
             <label>Pré-visualização da Mensagem Processada:</label>
-            <div id="envModeloPreviewBox" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 0.85rem; font-size: 0.85rem; color: #000000; white-space: pre-wrap; max-height: 220px; overflow-y: auto;">
+            <div id="envModeloPreviewBox" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 0.85rem; font-size: 0.85rem; color: #FFF; white-space: pre-wrap; max-height: 220px; overflow-y: auto;">
               Selecione um cliente acima para ver a pré-visualização.
             </div>
           </div>
@@ -1419,7 +1205,7 @@ Atenção, Gerailton! Hoje vence a assinatura de *2 cliente(s)*:
 
           <!-- RESUMO DO VALOR COM DESCONTO -->
           <div id="planoResumoValorBox" style="background: rgba(0, 255, 135, 0.08); border: 1px dashed var(--neon-green); padding: 0.75rem 1rem; border-radius: 10px; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
-            <span style="font-size: 0.85rem; color: #000000; font-weight: 600;"><i class="fa-solid fa-calculator" style="color: var(--neon-green);"></i> Valor Final cobrado ao Cliente:</span>
+            <span style="font-size: 0.85rem; color: #FFF; font-weight: 600;"><i class="fa-solid fa-calculator" style="color: var(--neon-green);"></i> Valor Final cobrado ao Cliente:</span>
             <span id="planoValorFinalCalculado" style="font-size: 1.1rem; font-weight: 800; color: var(--neon-green);">R$ 35,00</span>
           </div>
 
@@ -1596,7 +1382,7 @@ Atenção, Gerailton! Hoje vence a assinatura de *2 cliente(s)*:
             <label style="color: var(--neon-green); font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 0.4rem;">
               <i class="fa-brands fa-whatsapp" style="font-size: 1rem;"></i> Pré-visualização da Mensagem Formatada:
             </label>
-            <div id="disparoLivePreviewBox" style="background: rgba(16, 185, 129, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid var(--emerald-primary); color: #000000; font-family: monospace; font-size: 0.85rem; white-space: pre-wrap; word-break: break-word; min-height: 100px; max-height: 200px; overflow-y: auto;">
+            <div id="disparoLivePreviewBox" style="background: rgba(16, 185, 129, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid var(--emerald-primary); color: #E2E8F0; font-family: monospace; font-size: 0.85rem; white-space: pre-wrap; word-break: break-word; min-height: 100px; max-height: 200px; overflow-y: auto;">
               Selecione um cliente e um modelo acima para ver a pré-visualização.
             </div>
           </div>
@@ -1616,7 +1402,7 @@ Atenção, Gerailton! Hoje vence a assinatura de *2 cliente(s)*:
   <div class="modal-overlay" id="modalPwaInstalar">
     <div class="modal-box" style="max-width: 520px; text-align: center;">
       <div class="modal-header" style="justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.1);">
-        <h3 style="color: #000000; font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; justify-content: center;">
+        <h3 style="color: #FFF; font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; justify-content: center;">
           <img src="icon-192.png" alt="App Icon" style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--emerald-primary);">
           Instalar App no Seu Celular
         </h3>
@@ -1629,7 +1415,7 @@ Atenção, Gerailton! Hoje vence a assinatura de *2 cliente(s)*:
           <div style="font-weight: 800; color: var(--neon-blue); font-size: 1.05rem; margin-bottom: 0.75rem; text-align: center;">
             <i class="fa-brands fa-android"></i> Para Android (Google Chrome):
           </div>
-          <ol style="color: #000000; font-size: 0.9rem; line-height: 1.7; padding-left: 1.2rem; margin: 0;">
+          <ol style="color: #E2E8F0; font-size: 0.9rem; line-height: 1.7; padding-left: 1.2rem; margin: 0;">
             <li>No navegador Chrome, toque no menu de <strong>3 pontinhos <i class="fa-solid fa-ellipsis-vertical" style="color: var(--neon-blue);"></i></strong> (canto superior direito).</li>
             <li>Toque em <strong>"Adicionar à Tela de Início"</strong> (ou <strong>"Instalar Aplicativo"</strong>).</li>
             <li>Confirme tocando em <strong>Adicionar / Instalar</strong>.</li>
@@ -1641,7 +1427,7 @@ Atenção, Gerailton! Hoje vence a assinatura de *2 cliente(s)*:
           <div style="font-weight: 800; color: var(--emerald-light); font-size: 1.05rem; margin-bottom: 0.75rem; text-align: center;">
             <i class="fa-brands fa-apple"></i> Para iPhone / iPad (Safari):
           </div>
-          <ol style="color: #000000; font-size: 0.9rem; line-height: 1.7; padding-left: 1.2rem; margin: 0;">
+          <ol style="color: #E2E8F0; font-size: 0.9rem; line-height: 1.7; padding-left: 1.2rem; margin: 0;">
             <li>No navegador Safari, toque no botão <strong>Compartilhar <i class="fa-solid fa-share-from-square" style="color: var(--neon-blue);"></i></strong> (na barra inferior).</li>
             <li>Role as opções e toque em <strong>"Adicionar à Tela de Início" <i class="fa-solid fa-plus-square" style="color: var(--neon-green);"></i></strong>.</li>
             <li>Confirme tocando em <strong>Adicionar</strong>.</li>
@@ -1659,36 +1445,7 @@ Atenção, Gerailton! Hoje vence a assinatura de *2 cliente(s)*:
     </div>
   </div>
 
-  <!-- MODAL: RECIBO DIGITAL DE RENOVAÇÃO / QUITAÇÃO -->
-  <div class="modal-overlay" id="modalRecibo">
-    <div class="modal-box" style="max-width: 620px; background: #FFFFFF; border-radius: 16px; border: 1px solid #CBD5E1; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);">
-      <div class="modal-header" style="background: #FFFFFF; border-bottom: 1px solid #E2E8F0; padding: 1.1rem 1.5rem; border-top-left-radius: 16px; border-top-right-radius: 16px;">
-        <h3 style="color: #000000; font-weight: 800; font-size: 1.25rem; display: flex; align-items: center; gap: 0.6rem; margin: 0;">
-          <i class="fa-solid fa-file-invoice-dollar" style="color: #059669; font-size: 1.35rem;"></i>
-          Recibo Digital de Renovação
-        </h3>
-        <button class="modal-close" onclick="fecharModalRecibo()" style="color: #000000; font-size: 1.5rem;">&times;</button>
-      </div>
-      <div class="modal-body" id="modalReciboConteudo" style="padding: 1.5rem; background: #F8FAFC;">
-        <!-- Preenchido via JavaScript -->
-        <div style="text-align: center; padding: 2rem; color: #64748B;">
-          <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: #059669;"></i>
-          <p style="margin-top: 0.75rem; font-weight: 600;">Carregando recibo digital...</p>
-        </div>
-      </div>
-      <div class="modal-footer" style="background: #FFFFFF; border-top: 1px solid #E2E8F0; padding: 1rem 1.5rem; gap: 0.75rem; justify-content: flex-end; flex-wrap: wrap; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;">
-        <button type="button" class="btn-secondary" onclick="fecharModalRecibo()" style="padding: 0.65rem 1.25rem; font-weight: 700;">Fechar</button>
-        <button type="button" class="btn-secondary" id="btnImprimirRecibo" onclick="imprimirRecibo()" style="padding: 0.65rem 1.25rem; font-weight: 700; background: #F1F5F9; color: #0F172A; border-color: #CBD5E1;">
-          <i class="fa-solid fa-print"></i> Imprimir / PDF
-        </button>
-        <button type="button" class="btn-whatsapp-sm" id="btnEnviarReciboWhats" onclick="enviarReciboWhatsApp()" style="padding: 0.65rem 1.5rem; font-size: 0.95rem; font-weight: 800; background: #059669; color: #FFFFFF;">
-          <i class="fa-brands fa-whatsapp"></i> Enviar Recibo WhatsApp
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=99.0"></script>
+  <script src="js/app.js?v=71.0"></script>
 </body>
 </html>
