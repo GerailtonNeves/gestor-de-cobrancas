@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="GestorCob">
   
   <!-- CSS Principal -->
-  <link rel="stylesheet" href="css/styles.css?v=95.0">
+  <link rel="stylesheet" href="css/styles.css?v=96.0">
   
   <!-- Icones Remixicon & FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -332,13 +332,16 @@
           </div>
         </div>
 
+        <!-- BARRA DE PESQUISA RÁPIDA DE RENOVAÇÕES -->
+        <div style="margin-bottom: 1.25rem; background: #FFFFFF; padding: 0.85rem 1.15rem; border-radius: 14px; border: 1.5px solid #CBD5E1; box-shadow: 0 2px 10px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 0.85rem;">
+          <i class="fa-solid fa-magnifying-glass" style="color: #0284C7; font-size: 1.2rem;"></i>
+          <input type="text" id="filterCobrancas" class="form-control" placeholder="🔍 Pesquisar renovação por nome do cliente, WhatsApp ou descrição..." style="background: #FFFFFF !important; color: #000000 !important; font-weight: 800; border: none; font-size: 0.98rem; width: 100%; outline: none;" oninput="filtrarTabelaCobrancas()">
+        </div>
+
         <!-- MODO 1: TABELA DE COBRANÇAS -->
         <div id="cobrancasTableView" class="glass-panel">
           <div class="panel-header">
             <div class="panel-title"><i class="fa-solid fa-list-check"></i> Lista de Renovações</div>
-            <div style="display: flex; gap: 0.5rem; align-items: center;">
-              <input type="text" id="filterCobrancas" class="form-control" placeholder="Buscar por cliente ou descrição..." style="width: 250px; font-size: 0.85rem;" oninput="filtrarTabelaCobrancas()">
-            </div>
           </div>
 
           <div class="table-responsive">
@@ -451,6 +454,12 @@
               <i class="fa-solid fa-user-plus"></i> Novo Cliente
             </button>
           </div>
+        </div>
+
+        <!-- BARRA DE PESQUISA RÁPIDA DE CLIENTES -->
+        <div style="margin-bottom: 1.25rem; background: #FFFFFF; padding: 0.85rem 1.15rem; border-radius: 14px; border: 1.5px solid #CBD5E1; box-shadow: 0 2px 10px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 0.85rem;">
+          <i class="fa-solid fa-magnifying-glass" style="color: #0284C7; font-size: 1.2rem;"></i>
+          <input type="text" id="filterClientes" class="form-control" placeholder="🔍 Pesquisar cliente por nome, WhatsApp ou plano..." style="background: #FFFFFF !important; color: #000000 !important; font-weight: 800; border: none; font-size: 0.98rem; width: 100%; outline: none;" oninput="filtrarTabelaClientes()">
         </div>
 
         <!-- MODO 1: TABELA DE CLIENTES -->
@@ -1508,6 +1517,6 @@
   </div>
 
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=95.0"></script>
+  <script src="js/app.js?v=96.0"></script>
 </body>
 </html>
