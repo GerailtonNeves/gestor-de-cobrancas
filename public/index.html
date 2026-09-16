@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="GestorCob">
   
   <!-- CSS Principal -->
-  <link rel="stylesheet" href="css/styles.css?v=103.0">
+  <link rel="stylesheet" href="css/styles.css?v=104.0">
   
   <!-- Icones Remixicon & FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -224,26 +224,33 @@
 
       <!-- ABA 1: DASHBOARD -->
       <section id="tab-dashboard" class="tab-content active">
-        <div class="page-header">
+        <div class="page-header" style="background: #FFFFFF; padding: 1.25rem 1.5rem; border-radius: 18px; border: 1.5px solid #E2E8F0; box-shadow: 0 4px 16px rgba(0,0,0,0.03); margin-bottom: 1.5rem;">
           <div>
-            <h1><i class="fa-solid fa-chart-line"></i> Dashboard Financeiro</h1>
-            <p>Visão geral de recebimentos, cobranças pendentes e automações do WhatsApp.</p>
+            <h1 style="font-size: 1.6rem; font-weight: 900; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.65rem;">
+              <span style="background: linear-gradient(135deg, #0284C7, #0F172A); color: #FFF; width: 42px; height: 42px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                <i class="fa-solid fa-chart-line"></i>
+              </span>
+              Dashboard Financeiro
+            </h1>
+            <p style="color: #64748B; font-size: 0.9rem; margin-top: 0.35rem; font-weight: 600;">
+              Visão geral de recebimentos, cobranças pendentes e automações do WhatsApp.
+            </p>
           </div>
-          <div style="display: flex; gap: 0.65rem; flex-wrap: wrap;">
-            <button class="btn-primary" onclick="abrirModalNovaCobranca()">
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+            <button class="btn-primary" onclick="abrirModalNovaCobranca()" style="padding: 0.65rem 1.15rem; font-weight: 800; border-radius: 12px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);">
               <i class="fa-solid fa-plus"></i> + Nova Renovação
             </button>
-            <button class="btn-success-sm" style="padding: 0.6rem 1rem; font-size: 0.88rem; font-weight: 700;" onclick="abrirModalNovoCliente()">
+            <button class="btn-success-sm" style="padding: 0.65rem 1.15rem; font-size: 0.88rem; font-weight: 800; border-radius: 12px; background: #059669; color: #FFFFFF;" onclick="abrirModalNovoCliente()">
               <i class="fa-solid fa-user-plus"></i> + Novo Cliente
             </button>
-            <button class="btn-secondary" style="padding: 0.6rem 1rem; font-size: 0.85rem;" onclick="abrirModalNovoPlano()">
-              <i class="fa-solid fa-tv" style="color: var(--neon-blue);"></i> + Novo Plano
+            <button class="btn-secondary" style="padding: 0.65rem 1rem; font-size: 0.85rem; font-weight: 700; border-radius: 12px; background: #F8FAFC; color: #1E293B; border: 1.5px solid #CBD5E1;" onclick="abrirModalNovoPlano()">
+              <i class="fa-solid fa-tv" style="color: #0284C7;"></i> + Novo Plano
             </button>
-            <button class="btn-secondary" style="padding: 0.6rem 1rem; font-size: 0.85rem;" onclick="abrirModalNovoApp()">
-              <i class="fa-solid fa-mobile-screen-button" style="color: var(--emerald-light);"></i> + Novo App
+            <button class="btn-secondary" style="padding: 0.65rem 1rem; font-size: 0.85rem; font-weight: 700; border-radius: 12px; background: #F8FAFC; color: #1E293B; border: 1.5px solid #CBD5E1;" onclick="abrirModalNovoApp()">
+              <i class="fa-solid fa-mobile-screen-button" style="color: #10B981;"></i> + Novo App
             </button>
-            <button class="btn-secondary" style="padding: 0.6rem 1rem; font-size: 0.85rem;" onclick="abrirModalNovoServidor()">
-              <i class="fa-solid fa-server" style="color: var(--emerald-primary);"></i> + Novo Servidor
+            <button class="btn-secondary" style="padding: 0.65rem 1rem; font-size: 0.85rem; font-weight: 700; border-radius: 12px; background: #F8FAFC; color: #1E293B; border: 1.5px solid #CBD5E1;" onclick="abrirModalNovoServidor()">
+              <i class="fa-solid fa-server" style="color: #D97706;"></i> + Novo Servidor
             </button>
           </div>
         </div>
@@ -253,7 +260,7 @@
           <div class="metric-card warning">
             <div class="metric-info">
               <h3>Renovações Pendentes</h3>
-              <div class="metric-value" id="dashTotalPendente">R$ 0,00</div>
+              <div class="metric-value" id="dashTotalPendente" style="color: #D97706;">R$ 0,00</div>
             </div>
             <div class="metric-icon">
               <i class="fa-solid fa-clock"></i>
@@ -263,7 +270,7 @@
           <div class="metric-card success">
             <div class="metric-info">
               <h3>Faturamento Confirmado</h3>
-              <div class="metric-value" id="dashTotalRecebido" style="color: var(--emerald-primary);">R$ 0,00</div>
+              <div class="metric-value" id="dashTotalRecebido" style="color: #059669;">R$ 0,00</div>
             </div>
             <div class="metric-icon">
               <i class="fa-solid fa-circle-check"></i>
@@ -273,7 +280,7 @@
           <div class="metric-card danger">
             <div class="metric-info">
               <h3>Renovações Vencidas</h3>
-              <div class="metric-value" id="dashTotalVencido" style="color: #F87171;">R$ 0,00</div>
+              <div class="metric-value" id="dashTotalVencido" style="color: #DC2626;">R$ 0,00</div>
             </div>
             <div class="metric-icon">
               <i class="fa-solid fa-triangle-exclamation"></i>
@@ -283,9 +290,9 @@
           <div class="metric-card warning" onclick="switchTab('proximos-vencer')" style="cursor: pointer;" title="Clique para ver planos a vencer nos próximos 2 dias">
             <div class="metric-info">
               <h3>A Vencer (Até 2 Dias)</h3>
-              <div class="metric-value" id="dashTotalAVencer2Dias" style="color: #D97706;">R$ 0,00</div>
+              <div class="metric-value" id="dashTotalAVencer2Dias" style="color: #0284C7;">R$ 0,00</div>
             </div>
-            <div class="metric-icon" style="background: #FEF3C7; color: #D97706;">
+            <div class="metric-icon" style="background: #E0F2FE; color: #0284C7;">
               <i class="fa-solid fa-clock-rotate-left"></i>
             </div>
           </div>
@@ -293,7 +300,7 @@
           <div class="metric-card info">
             <div class="metric-info">
               <h3>Envios Programados</h3>
-              <div class="metric-value" id="dashTotalAgendados">0</div>
+              <div class="metric-value" id="dashTotalAgendados" style="color: #166534;">0</div>
             </div>
             <div class="metric-icon">
               <i class="fa-brands fa-whatsapp"></i>
@@ -302,20 +309,24 @@
         </div>
 
         <!-- Gráfico e Resumo -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
-          <div class="glass-panel">
-            <div class="panel-header">
-              <div class="panel-title"><i class="fa-solid fa-chart-bar"></i> Distribuição de Valores (R$)</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+          <div class="glass-panel" style="margin-bottom: 0;">
+            <div class="panel-header" style="border-bottom: 1.5px solid #F1F5F9; padding-bottom: 0.85rem; margin-bottom: 1rem;">
+              <div class="panel-title" style="font-weight: 900; color: #0F172A; display: flex; align-items: center; gap: 0.5rem; font-size: 1.05rem;">
+                <i class="fa-solid fa-chart-pie" style="color: #0284C7;"></i> Distribuição de Valores (R$)
+              </div>
             </div>
-            <div style="height: 280px; position: relative;">
+            <div style="height: 270px; position: relative;">
               <canvas id="financeChart"></canvas>
             </div>
           </div>
 
-          <div class="glass-panel">
-            <div class="panel-header">
-              <div class="panel-title"><i class="fa-solid fa-bell"></i> Próximos Envios de WhatsApp</div>
-              <button class="btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" onclick="switchTab('envios-agendados')">Ver Todos</button>
+          <div class="glass-panel" style="margin-bottom: 0;">
+            <div class="panel-header" style="border-bottom: 1.5px solid #F1F5F9; padding-bottom: 0.85rem; margin-bottom: 1rem;">
+              <div class="panel-title" style="font-weight: 900; color: #0F172A; display: flex; align-items: center; gap: 0.5rem; font-size: 1.05rem;">
+                <i class="fa-brands fa-whatsapp" style="color: #059669; font-size: 1.2rem;"></i> Próximos Envios de WhatsApp
+              </div>
+              <button class="btn-secondary" style="padding: 0.35rem 0.85rem; font-size: 0.8rem; font-weight: 800; border-radius: 8px; background: #F1F5F9; color: #0F172A; border: 1px solid #CBD5E1;" onclick="switchTab('envios-agendados')">Ver Todos</button>
             </div>
             <div id="dashProximosEnviosList">
               <!-- Renderizado via JS -->
@@ -324,13 +335,16 @@
         </div>
 
         <!-- PAINEL DE DESTAQUE: PLANOS PRÓXIMOS A VENCER (ATÉ 2 DIAS) -->
-        <div class="glass-panel" style="margin-top: 1.5rem; border: 1.5px solid #FCD34D;">
-          <div class="panel-header" style="background: #FFFBEB; border-bottom: 1.5px solid #FCD34D;">
-            <div class="panel-title" style="color: #92400E; font-weight: 900; display: flex; align-items: center; gap: 0.6rem;">
-              <i class="fa-solid fa-clock-rotate-left" style="color: #D97706; font-size: 1.2rem;"></i> Planos Próximos a Vencer (Até 2 Dias)
+        <div class="glass-panel" style="border: 1.5px solid #FCD34D; background: #FFFFFF; border-radius: 18px; overflow: hidden; box-shadow: 0 6px 20px rgba(245, 158, 11, 0.08);">
+          <div class="panel-header" style="background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%); border-bottom: 1.5px solid #FCD34D; padding: 1rem 1.25rem;">
+            <div class="panel-title" style="color: #78350F; font-weight: 900; font-size: 1.1rem; display: flex; align-items: center; gap: 0.65rem;">
+              <span style="background: #F59E0B; color: #FFFFFF; width: 34px; height: 34px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font-size: 1rem; box-shadow: 0 3px 8px rgba(245, 158, 11, 0.3);">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+              </span>
+              Planos Próximos a Vencer (Até 2 Dias)
             </div>
-            <button class="btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.84rem; background: #FDE68A; color: #78350F; font-weight: 800; border-color: #FCD34D;" onclick="switchTab('proximos-vencer')">
-              Ver Lista Completa
+            <button class="btn-secondary" style="padding: 0.45rem 1rem; font-size: 0.84rem; background: #FFFFFF; color: #92400E; font-weight: 800; border: 1.5px solid #FCD34D; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);" onclick="switchTab('proximos-vencer')">
+              <i class="fa-solid fa-list-check"></i> Ver Lista Completa
             </button>
           </div>
           <div id="dashProximosVencerList" style="padding: 1.25rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem;">
@@ -1678,6 +1692,6 @@ Atenção, Gerailton! Hoje vence a assinatura de *2 cliente(s)*:
   </div>
 
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=103.0"></script>
+  <script src="js/app.js?v=104.0"></script>
 </body>
 </html>
