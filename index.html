@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="GestorCob">
   
   <!-- CSS Principal -->
-  <link rel="stylesheet" href="css/styles.css?v=104.0">
+  <link rel="stylesheet" href="css/styles.css?v=105.0">
   
   <!-- Icones Remixicon & FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -146,7 +146,7 @@
         </li>
         <li>
           <a class="nav-item" data-tab="proximos-vencer" onclick="switchTab('proximos-vencer')">
-            <i class="fa-solid fa-clock-rotate-left" style="color: #F59E0B;"></i> A Vencer (2 Dias)
+            <i class="fa-solid fa-clock-rotate-left" style="color: #F59E0B;"></i> A Vencer e Vencidos
             <span class="badge badge-a-vencer" id="navBadgeAVencer" style="font-size: 0.72rem; padding: 0.15rem 0.45rem; margin-left: auto;">0</span>
           </a>
         </li>
@@ -287,9 +287,9 @@
             </div>
           </div>
 
-          <div class="metric-card warning" onclick="switchTab('proximos-vencer')" style="cursor: pointer;" title="Clique para ver planos a vencer nos próximos 2 dias">
+          <div class="metric-card warning" onclick="switchTab('proximos-vencer')" style="cursor: pointer;" title="Clique para ver planos a vencer e vencidos">
             <div class="metric-info">
-              <h3>A Vencer (Até 2 Dias)</h3>
+              <h3>A Vencer e Vencidos</h3>
               <div class="metric-value" id="dashTotalAVencer2Dias" style="color: #0284C7;">R$ 0,00</div>
             </div>
             <div class="metric-icon" style="background: #E0F2FE; color: #0284C7;">
@@ -334,14 +334,14 @@
           </div>
         </div>
 
-        <!-- PAINEL DE DESTAQUE: PLANOS PRÓXIMOS A VENCER (ATÉ 2 DIAS) -->
+        <!-- PAINEL DE DESTAQUE: PLANOS A VENCER E VENCIDOS -->
         <div class="glass-panel" style="border: 1.5px solid #FCD34D; background: #FFFFFF; border-radius: 18px; overflow: hidden; box-shadow: 0 6px 20px rgba(245, 158, 11, 0.08);">
           <div class="panel-header" style="background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%); border-bottom: 1.5px solid #FCD34D; padding: 1rem 1.25rem;">
             <div class="panel-title" style="color: #78350F; font-weight: 900; font-size: 1.1rem; display: flex; align-items: center; gap: 0.65rem;">
               <span style="background: #F59E0B; color: #FFFFFF; width: 34px; height: 34px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font-size: 1rem; box-shadow: 0 3px 8px rgba(245, 158, 11, 0.3);">
                 <i class="fa-solid fa-clock-rotate-left"></i>
               </span>
-              Planos Próximos a Vencer (Até 2 Dias)
+              Planos A Vencer e Vencidos
             </div>
             <button class="btn-secondary" style="padding: 0.45rem 1rem; font-size: 0.84rem; background: #FFFFFF; color: #92400E; font-weight: 800; border: 1.5px solid #FCD34D; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);" onclick="switchTab('proximos-vencer')">
               <i class="fa-solid fa-list-check"></i> Ver Lista Completa
@@ -353,12 +353,12 @@
         </div>
       </section>
 
-      <!-- ABA NOVO: PLANOS PRÓXIMOS A VENCER (ATÉ 2 DIAS) -->
+      <!-- ABA: PLANOS A VENCER E VENCIDOS -->
       <section id="tab-proximos-vencer" class="tab-content" style="display: none;">
         <div class="page-header">
           <div>
-            <h1><i class="fa-solid fa-clock-rotate-left" style="color: #F59E0B;"></i> Planos Próximos a Vencer (Até 2 Dias)</h1>
-            <p>Clientes com vencimentos agendados para hoje, amanhã ou em até 2 dias. Dispare notificações pelo WhatsApp ou dê baixa no recebimento!</p>
+            <h1><i class="fa-solid fa-clock-rotate-left" style="color: #F59E0B;"></i> Planos A Vencer e Vencidos</h1>
+            <p>Clientes com assinaturas vencidas ou com vencimentos nos próximos dias. Dispare notificações pelo WhatsApp ou dê baixa no recebimento!</p>
           </div>
           <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
             <button type="button" class="btn-whatsapp-sm" style="padding: 0.55rem 1rem; font-size: 0.88rem; background: #059669; color: #FFF; font-weight: 800;" onclick="abrirModalDispararModelo()">
@@ -1692,6 +1692,6 @@ Atenção, Gerailton! Hoje vence a assinatura de *2 cliente(s)*:
   </div>
 
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=104.0"></script>
+  <script src="js/app.js?v=105.0"></script>
 </body>
 </html>
