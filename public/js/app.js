@@ -605,9 +605,9 @@ function renderFinanceChart(pendente, recebido, vencido) {
       labels: ['Contas Recebidas', 'A Receber (Pendentes)', 'Vencidas'],
       datasets: [{
         data: [recebido, pendente, vencido],
-        backgroundColor: ['#00FF87', '#00F0FF', '#FF3366'],
-        borderWidth: 2,
-        borderColor: '#0D1527'
+        backgroundColor: ['#059669', '#0284C7', '#DC2626'],
+        borderWidth: 3,
+        borderColor: '#FFFFFF'
       }]
     },
     options: {
@@ -616,7 +616,7 @@ function renderFinanceChart(pendente, recebido, vencido) {
       plugins: {
         legend: {
           position: 'bottom',
-          labels: { color: '#38BDF8', font: { family: 'Plus Jakarta Sans', size: 12, weight: '600' } }
+          labels: { color: '#0F172A', font: { family: 'Plus Jakarta Sans', size: 12, weight: '800' } }
         }
       }
     }
@@ -723,20 +723,20 @@ function renderTabelaProximosVencer() {
         }
 
         return `
-          <div style="background: #FFFFFF; border: 1.5px solid ${corUrgencia}; border-radius: 12px; padding: 0.9rem; display: flex; flex-direction: column; justify-content: space-between; gap: 0.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <strong style="color: #0F172A; font-size: 0.95rem;">${cob.clienteNome}</strong>
-              <span class="badge" style="background: ${bgUrgencia}; color: ${corUrgencia}; border: 1px solid ${corUrgencia}; font-weight: 800; font-size: 0.75rem;">${rotuloUrgencia}</span>
+          <div style="background: #FFFFFF; border: 1.5px solid ${corUrgencia}; border-radius: 14px; padding: 1rem; display: flex; flex-direction: column; justify-content: space-between; gap: 0.65rem; box-shadow: 0 4px 14px rgba(0,0,0,0.04); transition: transform 0.2s ease;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #E2E8F0; padding-bottom: 0.6rem;">
+              <strong style="color: #0F172A; font-size: 1rem; font-weight: 800;">${cob.clienteNome}</strong>
+              <span class="badge" style="background: ${bgUrgencia}; color: ${corUrgencia}; border: 1.5px solid ${corUrgencia}; font-weight: 900; font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 8px;">${rotuloUrgencia}</span>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; color: #475569;">
-              <span><i class="fa-solid fa-tv" style="color: #0284C7;"></i> ${planoObj ? planoObj.nome : 'Plano IPTV'}</span>
-              <strong style="color: #059669; font-size: 1.05rem;">${formatCurrency(cob.valor)}</strong>
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.88rem; color: #334155; font-weight: 700;">
+              <span><i class="fa-solid fa-tv" style="color: #0284C7; margin-right: 0.35rem;"></i> ${planoObj ? planoObj.nome : 'Plano IPTV'}</span>
+              <strong style="color: #059669; font-size: 1.15rem; font-weight: 900;">${formatCurrency(cob.valor)}</strong>
             </div>
-            <div style="display: flex; gap: 0.4rem; margin-top: 0.35rem;">
-              <button class="btn-success-sm" style="flex: 1; justify-content: center; font-size: 0.78rem; padding: 0.35rem;" onclick="abrirModalBaixa('${cob.id}')">
-                <i class="fa-solid fa-check-circle"></i> Dar Baixa
+            <div style="display: flex; gap: 0.5rem; margin-top: 0.4rem;">
+              <button class="btn-success-sm" style="flex: 1; justify-content: center; font-size: 0.82rem; padding: 0.5rem; font-weight: 800; border-radius: 10px; background: #059669; color: #FFFFFF;" onclick="abrirModalBaixa('${cob.id}')">
+                <i class="fa-solid fa-circle-check"></i> Dar Baixa
               </button>
-              <button class="btn-whatsapp-sm" style="flex: 1; justify-content: center; font-size: 0.78rem; padding: 0.35rem;" onclick="dispararWhatsApp('${cob.id}')">
+              <button class="btn-whatsapp-sm" style="flex: 1; justify-content: center; font-size: 0.82rem; padding: 0.5rem; font-weight: 800; border-radius: 10px; background: #25D366; color: #FFFFFF;" onclick="dispararWhatsApp('${cob.id}')">
                 <i class="fa-brands fa-whatsapp"></i> Enviar
               </button>
             </div>
