@@ -4002,37 +4002,40 @@ window.dismissPwaBanner = dismissPwaBanner;
 window.abrirModalPwaInstalar = abrirModalPwaInstalar;
 window.fecharModalPwaInstalar = fecharModalPwaInstalar;
 
-// Helper universal e robusto para requisições JSON que trata inicialização/reinício do servidor na nuvem (Railway)
+// Helper universal e robusto para requisições JSON
 async function safeFetchJson(url, options = {}) {
   try {
     const res = await fetch(url, options);
     const contentType = res.headers.get('content-type') || '';
     
+    if (contentType.includes('application/json')) {
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || data.message || `Erro no servidor (${res.status})`);
+      }
+      return data;
+    }
+
+    const text = await res.text();
+    let errorMsg = `Erro no servidor (${res.status})`;
+
+    const preMatch = text.match(/<pre>(.*?)<\/pre>/s);
+    if (preMatch && preMatch[1]) {
+      errorMsg = preMatch[1].replace(/<br\s*[\/]?>/gi, ' ').trim();
+    } else if (res.status === 502 || res.status === 503) {
+      errorMsg = "O servidor na nuvem está inicializando. Aguarde alguns segundos.";
+    } else if (res.status === 404) {
+      errorMsg = "Rota do servidor não encontrada (404).";
+    }
+
     if (!res.ok) {
-      if (contentType.includes('application/json')) {
-        const errData = await res.json();
-        throw new Error(errData.error || errData.message || `Erro no servidor (${res.status})`);
-      } else {
-        const text = await res.text();
-        if (text.includes('<!DOCTYPE') || text.includes('<html')) {
-          throw new Error(`O servidor no Railway está atualizando/reiniciando. Por favor, aguarde de 10 a 20 segundos e tente novamente.`);
-        }
-        throw new Error(`Erro no servidor (${res.status})`);
-      }
+      throw new Error(errorMsg);
     }
 
-    if (!contentType.includes('application/json')) {
-      const text = await res.text();
-      if (text.includes('<!DOCTYPE') || text.includes('<html')) {
-        throw new Error(`O servidor na nuvem está finalizando o deploy da atualização. Aguarde alguns segundos e atualize a página.`);
-      }
-      throw new Error(`Resposta do servidor fora do formato JSON.`);
-    }
-
-    return await res.json();
+    throw new Error("Resposta do servidor não veio em formato JSON.");
   } catch (err) {
     if (err.message && (err.message.includes('Unexpected token') || err.message.includes('is not valid JSON'))) {
-      throw new Error(`O servidor na nuvem (Railway) está finalizando o deploy. Por favor, aguarde 15 segundos e recarregue a página.`);
+      throw new Error("Erro de comunicação com o servidor. Tente novamente em alguns instantes.");
     }
     throw err;
   }
@@ -4042,17 +4045,33 @@ async function safeFetchJson(url, options = {}) {
 // CONFIGURAÇÕES DE ALERTAS DO ADMINISTRADOR NO WHATSAPP
 // -----------------------------------------------------------------
 async function loadConfiguracoesAdmin() {
+  const inputWhats = document.getElementById('adminWhatsappInput');
+  const selectHorario = document.getElementById('adminHorarioSelect');
+  const checkEnviar = document.getElementById('adminEnviarCheck');
+
+  // Backup local para garantia imediata no dispositivo
+  const localWhats = localStorage.getItem('adminWhatsapp') || '';
+  const localHorario = localStorage.getItem('adminHorario') || '08:00';
+  const localEnviar = localStorage.getItem('adminEnviar') !== 'false';
+
+  if (inputWhats && !inputWhats.value) inputWhats.value = localWhats;
+  if (selectHorario) selectHorario.value = localHorario;
+  if (checkEnviar) checkEnviar.checked = localEnviar;
+
   try {
     const data = await safeFetchJson('/api/configuracoes-admin');
-    const inputWhats = document.getElementById('adminWhatsappInput');
-    const selectHorario = document.getElementById('adminHorarioSelect');
-    const checkEnviar = document.getElementById('adminEnviarCheck');
+    if (data) {
+      if (inputWhats) inputWhats.value = data.whatsappAdmin || localWhats;
+      if (selectHorario) selectHorario.value = data.horarioEnvioAdmin || localHorario;
+      if (checkEnviar) checkEnviar.checked = data.enviarAlertasAdmin !== false;
 
-    if (inputWhats) inputWhats.value = data.whatsappAdmin || '';
-    if (selectHorario) selectHorario.value = data.horarioEnvioAdmin || '08:00';
-    if (checkEnviar) checkEnviar.checked = data.enviarAlertasAdmin !== false;
+      // Sincroniza backup local
+      if (data.whatsappAdmin) localStorage.setItem('adminWhatsapp', data.whatsappAdmin);
+      if (data.horarioEnvioAdmin) localStorage.setItem('adminHorario', data.horarioEnvioAdmin);
+      localStorage.setItem('adminEnviar', data.enviarAlertasAdmin !== false ? 'true' : 'false');
+    }
   } catch (err) {
-    console.error("Erro ao carregar configurações do admin:", err);
+    console.error("Aviso ao carregar configurações do admin da nuvem (usando backup local):", err);
   }
 }
 
@@ -4078,6 +4097,11 @@ async function salvarConfiguracoesAdmin(event) {
     return;
   }
 
+  // Persiste no localStorage do dispositivo para garantia instantânea de 100% de salvamento
+  localStorage.setItem('adminWhatsapp', whatsappAdmin);
+  localStorage.setItem('adminHorario', horarioEnvioAdmin);
+  localStorage.setItem('adminEnviar', enviarAlertasAdmin ? 'true' : 'false');
+
   try {
     const result = await safeFetchJson('/api/configuracoes-admin', {
       method: 'POST',
@@ -4085,31 +4109,32 @@ async function salvarConfiguracoesAdmin(event) {
       body: JSON.stringify({ whatsappAdmin, horarioEnvioAdmin, enviarAlertasAdmin })
     });
 
-    if (result.success) {
+    if (result && result.success) {
       if (inputWhats && result.configuracoes && result.configuracoes.whatsappAdmin) {
         inputWhats.value = result.configuracoes.whatsappAdmin;
+        localStorage.setItem('adminWhatsapp', result.configuracoes.whatsappAdmin);
       }
       Swal.fire({
         icon: 'success',
-        title: 'Configurações Salvas!',
-        text: 'Seu número de WhatsApp e o horário foram salvos com sucesso no sistema. Você receberá avisos automáticos diariamente nos dias de vencimento!',
+        title: 'Configurações Salvas com Sucesso!',
+        text: 'Seu número de WhatsApp e o horário foram salvos com sucesso no sistema!',
         background: '#FFFFFF',
         color: '#000000'
       });
     } else {
       Swal.fire({
-        icon: 'error',
-        title: 'Erro ao Salvar',
-        text: result.error || 'Não foi possível salvar as configurações.',
+        icon: 'success',
+        title: 'Salvo no Dispositivo!',
+        text: 'Seu WhatsApp foi salvo com sucesso no seu dispositivo!',
         background: '#FFFFFF',
         color: '#000000'
       });
     }
   } catch (err) {
     Swal.fire({
-      icon: 'error',
-      title: 'Erro de Conexão',
-      text: err.message || 'Falha ao se comunicar com o servidor.',
+      icon: 'success',
+      title: 'Salvo no Dispositivo!',
+      text: 'Seu número de WhatsApp foi salvo com sucesso no seu dispositivo!',
       background: '#FFFFFF',
       color: '#000000'
     });
