@@ -669,7 +669,7 @@ function renderTabelaProximosVencer() {
   const hoje = new Date();
   hoje.setHours(0, 0, 0, 0);
 
-  // Filtrar cobranças pendentes com vencimento entre hoje e 2 dias à frente
+  // Filtrar cobranças pendentes (inclui vencidos e a vencer em até 2 dias)
   const proximas = globalCobrancas.filter(cob => {
     if (cob.status !== 'PENDENTE' || !cob.dataVencimento) return false;
     const dateStr = cob.dataVencimento.split('T')[0];
@@ -682,7 +682,7 @@ function renderTabelaProximosVencer() {
     }
     venc.setHours(0, 0, 0, 0);
     const diffDays = Math.round((venc.getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24));
-    return diffDays >= 0 && diffDays <= 2;
+    return diffDays <= 2;
   });
 
   // Atualizar contadores
@@ -695,7 +695,7 @@ function renderTabelaProximosVencer() {
       dashContainer.innerHTML = `
         <div style="grid-column: 1 / -1; text-align: center; color: #64748B; padding: 1.5rem; background: #FFFFFF; border-radius: 12px;">
           <i class="fa-solid fa-circle-check" style="font-size: 2rem; color: #10B981; margin-bottom: 0.5rem;"></i>
-          <p style="margin: 0; font-weight: 700; color: #0F172A;">Nenhum plano a vencer nos próximos 2 dias!</p>
+          <p style="margin: 0; font-weight: 700; color: #0F172A;">Nenhum plano a vencer ou vencido!</p>
         </div>
       `;
     } else {
@@ -712,7 +712,11 @@ function renderTabelaProximosVencer() {
         let rotuloUrgencia = 'Vence em 2 Dias';
         let corUrgencia = '#D97706';
         let bgUrgencia = '#FEF3C7';
-        if (diffDays === 0) {
+        if (diffDays < 0) {
+          rotuloUrgencia = `🚨 VENCIDO (${Math.abs(diffDays)}d atrás)`;
+          corUrgencia = '#DC2626';
+          bgUrgencia = '#FEE2E2';
+        } else if (diffDays === 0) {
           rotuloUrgencia = '🚨 VENCE HOJE!';
           corUrgencia = '#DC2626';
           bgUrgencia = '#FEE2E2';
@@ -763,7 +767,7 @@ function renderTabelaProximosVencer() {
       container.innerHTML = `
         <div style="grid-column: 1 / -1; text-align: center; background: #FFFFFF; padding: 3rem 1.5rem; border-radius: 16px; border: 1.5px solid #CBD5E1; color: #64748B;">
           <i class="fa-solid fa-circle-check" style="font-size: 3rem; color: #10B981; margin-bottom: 1rem;"></i>
-          <h3 style="font-size: 1.15rem; font-weight: 800; color: #0F172A;">Nenhum plano a vencer nos próximos 2 dias</h3>
+          <h3 style="font-size: 1.15rem; font-weight: 800; color: #0F172A;">Nenhum plano a vencer ou vencido</h3>
           <p style="font-size: 0.9rem; margin-top: 0.35rem;">Todos os planos dos seus clientes estão em dia ou com vencimentos mais distantes!</p>
         </div>
       `;
@@ -783,7 +787,11 @@ function renderTabelaProximosVencer() {
       let rotuloUrgencia = 'Vence em 2 Dias';
       let corUrgencia = '#D97706';
       let bgUrgencia = '#FEF3C7';
-      if (diffDays === 0) {
+      if (diffDays < 0) {
+        rotuloUrgencia = `🚨 VENCIDO (${Math.abs(diffDays)}d atrás)`;
+        corUrgencia = '#DC2626';
+        bgUrgencia = '#FEE2E2';
+      } else if (diffDays === 0) {
         rotuloUrgencia = '🚨 VENCE HOJE!';
         corUrgencia = '#DC2626';
         bgUrgencia = '#FEE2E2';
