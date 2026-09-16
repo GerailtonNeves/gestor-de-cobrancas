@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="GestorCob">
   
   <!-- CSS Principal -->
-  <link rel="stylesheet" href="css/styles.css?v=101.0">
+  <link rel="stylesheet" href="css/styles.css?v=102.0">
   
   <!-- Icones Remixicon & FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -868,18 +868,7 @@
                 <label for="adminHorarioSelect" style="font-weight: 700; color: #000000;">
                   <i class="fa-solid fa-clock" style="color: #F59E0B;"></i> Horário do Envio Automático Diário *
                 </label>
-                <select id="adminHorarioSelect" class="form-control" required style="font-size: 1rem; font-weight: 700;">
-                  <option value="07:00">07:00 - Manhã Cedo</option>
-                  <option value="08:00" selected>08:00 - Manhã (Recomendado)</option>
-                  <option value="09:00">09:00 - Manhã</option>
-                  <option value="10:00">10:00 - Manhã</option>
-                  <option value="11:00">11:00 - Manhã</option>
-                  <option value="12:00">12:00 - Meio-Dia</option>
-                  <option value="14:00">14:00 - Tarde</option>
-                  <option value="16:00">16:00 - Tarde</option>
-                  <option value="18:00">18:00 - Noite</option>
-                  <option value="20:00">20:00 - Noite</option>
-                </select>
+                <input type="time" id="adminHorarioSelect" class="form-control" value="08:00" required style="font-size: 1rem; font-weight: 700;">
                 <small style="color: #64748B; font-size: 0.78rem; display: block; margin-top: 0.35rem;">
                   O sistema verificará diariamente neste horário os clientes que vencem no dia e te enviará uma mensagem detalhada.
                 </small>
@@ -1689,6 +1678,6 @@ Atenção, Gerailton! Hoje vence a assinatura de *2 cliente(s)*:
   </div>
 
   <!-- JS da Aplicação -->
-  <script src="js/app.js?v=101.0"></script>
+  <script src="js/app.js?v=102.0"></script>
 </body>
 </html>
