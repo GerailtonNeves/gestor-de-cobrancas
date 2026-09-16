@@ -4143,13 +4143,13 @@ async function salvarConfiguracoesAdmin(event) {
 
 async function testarAlertaAdmin() {
   const inputWhats = document.getElementById('adminWhatsappInput');
-  const whatsappAdmin = inputWhats ? inputWhats.value.trim() : '';
+  const whatsappAdmin = (inputWhats ? inputWhats.value.trim() : '') || localStorage.getItem('adminWhatsapp') || '';
 
   if (!whatsappAdmin) {
     Swal.fire({
       icon: 'warning',
       title: 'Atenção',
-      text: 'Primeiro salve seu número de WhatsApp nas configurações antes de disparar o teste.',
+      text: 'Por favor, digite seu número de WhatsApp com DDD e clique em salvar antes de disparar o teste.',
       background: '#FFFFFF',
       color: '#000000'
     });
@@ -4173,13 +4173,14 @@ async function testarAlertaAdmin() {
   try {
     const result = await safeFetchJson('/api/testar-alerta-admin', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ whatsappAdmin })
     });
 
-    if (result.success) {
+    if (result && result.success) {
       Swal.fire({
         icon: 'success',
-        title: 'Teste Enviado!',
+        title: 'Teste Enviado com Sucesso!',
         text: `Mensagem de alerta disparada com sucesso para o seu WhatsApp (${whatsappAdmin})!`,
         background: '#FFFFFF',
         color: '#000000'
@@ -4187,8 +4188,8 @@ async function testarAlertaAdmin() {
     } else {
       Swal.fire({
         icon: 'warning',
-        title: 'Não foi possível enviar',
-        text: result.error || 'Verifique se o WhatsApp QR Code está conectado na aba "Conectar WhatsApp (QR)".',
+        title: 'Aviso do WhatsApp',
+        text: (result && result.error) ? result.error : 'Verifique se o WhatsApp QR Code está conectado na aba "Conectar WhatsApp (QR)".',
         background: '#FFFFFF',
         color: '#000000'
       });
