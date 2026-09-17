@@ -4203,10 +4203,14 @@ async function testarAlertaAdmin() {
       });
     }
   } catch (err) {
+    let msg = err.message || 'Falha ao tentar disparar a mensagem de teste.';
+    if (msg.includes('Cannot POST') || msg.includes('404')) {
+      msg = 'O Railway ainda está concluindo a atualização no servidor. Por favor, aguarde cerca de 30 a 60 segundos e tente novamente!';
+    }
     Swal.fire({
       icon: 'error',
-      title: 'Erro no Teste',
-      text: err.message || 'Falha ao tentar disparar a mensagem de teste.',
+      title: 'Aguarde a Atualização',
+      text: msg,
       background: '#FFFFFF',
       color: '#000000'
     });
