@@ -110,9 +110,8 @@ function getLocalIsoString(d = new Date()) {
 }
 
 function sanitizePhone(phone) {
-  if (phone === null || phone === undefined) return '';
-  let str = String(phone).trim();
-  let clean = str.replace(/\D/g, '');
+  if (!phone) return '';
+  let clean = phone.replace(/\D/g, '');
   if (clean.length === 10 || clean.length === 11) {
     clean = '55' + clean;
   }
@@ -122,23 +121,23 @@ function sanitizePhone(phone) {
 const defaultModelosMensagensArray = [
   {
     id: "tpl_lembrete",
-    titulo: "📌 Lembrete de Cobrança (Vencimento Hoje)",
+    titulo: "📌 Lembrete de Cobrança (Em Dia)",
     categoria: "Cobrança",
-    mensagem: `📌 *LEMBRETE DE VENCIMENTO DO PLANO* 📅\n\nOlá *{nome}*, tudo bem? 👋\n\nPassando para lembrar que a sua assinatura do plano de canais vence *HOJE ({vencimento})*:\n\n📌 *Plano:* {plano}\n💻 *Telas:* {telas}\n💰 *Valor da Renovação:* {valor}\n🗓️ *Próxima Renovação:* {proximo_vencimento}\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* {pix_titular}\n• *Banco:* {pix_banco}\n• *Chave PIX ({pix_tipo}):* {pix_chave}\n\nℹ️ {pix_instrucoes}\n\nPara renovar sem qualquer interrupção no sinal, efetue o PIX e nos envie o comprovante por aqui. Obrigado!\n\nEQUIPE: *Gerailton Neves*`,
+    mensagem: `Olá *{nome}*, tudo bem? 👋\n\nPassando para lembrar referente à cobrança do seu plano:\n📌 *Descrição:* {descricao}\n💻 *Telas:* {telas}\n💰 *Valor:* {valor}\n📅 *Vencimento:* {vencimento}\n🗓️ *Próxima Renovação:* {proximo_vencimento}\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Titular:* {pix_titular}\n• *Banco:* {pix_banco}\n• *Chave PIX ({pix_tipo}):* {pix_chave}\n\nℹ️ {pix_instrucoes}\n\nEQUIPE: *Gerailton Neves*`,
     padrao: true
   },
   {
     id: "tpl_vencido",
     titulo: "⚠️ Notificação de Plano Vencido",
     categoria: "Atrasados",
-    mensagem: `⚠️ *AVISO DE PLANO VENCIDO - AÇÃO NECESSÁRIA* 🚨\n\nOlá *{nome}*, identificamos que a assinatura do seu plano de canais encontra-se *VENCIDA* desde {vencimento}.\n\n💻 *Telas:* {telas}\n💰 *Valor em Aberto:* {valor}\n🗓️ *Próximo Vencimento:* {proximo_vencimento}\n\nPara evitar o bloqueio automático do sinal, por favor efetue a quitação via PIX:\n\n💳 *DADOS PARA PAGAMENTO (PIX):*\n• *Chave PIX ({pix_tipo}):* {pix_chave}\n• *Banco:* {pix_banco}\n• *Titular:* {pix_titular}\n\nApós efetuar o pagamento, por gentileza envie o comprovante respondendo a esta mensagem para reativação imediata.\n\nEQUIPE: *Gerailton Neves*`,
+    mensagem: `⚠️ *AVISO DE PLANO VENCIDO*\n\nOlá *{nome}*, identificamos que a sua assinatura do plano de canais encontra-se *VENCIDA* desde {vencimento}.\n\n💻 *Telas:* {telas}\n💰 *Valor em Aberto:* {valor}\n🗓️ *Próxima Renovação:* {proximo_vencimento}\n\nPara evitar o bloqueio automático do seu sinal, efetue o pagamento via PIX:\n💳 *Chave PIX ({pix_tipo}):* {pix_chave}\n• *Banco:* {pix_banco}\n• *Titular:* {pix_titular}\n\nPor gentileza, nos envie o comprovante respondendo a esta mensagem.\n\nEQUIPE: *Gerailton Neves*`,
     padrao: true
   },
   {
     id: "tpl_renovacao",
     titulo: "🎉 Aviso de Renovação (Baixa Quitada)",
     categoria: "Renovação",
-    mensagem: `🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!* 🚀✨\n\nOlá *{nome}*, confirmamos o recebimento do seu pagamento com sucesso! Sua assinatura foi renovada e seu acesso continua 100% ativo.\n\n📌 *Resumo da sua Renovação:*\n💻 *Telas:* {telas}\n💰 *Valor Pago:* {valor}\n📅 *Data do Pagamento:* {data_pagamento}\n🗓️ *Próximo Vencimento:* {proximo_vencimento}\n\nAgradecemos a preferência e a confiança em nossos serviços! Qualquer dúvida ou necessidade, estamos sempre à disposição.\n\nEQUIPE: *Gerailton Neves*`,
+    mensagem: `🎉 *PAGAMENTO CONFIRMADO E PLANO RENOVADO!* 🚀✨\n\nOlá *{nome}*, confirmamos o recebimento do seu pagamento e a sua assinatura foi renovada com sucesso!\n\n📌 *Resumo da Renovação:*\n💻 *Telas:* {telas}\n💰 *Valor Pago:* {valor}\n📅 *Vencimento Atual:* {vencimento}\n🗓️ *Próxima Renovação:* {proximo_vencimento}\n\nAgradecemos a preferência e a confiança! Qualquer dúvida, estamos à disposição no WhatsApp.\n\nEQUIPE: *Gerailton Neves*`,
     padrao: true
   },
   {
@@ -201,13 +200,7 @@ const defaultData = {
   ],
   modelosMensagens: defaultModelosMensagensArray,
   historicoEnvios: [],
-  alertasPendentes: [],
-  configuracoesAdmin: {
-    whatsappAdmin: "",
-    horarioEnvioAdmin: "08:00",
-    enviarAlertasAdmin: true,
-    ultimosAlertasEnviadosData: ""
-  }
+  alertasPendentes: []
 };
 
 function formatDateBR(dateStr) {
@@ -320,61 +313,6 @@ function gerarTextoCob(cobranca) {
   }, db.meusDados);
 }
 
-function gerarTextoAlertaAdmin(cobrancasHoje, db) {
-  const dtHojeBR = formatDateBR(getLocalIsoString().split('T')[0]);
-  if (!cobrancasHoje || cobrancasHoje.length === 0) {
-    return `🚨 *GESTOR DE COBRANÇAS - ALERTA DIÁRIO (${dtHojeBR})* 🚨\n\nNenhum plano de cliente vence no dia de hoje!\n\nTenha um ótimo dia de trabalho! 🚀`;
-  }
-
-  let text = `🚨 *ALERTA DE PLANOS VENCENDO HOJE (${dtHojeBR})* 🚨\n\n`;
-  if (cobrancasHoje.length === 1) {
-    text += `Atenção, Gerailton! Você tem *1 cliente* com assinatura vencendo hoje (${dtHojeBR}):\n\n`;
-  } else {
-    text += `Atenção, Gerailton! Você tem *${cobrancasHoje.length} clientes* com assinatura vencendo hoje (${dtHojeBR}):\n\n`;
-  }
-
-  cobrancasHoje.forEach((c, index) => {
-    let clienteObj = db.clientes ? db.clientes.find(cli => cli.id === c.clienteId) : null;
-    let clienteNome = c.clienteNome || (clienteObj ? clienteObj.nome : 'Cliente Sem Nome');
-    let planoNome = c.planoNome || c.descricao || 'Plano de Canais';
-    let servidorNome = '-';
-    let appNome = '-';
-
-    if (clienteObj) {
-      if (clienteObj.planoId && db.planos) {
-        const p = db.planos.find(item => item.id === clienteObj.planoId);
-        if (p) planoNome = p.nome;
-      }
-      if (clienteObj.servidorId && db.servidores) {
-        const s = db.servidores.find(item => item.id === clienteObj.servidorId);
-        if (s) servidorNome = s.nome;
-      }
-      if (clienteObj.appId && db.apps) {
-        const a = db.apps.find(item => item.id === clienteObj.appId);
-        if (a) appNome = a.nome;
-      }
-    }
-
-    const valFinalNum = parseFloat(c.valor || 0);
-    const valStr = valFinalNum.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    const whatsStr = c.clienteWhatsApp || (clienteObj ? clienteObj.whatsapp : '-') || '-';
-    const qtdTelasInt = parseInt(c.qtdTelas || (clienteObj ? clienteObj.qtdTelas : 1)) || 1;
-    const dtVencRaw = c.dataVencimento ? c.dataVencimento.split('T')[0] : '';
-    const dtVencFormatted = dtVencRaw ? formatDateBR(dtVencRaw) : dtHojeBR;
-
-    text += `${index + 1}️⃣ *CLIENTE: ${clienteNome.trim()}*\n`;
-    text += `   📱 *WhatsApp:* ${whatsStr}\n`;
-    text += `   📅 *Data de Vencimento:* ${dtVencFormatted}\n`;
-    text += `   📺 *Plano:* ${planoNome} (${qtdTelasInt === 1 ? '1 Tela' : qtdTelasInt + ' Telas'})\n`;
-    text += `   🖥️ *Servidor:* ${servidorNome}\n`;
-    text += `   📱 *App:* ${appNome}\n`;
-    text += `   💰 *Valor:* ${valStr}\n\n`;
-  });
-
-  text += `⚠️ *Ação Recomendada:* Verifique o recebimento do pagamento PIX ou dê baixa no painel assim que confirmado!`;
-  return text;
-}
-
 function getDB() {
   try {
     if (!fs.existsSync(DB_FILE)) {
@@ -387,14 +325,6 @@ function getDB() {
     // Migração: Se modelosMensagens não for array, substitui pelo array padrão
     if (!db.modelosMensagens || !Array.isArray(db.modelosMensagens)) {
       db.modelosMensagens = defaultModelosMensagensArray;
-    }
-    if (!db.configuracoesAdmin) {
-      db.configuracoesAdmin = {
-        whatsappAdmin: "",
-        horarioEnvioAdmin: "08:00",
-        enviarAlertasAdmin: true,
-        ultimosAlertasEnviadosData: ""
-      };
       saveDB(db);
     }
     return db;
@@ -522,7 +452,6 @@ async function connectToWhatsApp(forceClean = false) {
         waQrCodeDataUrl = null;
         waUserNumber = waSock.user ? waSock.user.id.split(':')[0] : 'Conectado';
         console.log(`✅ WhatsApp CONECTADO COM SUCESSO! Número: ${waUserNumber}`);
-        setTimeout(verificarAlertasVencimentoAdmin, 3000);
       }
 
       if (connection === 'close') {
@@ -633,31 +562,6 @@ app.get('/api/meus-dados', (req, res) => {
 // -----------------------------------------------------------------
 // PLANOS, APPS E SERVIDORES IPTV
 // -----------------------------------------------------------------
-
-app.get('/api/planos/:id', (req, res) => {
-  const db = getDB();
-  const cleanId = String(req.params.id || '').trim().toLowerCase();
-  const p = db.planos.find(item => String(item.id).trim().toLowerCase() === cleanId);
-  if (!p) return res.status(404).json({ error: "Plano não encontrado" });
-  res.json(p);
-});
-
-app.get('/api/apps/:id', (req, res) => {
-  const db = getDB();
-  const cleanId = String(req.params.id || '').trim().toLowerCase();
-  const appItem = db.apps.find(item => String(item.id).trim().toLowerCase() === cleanId);
-  if (!appItem) return res.status(404).json({ error: "Aplicativo não encontrado" });
-  res.json(appItem);
-});
-
-app.get('/api/servidores/:id', (req, res) => {
-  const db = getDB();
-  const cleanId = String(req.params.id || '').trim().toLowerCase();
-  const srv = db.servidores.find(item => String(item.id).trim().toLowerCase() === cleanId);
-  if (!srv) return res.status(404).json({ error: "Servidor não encontrado" });
-  res.json(srv);
-});
-
 app.get('/api/planos', (req, res) => {
   const db = getDB();
   res.json(db.planos || []);
@@ -1064,26 +968,10 @@ function gerarMensagemRenovacaoWhatsApp(cobranca, proximoVencimento, dataPagamen
   }, db.meusDados);
 }
 
-app.post(['/api/cobrancas/:id/dar-baixa', '/api/cobrancas/dar-baixa'], async (req, res) => {
+app.post('/api/cobrancas/:id/dar-baixa', async (req, res) => {
   const db = getDB();
-  const rawId = req.params.id;
-  const targetId = (rawId && rawId !== 'undefined' && rawId !== 'null' && rawId !== 'dar-baixa')
-    ? rawId
-    : (req.body.cobrancaId || req.body.clienteId || req.body.id);
-  
-  let cobranca = db.cobrancas.find(c => c.id === targetId);
-  if (!cobranca && targetId) {
-    cobranca = db.cobrancas.find(c => c.clienteId === targetId && c.status === 'PENDENTE');
-    if (!cobranca) {
-      cobranca = db.cobrancas.find(c => c.clienteId === targetId);
-    }
-  }
-  
-  if (!cobranca && db.cobrancas.length > 0) {
-    cobranca = db.cobrancas.find(c => c.status === 'PENDENTE') || db.cobrancas[0];
-  }
-
-  if (!cobranca) return res.status(404).json({ error: "Nenhuma cobrança encontrada para dar baixa" });
+  const cobranca = db.cobrancas.find(c => c.id === req.params.id);
+  if (!cobranca) return res.status(404).json({ error: "Cobrança não encontrada" });
 
   const { observacao, dataPagamento, proximoVencimento, enviarNotificacaoWhatsApp } = req.body;
 
@@ -1106,37 +994,6 @@ app.post(['/api/cobrancas/:id/dar-baixa', '/api/cobrancas/dar-baixa'], async (re
   cobranca.proximoVencimento = proxVenc || null;
   cobranca.observacaoBaixa = observacao || "Baixa efetuada manualmente pelo usuário";
 
-  // Garantir a renovação do plano para o próximo mês: atualizar ou criar a cobrança do próximo mês
-  if (proxVenc && cobranca.clienteId) {
-    let pendenteExistente = db.cobrancas.find(c => c.clienteId === cobranca.clienteId && c.status === 'PENDENTE' && c.id !== cobranca.id);
-    if (pendenteExistente) {
-      pendenteExistente.dataVencimento = proxVenc;
-      pendenteExistente.dataHoraEnvio = `${proxVenc}T09:00`;
-      pendenteExistente.statusEnvio = "AGENDADO";
-    } else {
-      const novaCobrancaProxMes = {
-        id: `cob_${Date.now()}`,
-        clienteId: cobranca.clienteId,
-        clienteNome: cobranca.clienteNome,
-        clienteTelefone: cobranca.clienteTelefone,
-        qtdTelas: cobranca.qtdTelas || 1,
-        valorBruto: cobranca.valorBruto || cobranca.valor,
-        desconto: cobranca.desconto || 0,
-        valor: cobranca.valor,
-        dataVencimento: proxVenc,
-        dataHoraEnvio: `${proxVenc}T09:00`,
-        descricao: cobranca.descricao || "Renovação Mensal do Plano de Canais",
-        modeloMensagemId: cobranca.modeloMensagemId || null,
-        status: "PENDENTE",
-        statusEnvio: "AGENDADO",
-        dataEnvioRealizado: null,
-        dataPagamento: null,
-        observacaoBaixa: null
-      };
-      db.cobrancas.push(novaCobrancaProxMes);
-    }
-  }
-
   const msgRenovacao = gerarMensagemRenovacaoWhatsApp(cobranca, proxVenc, cobranca.dataPagamento);
   const telefoneLimpo = sanitizePhone(cobranca.clienteTelefone);
   const linkWhatsAppRenovacao = `https://wa.me/${telefoneLimpo}?text=${encodeURIComponent(msgRenovacao)}`;
@@ -1144,12 +1001,13 @@ app.post(['/api/cobrancas/:id/dar-baixa', '/api/cobrancas/dar-baixa'], async (re
   let enviouDireto = false;
 
   if (enviarNotificacaoWhatsApp && waStatus === 'CONNECTED' && waSock) {
-    enviouDireto = true;
-    sendWhatsAppMessage(telefoneLimpo, msgRenovacao).then(() => {
+    try {
+      await sendWhatsAppMessage(telefoneLimpo, msgRenovacao);
+      enviouDireto = true;
       console.log(`🎉 [RENOVAÇÃO DE PLANO] Mensagem de confirmação enviada via WhatsApp para ${cobranca.clienteNome} (${telefoneLimpo})`);
-    }).catch(err => {
-      console.error("Erro ao enviar mensagem de renovação no Baileys:", err ? err.message : err);
-    });
+    } catch (err) {
+      console.error("Erro ao enviar mensagem de renovação no Baileys:", err);
+    }
   }
 
   db.historicoEnvios.push({
@@ -1165,109 +1023,13 @@ app.post(['/api/cobrancas/:id/dar-baixa', '/api/cobrancas/dar-baixa'], async (re
   });
 
   saveDB(db);
-
-  const idRecibo = `REC-${cobranca.id.replace('cob_', '')}`;
-  const dtPagto = cobranca.dataPagamento || getLocalIsoString().split('T')[0];
-  const dtVenc = cobranca.dataVencimento || '-';
-  const dtProx = cobranca.proximoVencimento || '-';
-  const dtPagtoBr = dtPagto.includes('T') ? dtPagto.split('T')[0].split('-').reverse().join('/') : dtPagto.split('-').reverse().join('/');
-  const dtProxBr = (dtProx && dtProx !== '-') ? (dtProx.includes('T') ? dtProx.split('T')[0].split('-').reverse().join('/') : dtProx.split('-').reverse().join('/')) : '-';
-
-  const msgRecibo = `📄 *RECIBO DE PAGAMENTO & RENOVAÇÃO* 📄\n` +
-    `--------------------------------------\n` +
-    `*Nº Recibo:* ${idRecibo}\n` +
-    `*Cliente:* ${cobranca.clienteNome}\n` +
-    `*Plano/Serviço:* ${cobranca.descricao}\n` +
-    `*Telas:* ${cobranca.qtdTelas || 1}\n` +
-    `*Valor Pago:* R$ ${Number(cobranca.valor).toFixed(2).replace('.', ',')}\n` +
-    `*Data do Pagamento:* ${dtPagtoBr}\n` +
-    `*Próxima Renovação:* ${dtProxBr}\n` +
-    `--------------------------------------\n` +
-    `*Emitido por:* ${(db.meusDados && db.meusDados.nomeTitular) || 'Gerailton Cobranças'}\n` +
-    `Obrigado pela preferência! 😊`;
-
-  const linkWhatsAppRecibo = `https://wa.me/${telefoneLimpo}?text=${encodeURIComponent(msgRecibo)}`;
-
-  const reciboObj = {
-    idRecibo,
-    cobrancaId: cobranca.id,
-    clienteId: cobranca.clienteId,
-    clienteNome: cobranca.clienteNome,
-    clienteTelefone: cobranca.clienteTelefone,
-    descricao: cobranca.descricao,
-    qtdTelas: cobranca.qtdTelas || 1,
-    valorBruto: cobranca.valorBruto || cobranca.valor,
-    desconto: cobranca.desconto || 0,
-    valor: cobranca.valor,
-    dataPagamento: dtPagto,
-    dataVencimento: dtVenc,
-    proximoVencimento: dtProx,
-    observacaoBaixa: cobranca.observacaoBaixa || '',
-    empresa: db.meusDados || {},
-    mensagemTexto: msgRecibo,
-    linkWhatsApp: linkWhatsAppRecibo
-  };
-
   res.json({
     success: true,
-    message: "Baixa efetuada e plano renovado com sucesso para o próximo mês!",
+    message: "Baixa efetuada e plano renovado com sucesso!",
     enviouDireto,
     msgRenovacao,
     linkWhatsAppRenovacao,
-    cobranca,
-    recibo: reciboObj
-  });
-});
-
-app.get('/api/cobrancas/:id/recibo', (req, res) => {
-  const db = getDB();
-  const cobranca = db.cobrancas.find(c => c.id === req.params.id);
-  if (!cobranca) return res.status(404).json({ error: "Cobrança não encontrada" });
-
-  const cliente = db.clientes.find(c => c.id === cobranca.clienteId);
-  const meusDados = db.meusDados || {};
-  const idRecibo = `REC-${cobranca.id.replace('cob_', '')}`;
-  const dtPagto = cobranca.dataPagamento || getLocalIsoString().split('T')[0];
-  const dtVenc = cobranca.dataVencimento || '-';
-  const dtProx = cobranca.proximoVencimento || '-';
-
-  const dtPagtoBr = dtPagto.includes('T') ? dtPagto.split('T')[0].split('-').reverse().join('/') : dtPagto.split('-').reverse().join('/');
-  const dtProxBr = (dtProx && dtProx !== '-') ? (dtProx.includes('T') ? dtProx.split('T')[0].split('-').reverse().join('/') : dtProx.split('-').reverse().join('/')) : '-';
-
-  const msgRecibo = `📄 *RECIBO DE PAGAMENTO & RENOVAÇÃO* 📄\n` +
-    `--------------------------------------\n` +
-    `*Nº Recibo:* ${idRecibo}\n` +
-    `*Cliente:* ${cobranca.clienteNome}\n` +
-    `*Plano/Serviço:* ${cobranca.descricao}\n` +
-    `*Telas:* ${cobranca.qtdTelas || (cliente ? cliente.qtdTelas : 1)}\n` +
-    `*Valor Pago:* R$ ${Number(cobranca.valor).toFixed(2).replace('.', ',')}\n` +
-    `*Data do Pagamento:* ${dtPagtoBr}\n` +
-    `*Próxima Renovação:* ${dtProxBr}\n` +
-    `--------------------------------------\n` +
-    `*Emitido por:* ${meusDados.nomeTitular || 'Gerailton Cobranças'}\n` +
-    `Obrigado pela preferência! 😊`;
-
-  const telSanitizado = sanitizePhone(cobranca.clienteTelefone);
-  const linkWhatsAppRecibo = `https://wa.me/${telSanitizado}?text=${encodeURIComponent(msgRecibo)}`;
-
-  res.json({
-    idRecibo,
-    cobrancaId: cobranca.id,
-    clienteId: cobranca.clienteId,
-    clienteNome: cobranca.clienteNome,
-    clienteTelefone: cobranca.clienteTelefone,
-    descricao: cobranca.descricao,
-    qtdTelas: cobranca.qtdTelas || (cliente ? cliente.qtdTelas : 1),
-    valorBruto: cobranca.valorBruto || cobranca.valor,
-    desconto: cobranca.desconto || 0,
-    valor: cobranca.valor,
-    dataPagamento: dtPagto,
-    dataVencimento: dtVenc,
-    proximoVencimento: dtProx,
-    observacaoBaixa: cobranca.observacaoBaixa || '',
-    empresa: meusDados,
-    mensagemTexto: msgRecibo,
-    linkWhatsApp: linkWhatsAppRecibo
+    cobranca
   });
 });
 
@@ -1356,21 +1118,8 @@ app.get('/api/dashboard', (req, res) => {
     .filter(c => c.status === 'PENDENTE' && c.dataVencimento < hoje)
     .reduce((sum, c) => sum + c.valor, 0);
 
+  const totalAgendados = cobrancas.filter(c => c.statusEnvio === 'AGENDADO' && c.status === 'PENDENTE').length;
   const totalClientes = (db.clientes || []).length;
-  const totalAgendados = cobrancas.filter(c => c.status === 'AGENDADO').length;
-
-  const em2DiasIso = (() => {
-    const d = new Date();
-    d.setDate(d.getDate() + 2);
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const dd = String(d.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}`;
-  })();
-
-  const cobrancasAVencer = cobrancas.filter(c => c.status === 'PENDENTE' && c.dataVencimento >= hoje && c.dataVencimento <= em2DiasIso);
-  const totalAVencer2Dias = cobrancasAVencer.reduce((sum, c) => sum + c.valor, 0);
-  const countAVencer2Dias = cobrancasAVencer.length;
 
   res.json({
     totalPendente,
@@ -1378,8 +1127,6 @@ app.get('/api/dashboard', (req, res) => {
     totalVencido,
     totalAgendados,
     totalClientes,
-    totalAVencer2Dias,
-    countAVencer2Dias,
     waStatus,
     waUserNumber,
     alertasPendentes: db.alertasPendentes || []
@@ -1393,138 +1140,6 @@ app.get('/api/alertas-pendentes', (req, res) => {
   saveDB(db);
   res.json(alertas);
 });
-
-// -----------------------------------------------------------------
-// CONFIGURAÇÕES DO ADMINISTRADOR (ALERTAS WHATSAPP NO VENCIMENTO)
-// -----------------------------------------------------------------
-app.all(['/api/configuracoes-admin', '/api/configuracoes-admin/'], (req, res) => {
-  if (req.method === 'GET') {
-    try {
-      const db = getDB();
-      const config = db.configuracoesAdmin || {
-        whatsappAdmin: "",
-        horarioEnvioAdmin: "08:00",
-        enviarAlertasAdmin: true,
-        ultimosAlertasEnviadosData: ""
-      };
-      return res.json(config);
-    } catch (err) {
-      console.error("❌ Erro em GET /api/configuracoes-admin:", err);
-      return res.status(500).json({ error: "Erro ao buscar configurações do administrador." });
-    }
-  } else if (req.method === 'POST') {
-    try {
-      const db = getDB();
-      const body = req.body || {};
-      const { whatsappAdmin, horarioEnvioAdmin, enviarAlertasAdmin } = body;
-
-      const cleanWhats = sanitizePhone(whatsappAdmin);
-
-      db.configuracoesAdmin = {
-        ...(db.configuracoesAdmin || {}),
-        whatsappAdmin: cleanWhats,
-        horarioEnvioAdmin: String(horarioEnvioAdmin || "08:00").trim(),
-        enviarAlertasAdmin: enviarAlertasAdmin !== undefined ? Boolean(enviarAlertasAdmin) : true,
-        ultimosAlertasEnviadosData: (db.configuracoesAdmin && db.configuracoesAdmin.ultimosAlertasEnviadosData) || ""
-      };
-      saveDB(db);
-      
-      // Tenta acionar a verificação imediata caso esteja no ou após o horário configurado
-      setTimeout(verificarAlertasVencimentoAdmin, 1000);
-
-      return res.json({ success: true, configuracoes: db.configuracoesAdmin });
-    } catch (err) {
-      console.error("❌ Erro em POST /api/configuracoes-admin:", err);
-      return res.status(500).json({ error: `Erro ao salvar configurações do admin: ${err.message}` });
-    }
-  } else {
-    return res.status(405).json({ error: "Método não permitido" });
-  }
-});
-
-app.all(['/api/testar-alerta-admin', '/api/testar-alerta-admin/'], async (req, res) => {
-  try {
-    const db = getDB();
-    const reqWhats = (req.body && req.body.whatsappAdmin) ? req.body.whatsappAdmin : null;
-    const config = db.configuracoesAdmin || {};
-    const whatsappTarget = sanitizePhone(reqWhats || config.whatsappAdmin || (db.meusDados && db.meusDados.whatsapp));
-
-    if (!whatsappTarget) {
-      return res.status(400).json({ error: "Número de WhatsApp do Administrador não foi configurado. Digite seu celular com DDD e clique em salvar." });
-    }
-
-    if (waStatus !== 'CONNECTED' || !waSock) {
-      return res.status(400).json({ error: "O WhatsApp não está conectado no sistema. Por favor, conecte seu WhatsApp na aba 'Conectar WhatsApp (QR)' antes de testar o disparo." });
-    }
-
-    const hoje = getLocalIsoString().split('T')[0];
-    const cobrancasHoje = (db.cobrancas || []).filter(c => {
-      if (c.status !== 'PENDENTE') return false;
-      if (!c.dataVencimento) return false;
-      const dtClean = c.dataVencimento.split('T')[0];
-      return dtClean <= hoje;
-    });
-
-    const texto = gerarTextoAlertaAdmin(cobrancasHoje.length > 0 ? cobrancasHoje : (db.cobrancas || []).slice(0, 2), db);
-
-    await sendWhatsAppMessage(whatsappTarget, texto);
-    return res.json({ success: true, message: `Mensagem de teste disparada com sucesso para ${whatsappTarget}!` });
-  } catch (err) {
-    console.error("❌ Erro em /api/testar-alerta-admin:", err);
-    return res.status(500).json({ error: `Falha ao disparar teste para WhatsApp: ${err.message}` });
-  }
-});
-
-// Rotina agendada que verifica a cada 60s se deve enviar aviso diário ao administrador
-function verificarAlertasVencimentoAdmin() {
-  try {
-    const db = getDB();
-    const config = db.configuracoesAdmin;
-    if (!config || config.enviarAlertasAdmin === false || !config.whatsappAdmin) return;
-    if (waStatus !== 'CONNECTED' || !waSock) return;
-
-    const agoraIso = getLocalIsoString(); // Formato YYYY-MM-DDTHH:mm
-    const [hoje, horaMinuto] = agoraIso.split('T');
-
-    const horarioAlerta = (config.horarioEnvioAdmin || "08:00").trim();
-    if (horaMinuto >= horarioAlerta) {
-      const cobrancasHoje = (db.cobrancas || []).filter(c => {
-        if (c.status !== 'PENDENTE') return false;
-        if (!c.dataVencimento) return false;
-        const dtClean = c.dataVencimento.split('T')[0];
-        return dtClean <= hoje;
-      });
-
-      if (cobrancasHoje.length === 0) return;
-
-      // Cria assinatura dos vencimentos atuais para garantir disparo de novos agendamentos no mesmo dia
-      const cobrancasSignature = cobrancasHoje.map(c => c.id).sort().join(',');
-      const lastSignature = config.ultimosAlertasSignature || "";
-
-      if (config.ultimosAlertasEnviadosData === hoje && lastSignature === cobrancasSignature) {
-        return;
-      }
-
-      console.log(`⏰ Disparando alerta no WhatsApp do Administrador (${cobrancasHoje.length} vencimentos em aberto)...`);
-      const texto = gerarTextoAlertaAdmin(cobrancasHoje, db);
-      sendWhatsAppMessage(config.whatsappAdmin, texto)
-        .then(() => {
-          console.log("✅ Alerta do Administrador enviado com sucesso!");
-          config.ultimosAlertasEnviadosData = hoje;
-          config.ultimosAlertasSignature = cobrancasSignature;
-          db.configuracoesAdmin = config;
-          saveDB(db);
-        })
-        .catch(err => {
-          console.error("❌ Erro ao enviar alerta para o Administrador:", err.message);
-        });
-    }
-  } catch (err) {
-    console.error("Erro na verificação de alertas admin:", err);
-  }
-}
-
-setInterval(verificarAlertasVencimentoAdmin, 60000);
 
 // -----------------------------------------------------------------
 // MODELOS DE MENSAGENS E PROMOÇÕES EDITÁVEIS
@@ -1574,87 +1189,21 @@ app.post('/api/promocao-indicacao/disparar', async (req, res) => {
       id: `promo_${Date.now()}_${Math.random().toString(36).substring(7)}`,
       clienteNome: cli.nome,
       clienteTelefone: telefoneLimpo,
-      valor: 0,
-      dataEnvio: getLocalIsoString(),
+      dataEnvio: new Date().toISOString(),
       mensagem: mensagemTexto,
-      tipoEnvio: enviouDireto ? "AUTOMATICO_PROMO" : "LINK_MANUAL_PROMO",
+      tipoEnvio: enviouDireto ? "AUTOMATICO_PROMOCAO" : "LINK_MANUAL_PROMOCAO",
       link: linkWhatsApp
     });
 
-    linksGerados.push({
-      clienteNome: cli.nome,
-      clienteTelefone: telefoneLimpo,
-      linkWhatsApp,
-      enviouDireto
-    });
+    linksGerados.push({ cliente: cli.nome, link: linkWhatsApp, enviouDireto });
   }
 
   saveDB(db);
   res.json({
     success: true,
+    message: `Disparo de promoção concluído para ${destinatarios.length} cliente(s)!`,
     totalEnviados,
-    totalDestinatarios: destinatarios.length,
     linksGerados
-  });
-});
-
-app.post('/api/cobrancas/mensagem-personalizada', async (req, res) => {
-  const db = getDB();
-  const { cobrancaId, mensagemPersonalizada } = req.body;
-
-  if (!cobrancaId || !mensagemPersonalizada) {
-    return res.status(400).json({ error: "cobrancaId e mensagemPersonalizada são obrigatórios" });
-  }
-
-  const cob = db.cobrancas.find(c => c.id === cobrancaId);
-  if (!cob) {
-    return res.status(404).json({ error: "Cobrança não encontrada" });
-  }
-
-  const cli = db.clientes ? db.clientes.find(c => c.id === cob.clienteId) : null;
-  const telefoneRaw = cob.clienteTelefone || (cli ? cli.telefone : '') || (cli ? cli.whatsapp : '');
-  const telefoneLimpo = sanitizePhone(telefoneRaw);
-  const mensagemTexto = processarTemplateMensagem(mensagemPersonalizada, {
-    clienteNome: cob.clienteNome || (cli ? cli.nome : 'Cliente'),
-    nome: cob.clienteNome || (cli ? cli.nome : 'Cliente'),
-    valor: cob.valor,
-    dataVencimento: cob.dataVencimento,
-    descricao: cob.descricao
-  }, db.meusDados);
-
-  const linkWhatsApp = `https://wa.me/${telefoneLimpo}?text=${encodeURIComponent(mensagemTexto)}`;
-  let enviouDireto = false;
-
-  if (waStatus === 'CONNECTED' && waSock && telefoneLimpo) {
-    try {
-      await sendWhatsAppMessage(telefoneLimpo, mensagemTexto);
-      enviouDireto = true;
-      cob.statusEnvio = 'ENVIADO';
-      cob.dataEnvioRealizado = getLocalIsoString();
-    } catch (err) {
-      console.error(`Erro ao enviar mensagem personalizada para ${cob.clienteNome}:`, err);
-    }
-  }
-
-  db.historicoEnvios.push({
-    id: `custom_${Date.now()}`,
-    cobrancaId: cob.id || null,
-    clienteNome: cob.clienteNome || (cli ? cli.nome : 'Cliente'),
-    clienteTelefone: telefoneLimpo,
-    valor: cob.valor || 0,
-    dataEnvio: getLocalIsoString(),
-    mensagem: mensagemTexto,
-    tipoEnvio: enviouDireto ? "AUTOMATICO_CUSTOM" : "LINK_MANUAL_CUSTOM",
-    link: linkWhatsApp
-  });
-
-  saveDB(db);
-  res.json({
-    success: true,
-    message: "Mensagem personalizada enviada com sucesso!",
-    enviouDireto,
-    linkWhatsApp,
-    mensagemTexto
   });
 });
 
@@ -1844,7 +1393,7 @@ app.post('/api/modelos-mensagens/enviar-custom', async (req, res) => {
 
 
 // -----------------------------------------------------------------
-// MOTOR CRON DE DISPARO AUTOMÁTICO (CHECAGEM EM TEMPO REAL A CADA 15s)
+// MOTOR CRON DE DISPARO AUTOMÁTICO (CHECAGEM EM TEMPO REAL)
 // -----------------------------------------------------------------
 setInterval(async () => {
   try {
@@ -1853,39 +1402,37 @@ setInterval(async () => {
     let alterado = false;
 
     for (let cob of db.cobrancas) {
-      // Checa qualquer cobrança pendente que ainda NÃO foi enviada (inclui PRONTO_PARA_DISPARO para re-tentativas automáticas)
-      if (cob.status === 'PENDENTE' && (cob.statusEnvio === 'AGENDADO' || cob.statusEnvio === 'PRONTO_PARA_DISPARO' || !cob.statusEnvio) && cob.dataHoraEnvio) {
+      // Checa qualquer cobrança pendente que ainda NÃO foi enviada
+      if (cob.status === 'PENDENTE' && (cob.statusEnvio === 'AGENDADO' || !cob.statusEnvio) && cob.dataHoraEnvio) {
         
         if (agoraLocalStr >= cob.dataHoraEnvio) {
-          const cli = db.clientes ? db.clientes.find(c => c.id === cob.clienteId) : null;
-          const telefoneRaw = cob.clienteTelefone || (cli ? cli.telefone : '') || (cli ? cli.whatsapp : '');
-          const telefoneLimpo = sanitizePhone(telefoneRaw);
           const mensagemTexto = gerarMensagemWhatsApp(cob, db.meusDados);
+          const telefoneLimpo = sanitizePhone(cob.clienteTelefone);
           const linkWhatsApp = `https://wa.me/${telefoneLimpo}?text=${encodeURIComponent(mensagemTexto)}`;
 
           console.log(`⏰ [CRON] Cobrança #${cob.id} pronta para envio (${cob.dataHoraEnvio}). Fuso Local: ${agoraLocalStr}`);
 
           // Se WhatsApp estiver CONECTADO via QR Code -> Envia 100% AUTOMÁTICO!
-          if (waStatus === 'CONNECTED' && waSock && telefoneLimpo) {
+          if (waStatus === 'CONNECTED' && waSock) {
             try {
               await sendWhatsAppMessage(telefoneLimpo, mensagemTexto);
               
               cob.statusEnvio = 'ENVIADO';
-              cob.dataEnvioRealizado = getLocalIsoString();
+              cob.dataEnvioRealizado = new Date().toISOString();
               alterado = true;
 
               db.historicoEnvios.push({
                 id: `env_auto_${Date.now()}_${cob.id}`,
                 cobrancaId: cob.id,
-                clienteNome: cob.clienteNome || (cli ? cli.nome : 'Cliente'),
+                clienteNome: cob.clienteNome,
                 clienteTelefone: telefoneLimpo,
                 valor: cob.valor,
-                dataEnvio: getLocalIsoString(),
+                dataEnvio: new Date().toISOString(),
                 mensagem: mensagemTexto,
                 tipoEnvio: "AUTOMATICO_ROBOT"
               });
 
-              console.log(`🤖 [ROBÔ WHATSAPP] Mensagem entregue com SUCESSO para ${cob.clienteNome || (cli ? cli.nome : 'Cliente')} (${telefoneLimpo})!`);
+              console.log(`🤖 [ROBÔ WHATSAPP] Mensagem entregue com SUCESSO para ${cob.clienteNome} (${telefoneLimpo})!`);
               continue;
             } catch (sendErr) {
               console.error("❌ Erro ao enviar mensagem no cron Baileys:", sendErr);
@@ -1901,7 +1448,7 @@ setInterval(async () => {
             db.alertasPendentes.push({
               id: `alt_${Date.now()}_${cob.id}`,
               cobrancaId: cob.id,
-              clienteNome: cob.clienteNome || (cli ? cli.nome : 'Cliente'),
+              clienteNome: cob.clienteNome,
               clienteTelefone: telefoneLimpo,
               valor: cob.valor,
               descricao: cob.descricao,
@@ -1918,16 +1465,9 @@ setInterval(async () => {
       saveDB(db);
     }
   } catch (err) {
-    console.error("Erro na verificação de cobranças do cron:", err);
+    console.error("Erro no motor de disparo automático:", err);
   }
-}, 15000);
-
-// Middleware Global de Tratamento de Erros no Express (Sempre Retorna JSON e Evita HTML)
-app.use((err, req, res, next) => {
-  console.error("❌ [EXPRESS GLOBAL ERROR HANDLER]:", err);
-  if (res.headersSent) return next(err);
-  return res.status(500).json({ error: err.message || "Erro interno no servidor." });
-});
+}, 10000);
 
 app.get('*', (req, res) => {
   if (req.path.startsWith('/api/')) {
