@@ -1364,7 +1364,7 @@ async function deletarCobranca(id) {
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#EF4444',
-    cancelButtonColor: '#3E2418',
+    cancelButtonColor: '#64748B',
     confirmButtonText: 'Sim, excluir!',
     cancelButtonText: 'Cancelar',
     background: '#FFFFFF',
@@ -1527,10 +1527,10 @@ async function darBaixaRapida(id) {
   const result = await Swal.fire({
     title: '🎉 Confirmar Baixa & Renovação?',
     html: `
-      <div style="text-align: left; background: #F2ECE0; padding: 1rem; border-radius: 12px; border: 1.5px solid #059669; margin-top: 0.5rem; color: #1E293B;">
-        <p style="margin-bottom: 0.4rem; font-size: 1rem;">👤 Cliente: <strong style="color: #059669;">${nomeCliente}</strong></p>
-        <p style="margin-bottom: 0.4rem; font-size: 1rem;">💰 Valor Recebido: <strong style="color: #059669;">${formatCurrency(valorCob)}</strong></p>
-        <p style="margin: 0; font-size: 1rem;">📅 Próximo Vencimento: <strong style="color: #0284C7;">${proxDataBr}</strong></p>
+      <div style="text-align: left; background: #F8FAFC; padding: 1.25rem; border-radius: 12px; border: 1.5px solid #059669; margin-top: 0.5rem; color: #0F172A; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+        <p style="margin-bottom: 0.5rem; font-size: 1rem; color: #0F172A;">👤 Cliente: <strong style="color: #059669;">${nomeCliente}</strong></p>
+        <p style="margin-bottom: 0.5rem; font-size: 1rem; color: #0F172A;">💰 Valor Recebido: <strong style="color: #059669;">${formatCurrency(valorCob)}</strong></p>
+        <p style="margin: 0; font-size: 1rem; color: #0F172A;">📅 Próximo Vencimento: <strong style="color: #0284C7;">${proxDataBr}</strong></p>
       </div>
       <p style="margin-top: 0.85rem; font-size: 0.85rem; color: #475569;">
         O plano do cliente será alterado para <strong>ATIVO (Em Dia)</strong> e a renovação do próximo mês será agendada!
@@ -1759,7 +1759,7 @@ async function reverterBaixa(id) {
     icon: 'question',
     showCancelButton: true,
     confirmButtonColor: '#00F0FF',
-    cancelButtonColor: '#3E2418',
+    cancelButtonColor: '#64748B',
     confirmButtonText: 'Sim, Reverter Baixa!',
     cancelButtonText: 'Cancelar',
     background: '#FFFFFF',
@@ -2299,7 +2299,7 @@ async function deletarCliente(id) {
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#EF4444',
-    cancelButtonColor: '#3E2418',
+    cancelButtonColor: '#64748B',
     confirmButtonText: 'Sim, excluir!',
     cancelButtonText: 'Cancelar',
     background: '#FFFFFF',
@@ -2777,21 +2777,21 @@ async function checkAlertasPendentes() {
       Swal.fire({
         title: '🔔 Chegou a Hora de Enviar a Renovação!',
         html: `
-          <div style="text-align: left; background: #1C110A; padding: 1rem; border-radius: 12px; border: 1px solid var(--emerald-primary);">
-            <p><strong>Cliente:</strong> ${alerta.clienteNome}</p>
-            <p><strong>Valor:</strong> ${formatCurrency(alerta.valor)}</p>
-            <p><strong>Descrição:</strong> ${alerta.descricao}</p>
+          <div style="text-align: left; background: #F8FAFC; padding: 1.25rem; border-radius: 12px; border: 1.5px solid #10B981; color: #0F172A; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <p style="margin-bottom: 0.6rem; font-size: 1rem; color: #0F172A;"><strong style="color: #0F172A;">Cliente:</strong> ${alerta.clienteNome}</p>
+            <p style="margin-bottom: 0.6rem; font-size: 1rem; color: #0F172A;"><strong style="color: #0F172A;">Valor:</strong> <span style="color: #059669; font-weight: 800;">${formatCurrency(alerta.valor)}</span></p>
+            <p style="margin-bottom: 0; font-size: 0.95rem; color: #334155;"><strong style="color: #0F172A;">Descrição:</strong> ${alerta.descricao}</p>
           </div>
-          <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-brown-muted);">Clique no botão abaixo para abrir o WhatsApp Web e disparar o envio automaticamente.</p>
+          <p style="margin-top: 1rem; font-size: 0.95rem; color: #475569; font-weight: 500;">Clique no botão abaixo para abrir o WhatsApp Web e disparar o envio automaticamente.</p>
         `,
         icon: 'info',
         showCancelButton: true,
         confirmButtonText: '<i class="fa-brands fa-whatsapp"></i> Disparar WhatsApp Agora',
         cancelButtonText: 'Depois',
         confirmButtonColor: '#25D366',
-        cancelButtonColor: '#3E2418',
+        cancelButtonColor: '#64748B',
         background: '#FFFFFF',
-        color: '#000000'
+        color: '#0F172A'
       }).then((result) => {
         if (result.isConfirmed && alerta.linkWhatsApp) {
           window.open(alerta.linkWhatsApp, '_blank');
@@ -2930,10 +2930,10 @@ async function testarEnvioWhatsApp() {
     title: '🚀 Testar Envio no WhatsApp',
     html: `
       <div style="text-align: left;">
-        <label style="font-size: 0.85rem; color: #D1B89D;">WhatsApp do Destinatário (DDD + Número)</label>
-        <input id="swal-input-tel" class="swal2-input" placeholder="Ex: 11972560991" style="background: #1C110A; color: #000000; border-color: rgba(184, 115, 51, 0.3);">
-        <label style="font-size: 0.85rem; color: #D1B89D; margin-top: 0.5rem; display: block;">Mensagem de Teste</label>
-        <textarea id="swal-input-msg" class="swal2-textarea" placeholder="Mensagem para testar o envio..." style="background: #1C110A; color: #000000; border-color: rgba(184, 115, 51, 0.3);">🚀 Teste de envio de cobrança automática via GESTOR DE COBRANÇAS!</textarea>
+        <label style="font-size: 0.85rem; color: #475569; font-weight: 700; margin-bottom: 0.35rem; display: block;">WhatsApp do Destinatário (DDD + Número)</label>
+        <input id="swal-input-tel" class="swal2-input" placeholder="Ex: 11972560991" style="background: #F8FAFC; color: #0F172A; border: 1.5px solid #CBD5E1; margin: 0 0 1rem 0; width: 100%; font-size: 0.95rem;">
+        <label style="font-size: 0.85rem; color: #475569; font-weight: 700; margin-bottom: 0.35rem; display: block;">Mensagem de Teste</label>
+        <textarea id="swal-input-msg" class="swal2-textarea" placeholder="Mensagem para testar o envio..." style="background: #F8FAFC; color: #0F172A; border: 1.5px solid #CBD5E1; margin: 0; width: 100%; font-size: 0.95rem;">🚀 Teste de envio de cobrança automática via GESTOR DE COBRANÇAS!</textarea>
       </div>
     `,
     focusConfirm: false,
@@ -2941,9 +2941,9 @@ async function testarEnvioWhatsApp() {
     confirmButtonText: '<i class="fa-solid fa-paper-plane"></i> Disparar Teste Agora',
     cancelButtonText: 'Cancelar',
     confirmButtonColor: '#25D366',
-    cancelButtonColor: '#3E2418',
+    cancelButtonColor: '#64748B',
     background: '#FFFFFF',
-    color: '#000000',
+    color: '#0F172A',
     preConfirm: () => {
       const tel = document.getElementById('swal-input-tel').value;
       const msg = document.getElementById('swal-input-msg').value;
@@ -3206,7 +3206,7 @@ async function deletarPlano(id) {
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#EF4444',
-    cancelButtonColor: '#3E2418',
+    cancelButtonColor: '#64748B',
     confirmButtonText: 'Sim, excluir!',
     cancelButtonText: 'Cancelar',
     background: '#FFFFFF',
@@ -3503,7 +3503,7 @@ async function deletarServidor(id) {
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#EF4444',
-    cancelButtonColor: '#3E2418',
+    cancelButtonColor: '#64748B',
     confirmButtonText: 'Sim, excluir!',
     cancelButtonText: 'Cancelar',
     background: '#FFFFFF',
@@ -3683,7 +3683,7 @@ async function deletarModelo(id) {
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#EF4444',
-    cancelButtonColor: '#3E2418',
+    cancelButtonColor: '#64748B',
     confirmButtonText: 'Sim, excluir!',
     cancelButtonText: 'Cancelar',
     background: '#FFFFFF',
