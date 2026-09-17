@@ -3568,46 +3568,46 @@ function renderCardsModelosMensagens() {
   if (!container) return;
 
   if (globalModelosMensagens.length === 0) {
-    container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--text-brown-muted); padding: 3rem;">Nenhum modelo de mensagem cadastrado. Clique no botão acima para adicionar!</div>`;
+    container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: #64748B; padding: 3rem; background: #FFFFFF; border-radius: 12px; border: 1px solid #CBD5E1; font-weight: 600;">Nenhum modelo de mensagem cadastrado. Clique no botão acima para adicionar!</div>`;
     return;
   }
 
   const categoryColors = {
-    'Cobrança': 'var(--neon-blue)',
-    'Atrasados': 'var(--danger-color)',
-    'Renovação': 'var(--neon-green)',
-    'Promoções': '#FFD700',
-    'Personalizada': '#A855F7'
+    'Cobrança': '#0284C7',
+    'Atrasados': '#EF4444',
+    'Renovação': '#059669',
+    'Promoções': '#D97706',
+    'Personalizada': '#7C3AED'
   };
 
   container.innerHTML = globalModelosMensagens.map(modelo => {
-    const cardColor = categoryColors[modelo.categoria] || 'var(--neon-blue)';
+    const cardColor = categoryColors[modelo.categoria] || '#0284C7';
 
     return `
-      <div class="glass-panel" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 3px solid ${cardColor};">
+      <div class="card card-hover" style="background: #FFFFFF !important; border: 1.5px solid #CBD5E1; border-top: 4px solid ${cardColor}; border-radius: 16px; padding: 1.25rem; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05); display: flex; flex-direction: column; justify-content: space-between; gap: 1rem;">
         <div>
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
-            <h3 style="font-size: 1.1rem; font-weight: 800; color: #000000; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.5rem;">
+            <h3 style="font-size: 1.1rem; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
               <i class="fa-solid fa-comment-dots" style="color: ${cardColor};"></i> ${modelo.titulo}
             </h3>
-            <span class="badge" style="background: rgba(255,255,255,0.08); border: 1px solid ${cardColor}; color: #000000; font-size: 0.75rem; padding: 0.2rem 0.5rem;">
+            <span class="badge" style="background: #F1F5F9; border: 1.5px solid ${cardColor}; color: #0F172A; font-weight: 800; font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 20px;">
               ${modelo.categoria || 'Geral'}
             </span>
           </div>
 
-          <div style="background: rgba(0, 0, 0, 0.25); padding: 0.85rem; border-radius: 10px; border: 1px solid var(--border-color); font-family: monospace; font-size: 0.82rem; color: #CBD5E1; line-height: 1.4; white-space: pre-wrap; word-break: break-word; margin-bottom: 1rem; max-height: 180px; overflow-y: auto;">${modelo.mensagem}</div>
+          <div style="background: #F8FAFC; padding: 1rem; border-radius: 12px; border: 1.5px solid #E2E8F0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 0.9rem; color: #0F172A; font-weight: 600; line-height: 1.5; white-space: pre-wrap; word-break: break-word; margin-bottom: 0.5rem; max-height: 200px; overflow-y: auto; box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);">${modelo.mensagem}</div>
         </div>
 
         <div>
-          <div style="display: flex; gap: 0.5rem; justify-content: space-between; border-top: 1px dashed var(--border-color); padding-top: 0.75rem;">
-            <button class="btn-whatsapp-sm" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;" onclick="abrirModalDispararModelo('${modelo.id}')">
+          <div style="display: flex; gap: 0.5rem; justify-content: space-between; align-items: center; border-top: 1px dashed #CBD5E1; padding-top: 0.85rem;">
+            <button class="btn-whatsapp-sm" style="font-size: 0.82rem; padding: 0.45rem 0.85rem; font-weight: 800; background: #25D366; color: #FFFFFF; border-radius: 8px;" onclick="abrirModalDispararModelo('${modelo.id}')">
               <i class="fa-solid fa-paper-plane"></i> Disparar p/ Cliente
             </button>
             <div style="display: flex; gap: 0.4rem;">
-              <button class="btn-secondary" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;" onclick="editarModelo('${modelo.id}')">
+              <button class="btn-secondary" style="padding: 0.45rem 0.7rem; font-size: 0.82rem; font-weight: 700; background: #F1F5F9; color: #334155; border: 1px solid #CBD5E1; border-radius: 8px;" onclick="editarModelo('${modelo.id}')">
                 <i class="fa-solid fa-pen"></i> Editar
               </button>
-              <button class="btn-danger-sm" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;" onclick="deletarModelo('${modelo.id}')">
+              <button class="btn-danger-sm" style="padding: 0.45rem 0.7rem; font-size: 0.82rem; font-weight: 700; background: #EF4444; color: #FFFFFF; border-radius: 8px;" onclick="deletarModelo('${modelo.id}')">
                 <i class="fa-solid fa-trash"></i> Excluir
               </button>
             </div>
